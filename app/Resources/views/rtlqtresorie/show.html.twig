@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>RtlqTresorie</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ rtlqTresorie.id }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ rtlqTresorie.description }}</td>
+            </tr>
+            <tr>
+                <th>Responsable</th>
+                <td>{{ rtlqTresorie.responsable }}</td>
+            </tr>
+            <tr>
+                <th>Adherent</th>
+                <td>{{ rtlqTresorie.adherent }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{% if rtlqTresorie.date %}{{ rtlqTresorie.date|date('Y-m-d') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Montant</th>
+                <td>{{ rtlqTresorie.montant }}</td>
+            </tr>
+            <tr>
+                <th>Cheque</th>
+                <td>{{ rtlqTresorie.cheque }}</td>
+            </tr>
+            <tr>
+                <th>Numerocheque</th>
+                <td>{{ rtlqTresorie.numeroCheque }}</td>
+            </tr>
+            <tr>
+                <th>Idetat</th>
+                <td>{{ rtlqTresorie.idEtat }}</td>
+            </tr>
+            <tr>
+                <th>Idsaison</th>
+                <td>{{ rtlqTresorie.idSaison }}</td>
+            </tr>
+            <tr>
+                <th>Idcategorie</th>
+                <td>{{ rtlqTresorie.idCategorie }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('rtlqtresorie_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('rtlqtresorie_edit', { 'id': rtlqTresorie.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

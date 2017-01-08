@@ -1,0 +1,6 @@
+routanglangquan_web:
+    resource: "@RoutanglangquanBundle/Controller/Web"
+    type:     annotation
+routanglangquan_api:
+    resource: "@RoutanglangquanBundle/Controller/Api"
+    type:     annotation
