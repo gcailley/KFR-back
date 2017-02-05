@@ -1,16 +1,14 @@
 <?php
-
 namespace Controller\Cotisation;
 
 use Controller\AbstractRtlqCrudTest;
-use function GuzzleHttp\json_decode;
-use function GuzzleHttp\json_encode;
+use Controller\MyUtilClassTest;
 
 class CotisationControllerTest extends AbstractRtlqCrudTest {
 
-        private $idSaison ;
+        private $idSaison;
         private $idCategorie;
-        
+
         protected function getApiName() {
 		return '/api/cotisations'; 
 	}
@@ -51,24 +49,8 @@ class CotisationControllerTest extends AbstractRtlqCrudTest {
 
         protected function assertPreConditions() {
             parent::assertPreConditions();
-
-//                $this->logDebug("creation saison pour le test", true);
-                $saisonTest = new \Controller\Saison\SaisonsControllerTest();
-                $data = $saisonTest->getDataForPost();
-                $request = $this->getClient ()->post ( self::URL_BACK . $saisonTest->getApiName(), null, json_encode($data) );
-		$response = $request->send ();
-		$dataResponse = json_decode ( $response->getBody ( true ), true );
-                $this->idSaison = $dataResponse['id'];
-                $this->assertNotNull ( $this->idSaison );
-                
-//                $this->logDebug("creation categorie pour le test", true);
-                $categorieTest = new \Controller\Tresorie\TresoriesCategorieControllerTest();
-                $data = $categorieTest->getDataForPost();
-                $request = $this->getClient ()->post ( self::URL_BACK . $categorieTest->getApiName(), null, json_encode($data) );
-		$response = $request->send ();
-		$dataResponse = json_decode ( $response->getBody ( true ), true );
-                $this->idCategorie = $dataResponse['id'];
-                $this->assertNotNull ( $this->idCategorie );
+            $this->idSaison = $this->creationSaison();
+            $this->idCategorie = $this->creationCategorie();               
         }
 
 }

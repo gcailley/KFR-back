@@ -2,39 +2,18 @@
 
 namespace Controller;
 
+use Controller\Saison\SaisonsControllerTest;
+use Controller\Tresorie\TresoriesCategorieControllerTest;
 use Guzzle\Http\Client;
-use Guzzle\Tests\Http\Exception\ExceptionTest;
 use Guzzle\Http\Exception\RequestException;
+use Symfony\Component\Form\FormConfigInterface;
+use function GuzzleHttp\json_decode;
+use function GuzzleHttp\json_encode;
 
 abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 	const URL_BACK = "http://localhost/kfr-back/web/app_dev.php";
 	private $client;
-	
-    protected function setUp()
-    {
-//        $this->logDebug("\nRunning :");
-    }
-
-    protected function assertPreConditions()
-    {
-//        $this->logDebug(__METHOD__);
-    }
-
-
-    protected function assertPostConditions()
-    {
-//        $this->logDebug(__METHOD__);
-    }
-
-    protected function tearDown()
-    {
-//        $this->logDebug("Result :");
-    }
-
-    public static function tearDownAfterClass()
-    {
-//        $this->logDebug(__METHOD__);
-    }
+ 
 
 	/**
 	 * Creates a new button from a form configuration.
@@ -54,10 +33,10 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 		return $this->getDataForPost ();
 	}
 	public function testPost() {
-                $this->logDebug(__METHOD__,true);
+//                $this->logDebug(__METHOD__,true);
 		$data = $this->getDataForPost ();
      
-                $this->logDebug( json_encode ( $data ));
+//                $this->logDebug( json_encode ( $data ));
 		$request = $this->getClient ()->post ( self::URL_BACK . $this->getApiName (), null, json_encode ( $data ) );
 		$response = $request->send ();
 		$this->assertEquals ( 201, $response->getStatusCode () );
@@ -67,86 +46,9 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 		
 		$this->assertDataForPost ( $data, $dataResponse );               
 	}
-	public function testPut() {
-                $this->logDebug(__METHOD__,true);
-		$dataPost = $this->getDataForPost ();
-		$dataPut = $this->getDataForPut ();
-
-                $request = $this->getClient ()->get ( self::URL_BACK . $this->getApiName (), null, null );
-		$response = $request->send ();
-		$dataResponse = json_decode ( $response->getBody ( true ), true );
-		$this->assertNotNull ( $dataResponse );
-		
-//		$request = $this->getClient ()->post ( self::URL_BACK . $this->getApiName (), null, json_encode ( $dataPost ) );
-//		$response = $request->send ();
-//		$this->assertEquals ( 201, $response->getStatusCode () );
-//		$dataResponse = json_decode ( $response->getBody ( true ), true );
-//		$this->assertNotNull ( $dataResponse );
-//		$this->assertDataForPost ( $dataPost, $dataResponse );
-		
-		
-                $idUpdate = $dataResponse ['id'];
-		$request = $this->getClient ()->put ( self::URL_BACK . $this->getApiName () . '/' . $idUpdate, null, json_encode ( $dataPut ) );
-		$response = $request->send ();
-		$this->assertEquals ( 201, $response->getStatusCode () );
-		
-		$dataResponse = json_decode ( $response->getBody ( true ), true );
-		$this->assertNotNull ( $dataResponse );
-		$this->assertDataForPost ( $dataPut, $dataResponse );
-
-                $this->logDebug("Clean");
-                $this->logDebug(self::URL_BACK . $this->getApiName () . '/' . $idUpdate);
-
-		$requestOne = $this->getClient ()->delete ( self::URL_BACK . $this->getApiName () . '/' . $idUpdate, null, null );
-		$responseOne = $requestOne->send ();
-	}
-	public function testPutAvecChampUnknown() {
-		$this->logDebug(__METHOD__,true);
-                $dataPost = $this->getDataForPost ();
-		$dataPut = $this->getDataForPut ();
-		
-		$dataPut ['blabclbqsdpqjdpeoq'] = "qsdq";
-		
-//		$request = $this->getClient ()->post ( self::URL_BACK . $this->getApiName (), null, json_encode ( $dataPost ) );
-//		$response = $request->send ();
-//		$this->assertEquals ( 201, $response->getStatusCode () );
-//		
-//		$dataResponse = json_decode ( $response->getBody ( true ), true );
-//		$this->assertNotNull ( $dataResponse );
-//		$this->assertDataForPost ( $dataPost, $dataResponse );
-//		
-                $request = $this->getClient ()->get ( self::URL_BACK . $this->getApiName (), null, null );
-		$response = $request->send ();
-		$dataResponse = json_decode ( $response->getBody ( true ), true );
-		$this->assertNotNull ( $dataResponse );
-		
-                
-		$idUpdate = $dataResponse ['id'];
-		$request = $this->getClient ()->put ( self::URL_BACK . $this->getApiName () . '/' . $idUpdate, null, json_encode ( $dataPut ) );
-		$response = $request->send ();
-		$this->assertEquals ( 201, $response->getStatusCode () );
-		
-		$dataResponse = json_decode ( $response->getBody ( true ), true );
-		$this->assertNotNull ( $dataResponse );
-		$this->assertDataForPost ( $dataPut, $dataResponse );
-		
-		$requestOne = $this->getClient ()->delete ( self::URL_BACK . $this->getApiName () . '/' . $idUpdate, null, null );
-		$responseOne = $requestOne->send ();
-	}
-	public function testPutNotFound() {
-		$this->logDebug(__METHOD__,true);
-                $dataPut = $this->getDataForPut ();
-		$idUpdate = 0;
-		$request = $this->getClient ()->put ( self::URL_BACK . $this->getApiName () . '/' . $idUpdate, null, json_encode ( $dataPut ) );
-		try {
-			$response = $request->send ();
-			$this->assertEquals ( 404, $response->getStatusCode () );
-		} catch ( RequestException $e ) {
-			$this->assertEquals ( 404, $e->getRequest ()->getResponse ()->getStatusCode () );
-		}
-	}
-	public function testGetAll() {
-		$this->logDebug(__METHOD__,true);
+        
+        	public function testGetAll() {
+//		$this->logDebug(__METHOD__,true);
                 $request = $this->getClient ()->get ( self::URL_BACK . $this->getApiName (), null, null );
 		$response = $request->send ();
 		$this->assertEquals ( 201, $response->getStatusCode () );
@@ -159,7 +61,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 		$this->assertDataForPost ( array (), $dataResponse [$size] );
 	}
 	public function testGetLast() {
-                $this->logDebug(__METHOD__,true);
+//                $this->logDebug(__METHOD__,true);
                 $request = $this->getClient ()->get ( self::URL_BACK . $this->getApiName (), null, null );
 		$response = $request->send ();
 		$dataResponse = json_decode ( $response->getBody ( true ), true );
@@ -175,8 +77,66 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 		
 		$this->assertDataForPost ( array (), $dataResponse [$size] );
 	}
+
+        
+	public function testPut() {
+//                $this->logDebug(__METHOD__,true);
+		$dataPost = $this->getDataForPost ();
+		$dataPut = $this->getDataForPut ();
+
+                $request = $this->getClient ()->get ( self::URL_BACK . $this->getApiName (), null, null );
+		$response = $request->send ();
+		$dataResponse = json_decode ( $response->getBody ( true ), true );                
+		$this->assertNotNull ("dataResponse null", $dataResponse );
+		
+                
+                $idUpdate = $dataResponse [0] ['id'];
+		$request = $this->getClient ()->put ( self::URL_BACK . $this->getApiName () . '/' . $idUpdate, null, json_encode ( $dataPut ) );
+		$response = $request->send ();
+		$this->assertEquals ( 201, $response->getStatusCode () );
+		
+		$dataResponse = json_decode ( $response->getBody ( true ), true );
+		$this->assertNotNull ( $dataResponse );
+		$this->assertDataForPost ( $dataPut, $dataResponse );
+
+	}
+	public function testPutAvecChampUnknown() {
+//		$this->logDebug(__METHOD__,true);
+                $dataPost = $this->getDataForPost ();
+		$dataPut = $this->getDataForPut ();
+		
+		$dataPut ['blabclbqsdpqjdpeoq'] = "qsdq";
+		
+                $request = $this->getClient ()->get ( self::URL_BACK . $this->getApiName (), null, null );
+		$response = $request->send ();
+		$dataResponse = json_decode ( $response->getBody ( true ), true );
+		$this->assertNotNull ( $dataResponse );
+		
+                
+		$idUpdate = $dataResponse[0] ['id'];
+		$request = $this->getClient ()->put ( self::URL_BACK . $this->getApiName () . '/' . $idUpdate, null, json_encode ( $dataPut ) );
+		$response = $request->send ();
+		$this->assertEquals ( 201, $response->getStatusCode () );
+		
+		$dataResponse = json_decode ( $response->getBody ( true ), true );
+		$this->assertNotNull ( $dataResponse );
+		$this->assertDataForPost ( $dataPut, $dataResponse );
+		
+	}
+	public function testPutNotFound() {
+//		$this->logDebug(__METHOD__,true);
+                $dataPut = $this->getDataForPut ();
+		$idUpdate = 0;
+		$request = $this->getClient ()->put ( self::URL_BACK . $this->getApiName () . '/' . $idUpdate, null, json_encode ( $dataPut ) );
+		try {
+			$response = $request->send ();
+			$this->assertEquals ( 404, $response->getStatusCode () );
+		} catch ( RequestException $e ) {
+			$this->assertEquals ( 404, $e->getRequest ()->getResponse ()->getStatusCode () );
+		}
+	}
 	public function testDeleteLast() {
-                $this->logDebug(__METHOD__,true);
+//                $this->logDebug(__METHOD__,true);
                 $request = $this->getClient ()->get ( self::URL_BACK . $this->getApiName (), null, null );
 		$response = $request->send ();
 		$dataResponse = json_decode ( $response->getBody ( true ), true );
@@ -191,7 +151,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 		$this->assertNull ( $dataResponseOne );
 	}
 	public function testDeleteNotFound() {
-		$this->logDebug(__METHOD__,true);
+//		$this->logDebug(__METHOD__,true);
                 $requestOne = $this->getClient ()->delete ( self::URL_BACK . $this->getApiName () . '/0', null, null );
 		try {
 			$responseOne = $requestOne->send ();
@@ -204,7 +164,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 		return $this->client;
 	}
 	protected function assertArrayHasKeyNotNull($name, $arrayResult, $arrayInitial = array()) {
-		$this->assertArrayHasKey ( $name, $arrayResult );
+                $this->assertArrayHasKey ( $name, $arrayResult );
 		$this->assertNotNull ( $arrayResult [$name] );
 		if (array_key_exists ( $name, $arrayInitial )) {
 			$this->assertEquals ( $arrayInitial [$name], $arrayResult [$name] );
@@ -260,12 +220,48 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         $this->setTestResultObject($add_failure);
     }
     protected function logDebug($myDebugVar, $newligne=false) {
-//        fwrite(STDOUT, print_r($myDebugVar, TRUE));       
-//        if($newligne) fwrite(STDOUT, print_r( "\n", TRUE));       
+        fwrite(STDOUT, print_r($myDebugVar, TRUE));       
+        if($newligne) fwrite(STDOUT, print_r( "\n", TRUE));       
     }
     protected function logError($myDebugVar) {
         fwrite(STDERR, print_r($myDebugVar . "\n", TRUE));    
     }
   
+    
+    
+    
+    
+    public function creationSaison() {
+        $saisonTest = new SaisonsControllerTest();
+        $data = $saisonTest->getDataForPost();
+        $request = $this->getClient()->post(self::URL_BACK . $saisonTest->getApiName(), null, json_encode($data));
+        $response = $request->send();
+        $dataResponse = json_decode($response->getBody(true), true);
+        $idSaison = $dataResponse['id'];
+        $this->assertNotNull($idSaison);
+        return $idSaison;
+    }
+
+    public function creationCategorie() {
+        $categorieTest = new TresoriesCategorieControllerTest();
+        $data = $categorieTest->getDataForPost();
+        $request = $this->getClient()->post(self::URL_BACK . $categorieTest->getApiName(), null, json_encode($data));
+        $response = $request->send();
+        $dataResponse = json_decode($response->getBody(true), true);
+        $idCategorie = $dataResponse['id'];
+        $this->assertNotNull($idCategorie);
+        return $idCategorie;
+    }
+    
+    public function creationEtat() {
+        $etatTest = new Tresorie\TresoriesEtatControllerTest();
+        $data = $etatTest->getDataForPost();
+        $request = $this->getClient()->post(self::URL_BACK . $etatTest->getApiName(), null, json_encode($data));
+        $response = $request->send();
+        $dataResponse = json_decode($response->getBody(true), true);
+        $idEtat = $dataResponse['id'];
+        $this->assertNotNull($idEtat);
+        return $idEtat;
+    }
 }
 

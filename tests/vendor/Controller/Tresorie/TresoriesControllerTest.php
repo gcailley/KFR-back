@@ -8,6 +8,11 @@ use RoutanglangquanBundle\Controller\Api\Tresorie\TresorieController;
 
 class TresoriesControllerTest extends AbstractRtlqCrudTest {
 	
+        private $idSaison;
+        private $idCategorie;
+        private $idEtat;
+
+    
 	protected function getApiName() {
 		return '/api/tresorie/tresories'; 
 	}
@@ -21,9 +26,9 @@ class TresoriesControllerTest extends AbstractRtlqCrudTest {
 				"numero_cheque" =>rand ( 1, 999999 ),
 				"date_creation" =>$this->getRandomDate(),
 				"cheque" =>false,
-				"etat_id" =>1,
-				"saison_id" =>1,
-				"categorie_id" =>1
+				"etat_id" =>$this->idEtat,
+				"saison_id" =>$this->idSaison,
+				"categorie_id" =>$this->idCategorie
 		);
 		return $data;
 	}
@@ -37,9 +42,9 @@ class TresoriesControllerTest extends AbstractRtlqCrudTest {
 				"numero_cheque" =>rand ( 1, 999999 ),
 				"date_creation" =>$this->getRandomDate(),
 				"cheque" =>true,
-				"etat_id" =>1,
-				"saison_id" =>1,
-				"categorie_id" =>1
+				"etat_id" =>$this->idEtat,
+				"saison_id" =>$this->idSaison,
+				"categorie_id" =>$this->idCategorie
 		);
 		return $data;
 	}
@@ -58,6 +63,13 @@ class TresoriesControllerTest extends AbstractRtlqCrudTest {
 		$this->assertArrayHasKeyNotNull('categorie_id', $dataResponse, $data);
 	}
 
-	
+	protected function assertPreConditions() {
+            parent::assertPreConditions();
+            $this->idSaison = $this->creationSaison();
+            $this->idCategorie = $this->creationCategorie();               
+            $this->idEtat = $this->creationEtat();               
+        }
+
+
 
 }
