@@ -1,0 +1,73 @@
+<?php
+
+namespace RoutanglangquanBundle\Form\Builder\Association;
+
+use RoutanglangquanBundle\Form\Dto\Association\RtlqAdherentDTO;
+use RoutanglangquanBundle\Entity\Association\RtlqAdherent;
+use RoutanglangquanBundle\Form\Builder\AbstractRtlqBuilder;
+
+class RtlqAdherentBuilder extends AbstractRtlqBuilder {
+
+    public function dtoToModele($em, $postModele) {
+        $modele = new RtlqAdherent ();
+
+        $modele->setId($postModele->getId());
+        $modele->setEmail($postModele->getEmail());
+        $modele->setPwd($postModele->getPwd());
+        $modele->setTelephone($postModele->getTelephone());
+        $modele->setNom($postModele->getNom());
+        $modele->setPrenom($postModele->getPrenom());
+        $modele->setDateNaissance($postModele->getDateNaissance());
+        $modele->setActive($postModele->getActive());
+        $modele->setPublic($postModele->getPublic());
+        $modele->setAdresse($postModele->getAdresse());
+        $modele->setCodePostal($postModele->getCodePostal());
+        $modele->setVille($postModele->getVille());
+        $modele->setAvatar($postModele->getAvatar());
+        $modele->setDateCreation($postModele->getDateCreation());
+        $modele->setDateLastAuth($postModele->getDateLastAuth());
+
+
+        foreach ($postModele->getGroupesId() as $groupeId) {
+            $modele->addGroupe($em->getReference("RoutanglangquanBundle\Entity\Association\RtlqGroupe", $groupeId()));
+        }
+        foreach ($postModele->getCotisationsId() as $cotisationId) {
+            $modele->addCotisation($em->getReference("RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation", $cotisationId()));
+        }
+
+        return $modele;
+    }
+
+    public function modeleToDto($modele) {
+        $dto = new RtlqAdherentDTO ();
+
+        $dto->setId($modele->getId());
+        $dto->setEmail($modele->getEmail());
+        $dto->setPwd($modele->getPwd());
+        $dto->setTelephone($modele->setTelephone());
+        $dto->setNom($modele->getNom());
+        $dto->setPrenom($modele->getPrenom());
+        $dto->setDateNaissance($this->dateToString($modele->getDateNaissance()));
+        $dto->setActive($modele->getActive());
+        $dto->setPublic($modele->getPublic());
+
+        $dto->setAdresse($modele->getAdresse());
+        $dto->setCodePostal($modele->getCodePostal());
+        $dto->setVille($modele->getVille());
+        $dto->setAvatar($modele->getAvatar());
+        $dto->setDateCreation($this->dateToString($modele->getDateCreation()));
+        $dto->setDateLastAuth($this->dateToString($modele->getDateLastAuth()));
+
+
+        foreach ($modele->getGroupes() as $groupe) {
+            $dto->addGroupe($groupe->getId());
+        }
+        foreach ($modele->getCotisations() as $cotisation) {
+            $dto->addCotisation($cotisation->getId());
+        }
+
+
+        return $dto;
+    }
+
+}

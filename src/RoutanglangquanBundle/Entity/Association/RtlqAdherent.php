@@ -13,124 +13,129 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  */
 class RtlqAdherent {
-	/**
-	 *
-	 * @var integer @ORM\Column(name="id", type="integer", nullable=false)
-	 *      @ORM\Id
-	 *      @ORM\GeneratedValue(strategy="IDENTITY")
-	 */
-	private $id;
-	
-	/**
-	 *
-	 * @var string @ORM\Column(name="email", type="string", length=100, nullable=false)
-	 */
-	private $email;
-	
-	/**
-	 *
-	 * @var string //TODO encrypted
-	 *      @ORM\Column(name="pwd", type="string", length=100, nullable=false)
-	 */
-	private $pwd;
-	
-	/**
-	 *
-	 * @var string @ORM\Column(name="telephone", type="string", length=10, nullable=false)
-	 */
-	private $telephone;
-	
-	/**
-	 *
-	 * @var string @ORM\Column(name="nom", type="string", length=100, nullable=false)
-	 */
-	private $nom;
-	
-	/**
-	 *
-	 * @var string @ORM\Column(name="prenom", type="string", length=100, nullable=false)
-	 */
-	private $prenom;
-	
-	/**
-	 *
-	 * @var \DateTime @ORM\Column(name="date_naissance", type="date", nullable=false)
-	 */
-	private $dateNaissance;
-	
-	/**
-	 *
-	 * @var boolean @ORM\Column(name="actif", type="boolean", nullable=false)
-	 */
-	private $actif;
-	
-	/**
-	 *
-	 * @var boolean @ORM\Column(name="public", type="boolean", nullable=false)
-	 */
-	private $public;
-	
-	/**
-	 *
-	 * @var string @ORM\Column(name="adresse", type="string", length=100, nullable=false)
-	 */
-	private $adresse;
-	/**
-	 *
-	 * @var string @ORM\Column(name="avatar", type="string", length=100, nullable=false)
-	 */
-	private $avatar;
-	
-	/**
-	 *
-	 * @var string @ORM\Column(name="codePostal", type="string", length=5, nullable=false)
-	 */
-	private $codePostal;
-	/**
-	 *
-	 * @var string @ORM\Column(name="ville", type="string", length=100, nullable=false)
-	 */
-	private $ville;
-	
-	/**
-	 *
-	 * @var \DateTime @ORM\Column(name="date_creation", type="date", nullable=false)
-	 */
-	private $dateCreation;
-	
-	/**
-	 * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqGroupe", mappedBy="adherents")
-	 */
-	private $groupes;
-	
-	/**
-	 * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation")
-	 * @ORM\JoinTable(name="adherents_cotisations",
-	 *      joinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")},
-	 *      inverseJoinColumns={@ORM\JoinColumn(name="cotisation_id", referencedColumnName="id")}
-	 *      )
-	 */
-	private $cotisations;
-	
-	
-	
-	public function __construct() {
-		$this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
-		$this->cotisations = new \Doctrine\Common\Collections\ArrayCollection();
-	}
-	
-	
-	// TODO cotisations pour une saison
-	// TODO licence as object
-	// TODO adherentForum as object
+
+    /**
+     *
+     * @var integer @ORM\Column(name="id", type="integer", nullable=false)
+     *      @ORM\Id
+     *      @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     *
+     * @var string @ORM\Column(name="email", type="string", length=100, nullable=false)
+     */
+    private $email;
+
+    /**
+     *
+     * @var string //TODO encrypted
+     *      @ORM\Column(name="pwd", type="string", length=100, nullable=false)
+     */
+    private $pwd;
+
+    /**
+     *
+     * @var string @ORM\Column(name="telephone", type="string", length=10, nullable=false)
+     */
+    private $telephone;
+
+    /**
+     *
+     * @var string @ORM\Column(name="nom", type="string", length=100, nullable=false)
+     */
+    private $nom;
+
+    /**
+     *
+     * @var string @ORM\Column(name="prenom", type="string", length=100, nullable=false)
+     */
+    private $prenom;
+
+    /**
+     *
+     * @var \DateTime @ORM\Column(name="date_naissance", type="date", nullable=false)
+     */
+    private $dateNaissance;
+
+    /**
+     *
+     * @var boolean @ORM\Column(name="actif", type="boolean", nullable=false)
+     */
+    private $actif;
+
+    /**
+     *
+     * @var boolean @ORM\Column(name="public", type="boolean", nullable=false)
+     */
+    private $public;
+
+    /**
+     *
+     * @var string @ORM\Column(name="adresse", type="string", length=100, nullable=false)
+     */
+    private $adresse;
+
+    /**
+     *
+     * @var string @ORM\Column(name="avatar", type="string", length=100, nullable=false)
+     */
+    private $avatar;
+
+    /**
+     *
+     * @var string @ORM\Column(name="codePostal", type="string", length=5, nullable=false)
+     */
+    private $codePostal;
+
+    /**
+     *
+     * @var string @ORM\Column(name="ville", type="string", length=100, nullable=false)
+     */
+    private $ville;
+
+    /**
+     *
+     * @var \DateTime @ORM\Column(name="date_creation", type="date", nullable=false)
+     */
+    private $dateCreation;
+
+    /**
+     *
+     * @var \DateTime @ORM\Column(name="date_last_auth", type="date", nullable=false)
+     */
+    private $dateLastAuth;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqGroupe", mappedBy="adherents")
+     */
+    private $groupes;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation")
+     * @ORM\JoinTable(name="adherents_cotisations",
+     *      joinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="cotisation_id", referencedColumnName="id")}
+     *      )
+     */
+    private $cotisations;
+
+    public function __construct() {
+        $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->cotisations = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    // TODO cotisations pour une saison
+    // TODO licence as object
+    // TODO adherentForum as object
 
     /**
      * Get id
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -141,8 +146,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setEmail($email)
-    {
+    public function setEmail($email) {
         $this->email = $email;
 
         return $this;
@@ -153,8 +157,7 @@ class RtlqAdherent {
      *
      * @return string
      */
-    public function getEmail()
-    {
+    public function getEmail() {
         return $this->email;
     }
 
@@ -165,8 +168,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setPwd($pwd)
-    {
+    public function setPwd($pwd) {
         $this->pwd = $pwd;
 
         return $this;
@@ -177,8 +179,7 @@ class RtlqAdherent {
      *
      * @return string
      */
-    public function getPwd()
-    {
+    public function getPwd() {
         return $this->pwd;
     }
 
@@ -189,8 +190,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setTelephone($telephone)
-    {
+    public function setTelephone($telephone) {
         $this->telephone = $telephone;
 
         return $this;
@@ -201,8 +201,7 @@ class RtlqAdherent {
      *
      * @return string
      */
-    public function getTelephone()
-    {
+    public function getTelephone() {
         return $this->telephone;
     }
 
@@ -213,8 +212,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setNom($nom)
-    {
+    public function setNom($nom) {
         $this->nom = $nom;
 
         return $this;
@@ -225,8 +223,7 @@ class RtlqAdherent {
      *
      * @return string
      */
-    public function getNom()
-    {
+    public function getNom() {
         return $this->nom;
     }
 
@@ -237,8 +234,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setPrenom($prenom)
-    {
+    public function setPrenom($prenom) {
         $this->prenom = $prenom;
 
         return $this;
@@ -249,8 +245,7 @@ class RtlqAdherent {
      *
      * @return string
      */
-    public function getPrenom()
-    {
+    public function getPrenom() {
         return $this->prenom;
     }
 
@@ -261,8 +256,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setDateNaissance($dateNaissance)
-    {
+    public function setDateNaissance($dateNaissance) {
         $this->dateNaissance = $dateNaissance;
 
         return $this;
@@ -273,8 +267,7 @@ class RtlqAdherent {
      *
      * @return \DateTime
      */
-    public function getDateNaissance()
-    {
+    public function getDateNaissance() {
         return $this->dateNaissance;
     }
 
@@ -285,8 +278,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setActif($actif)
-    {
+    public function setActif($actif) {
         $this->actif = $actif;
 
         return $this;
@@ -297,8 +289,7 @@ class RtlqAdherent {
      *
      * @return boolean
      */
-    public function getActif()
-    {
+    public function getActif() {
         return $this->actif;
     }
 
@@ -309,8 +300,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setPublic($public)
-    {
+    public function setPublic($public) {
         $this->public = $public;
 
         return $this;
@@ -321,8 +311,7 @@ class RtlqAdherent {
      *
      * @return boolean
      */
-    public function getPublic()
-    {
+    public function getPublic() {
         return $this->public;
     }
 
@@ -333,8 +322,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setAdresse($adresse)
-    {
+    public function setAdresse($adresse) {
         $this->adresse = $adresse;
 
         return $this;
@@ -345,8 +333,7 @@ class RtlqAdherent {
      *
      * @return string
      */
-    public function getAdresse()
-    {
+    public function getAdresse() {
         return $this->adresse;
     }
 
@@ -357,8 +344,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setAvatar($avatar)
-    {
+    public function setAvatar($avatar) {
         $this->avatar = $avatar;
 
         return $this;
@@ -369,8 +355,7 @@ class RtlqAdherent {
      *
      * @return string
      */
-    public function getAvatar()
-    {
+    public function getAvatar() {
         return $this->avatar;
     }
 
@@ -381,8 +366,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setCodePostal($codePostal)
-    {
+    public function setCodePostal($codePostal) {
         $this->codePostal = $codePostal;
 
         return $this;
@@ -393,8 +377,7 @@ class RtlqAdherent {
      *
      * @return string
      */
-    public function getCodePostal()
-    {
+    public function getCodePostal() {
         return $this->codePostal;
     }
 
@@ -405,8 +388,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setVille($ville)
-    {
+    public function setVille($ville) {
         $this->ville = $ville;
 
         return $this;
@@ -417,8 +399,7 @@ class RtlqAdherent {
      *
      * @return string
      */
-    public function getVille()
-    {
+    public function getVille() {
         return $this->ville;
     }
 
@@ -429,8 +410,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function setDateCreation($dateCreation)
-    {
+    public function setDateCreation($dateCreation) {
         $this->dateCreation = $dateCreation;
 
         return $this;
@@ -441,8 +421,7 @@ class RtlqAdherent {
      *
      * @return \DateTime
      */
-    public function getDateCreation()
-    {
+    public function getDateCreation() {
         return $this->dateCreation;
     }
 
@@ -453,8 +432,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function addGroupe(\RoutanglangquanBundle\Entity\Association\RtlqGroupe $groupe)
-    {
+    public function addGroupe(\RoutanglangquanBundle\Entity\Association\RtlqGroupe $groupe) {
         $this->groupes[] = $groupe;
 
         return $this;
@@ -465,8 +443,7 @@ class RtlqAdherent {
      *
      * @param \RoutanglangquanBundle\Entity\Association\RtlqGroupe $groupe
      */
-    public function removeGroupe(\RoutanglangquanBundle\Entity\Association\RtlqGroupe $groupe)
-    {
+    public function removeGroupe(\RoutanglangquanBundle\Entity\Association\RtlqGroupe $groupe) {
         $this->groupes->removeElement($groupe);
     }
 
@@ -475,8 +452,7 @@ class RtlqAdherent {
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getGroupes()
-    {
+    public function getGroupes() {
         return $this->groupes;
     }
 
@@ -487,8 +463,7 @@ class RtlqAdherent {
      *
      * @return RtlqAdherent
      */
-    public function addCotisation(\RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation $cotisation)
-    {
+    public function addCotisation(\RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation $cotisation) {
         $this->cotisations[] = $cotisation;
 
         return $this;
@@ -499,8 +474,7 @@ class RtlqAdherent {
      *
      * @param \RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation $cotisation
      */
-    public function removeCotisation(\RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation $cotisation)
-    {
+    public function removeCotisation(\RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation $cotisation) {
         $this->cotisations->removeElement($cotisation);
     }
 
@@ -509,8 +483,17 @@ class RtlqAdherent {
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getCotisations()
-    {
+    public function getCotisations() {
         return $this->cotisations;
     }
+
+    public function getDateLastAuth() {
+        return $this->dateLastAuth;
+    }
+
+    public function setDateLastAuth(\DateTime $dateLastAuth) {
+        $this->dateLastAuth = $dateLastAuth;
+        return $this;
+    }
+
 }
