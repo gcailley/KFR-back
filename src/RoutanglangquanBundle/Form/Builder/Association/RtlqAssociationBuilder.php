@@ -13,7 +13,7 @@ class RtlqAssociationBuilder extends AbstractRtlqBuilder {
 		$modele->setId ( $postModele->getId () );
                 $modele->setNom ( $postModele->getNom () );  
 		$modele->setEmail( $postModele->getEmail () );
-		$modele->setSeigeSocial ( $postModele->getSeigeSocial () );
+		$modele->setSiegeSocial ( $postModele->getSiegeSocial () );
 		$modele->setDateCreation ( $postModele->getDateCreation () );
 		$modele->setActive($postModele->getActive() );
 		
@@ -27,7 +27,7 @@ class RtlqAssociationBuilder extends AbstractRtlqBuilder {
 		$dto->setId ( $modele->getId () );
 		$dto->setNom ( $modele->getNom() );
 		$dto->setEmail($modele->getEmail ( ) );
-                $dto->setSeigeSocial($modele->getSeigeSocial ( ) );
+                $dto->setSiegeSocial($modele->getSiegeSocial ( ) );
 		$dto->setDateCreation( $this->dateToString ( $modele->getDateCreation () ) );
 		$dto->setActive( $modele->getActive() );
 		

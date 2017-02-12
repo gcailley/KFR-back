@@ -1,6 +1,6 @@
 <?php
 
-namespace RoutanglangquanBundle\Form\Dto\Cotisation;
+namespace RoutanglangquanBundle\Form\Dto\Association;
 
 use RoutanglangquanBundle\Form\Dto\AbstractRtlqDTO;
 
@@ -8,37 +8,37 @@ use RoutanglangquanBundle\Form\Dto\AbstractRtlqDTO;
  * @author GREGORY
  *
  */
-class RtlqCotisationDTO extends AbstractRtlqDTO {
+class RtlqAdherentDTO extends AbstractRtlqDTO {
 
     protected $email;
     protected $pwd;
     protected $telephone;
     protected $nom;
     protected $prenom;
-    protected $dateNaissance;
+    protected $date_naissance;
     protected $actif;
     protected $public;
     protected $adresse;
     protected $avatar;
-    protected $codePostal;
+    protected $code_postal;
     protected $ville;
-    protected $dateCreation;
-    protected $dateLastAuth;
-    protected $groupesId;
-    protected $cotisationsId;
+    protected $date_creation;
+    protected $date_last_auth;
+    protected $groupes;
+    protected $cotisations;
 
     public function __construct() {
-        $this->groupesId = array();
-        $this->cotisationsId = array();
+        $this->groupes = array();
+        $this->cotisations = array();
     }
 
-    public function addGroupe($groupeId) {
-        $this->groupesId[] = $groupeId;
+    public function addGroupe($groupe) {
+        $this->groupes[] = $groupe;
         return $this;
     }
 
-    public function addCotisation($cotisationId) {
-        $this->$cotisationsId[] = $cotisationId;
+    public function addCotisation($cotisation) {
+        $this->$cotisations[] = $cotisation;
         return $this;
     }
 
@@ -63,7 +63,7 @@ class RtlqCotisationDTO extends AbstractRtlqDTO {
     }
 
     public function getDateNaissance() {
-        return $this->dateNaissance;
+        return $this->date_naissance;
     }
 
     public function getActif() {
@@ -83,7 +83,7 @@ class RtlqCotisationDTO extends AbstractRtlqDTO {
     }
 
     public function getCodePostal() {
-        return $this->codePostal;
+        return $this->code_postal;
     }
 
     public function getVille() {
@@ -95,15 +95,15 @@ class RtlqCotisationDTO extends AbstractRtlqDTO {
     }
 
     public function getDateLastAuth() {
-        return $this->dateLastAuth;
+        return $this->date_last_auth;
     }
 
-    public function getGroupesId() {
-        return $this->groupesId;
+    public function getGroupes() {
+        return $this->groupes;
     }
 
-    public function getCotisationsId() {
-        return $this->cotisationsId;
+    public function getCotisations() {
+        return $this->cotisations;
     }
 
     public function setEmail($email) {
@@ -131,8 +131,8 @@ class RtlqCotisationDTO extends AbstractRtlqDTO {
         return $this;
     }
 
-    public function setDateNaissance($dateNaissance) {
-        $this->dateNaissance = $dateNaissance;
+    public function setDateNaissance($date_naissance) {
+        $this->date_naissance = $date_naissance;
         return $this;
     }
 
@@ -156,8 +156,8 @@ class RtlqCotisationDTO extends AbstractRtlqDTO {
         return $this;
     }
 
-    public function setCodePostal($codePostal) {
-        $this->codePostal = $codePostal;
+    public function setCodePostal($code_postal) {
+        $this->code_postal = $code_postal;
         return $this;
     }
 
@@ -171,18 +171,18 @@ class RtlqCotisationDTO extends AbstractRtlqDTO {
         return $this;
     }
 
-    public function setDateLastAuth($dateLastAuth) {
-        $this->dateLastAuth = $dateLastAuth;
+    public function setDateLastAuth($date_last_auth) {
+        $this->date_last_auth = $date_last_auth;
         return $this;
     }
 
-    public function setGroupesId($groupesId) {
-        $this->groupesId = $groupesId;
+    public function setGroupes($groupes) {
+        $this->groupes = $groupes;
         return $this;
     }
 
-    public function setCotisationsId($cotisationsId) {
-        $this->cotisationsId = $cotisationsId;
+    public function setCotisations($cotisations) {
+        $this->cotisations = $cotisations;
         return $this;
     }
 

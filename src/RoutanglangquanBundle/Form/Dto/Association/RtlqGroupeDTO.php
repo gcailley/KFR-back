@@ -1,6 +1,6 @@
 <?php
 
-namespace RoutanglangquanBundle\Form\Dto\Cotisation;
+namespace RoutanglangquanBundle\Form\Dto\Association;
 
 use RoutanglangquanBundle\Form\Dto\AbstractRtlqDTO;
 
@@ -8,68 +8,36 @@ use RoutanglangquanBundle\Form\Dto\AbstractRtlqDTO;
  * @author GREGORY
  *
  */
-class RtlqCotisationDTO extends AbstractRtlqDTO {
+class RtlqGroupeDTO extends AbstractRtlqDTO {
 	
-	protected $description;
-	protected $cotisation;
-	protected $repartitionCheque;
-	protected $active;
-	protected $saison_id;
-	protected $categorie_id;
-	
-        public function getDescription() {
-            return $this->description;
-        }
+    protected $nom;
+    protected $adherents;
 
-        public function getCotisation() {
-            return $this->cotisation;
-        }
+    
+    public function __construct() {
+    	$this->$adherents = array();
+    }
+    public function getNom() {
+        return $this->nom;
+    }
 
-        public function getRepartitionCheque() {
-            return $this->repartitionCheque;
-        }
+    public function getAdherents() {
+        return $this->adherents;
+    }
 
-        public function getActive() {
-            return $this->active;
-        }
+    public function setNom($nom) {
+        $this->nom = $nom;
+        return $this;
+    }
 
-        public function getSaisonId() {
-            return $this->saison_id;
-        }
+    public function setAdherents($adherents) {
+        $this->adherents = $adherents;
+        return $this;
+    }
 
-        public function getCategorieId() {
-            return $this->categorie_id;
-        }
-
-        public function setDescription($description) {
-            $this->description = $description;
-            return $this;
-        }
-
-        public function setCotisation($cotisation) {
-            $this->cotisation = $cotisation;
-            return $this;
-        }
-
-        public function setRepartitionCheque($repartitionCheque) {
-            $this->repartitionCheque = $repartitionCheque;
-            return $this;
-        }
-
-        public function setActive($active) {
-            $this->active = $active;
-            return $this;
-        }
-
-        public function setSaisonId($saison_id) {
-            $this->saison_id = $saison_id;
-            return $this;
-        }
-
-        public function setCategorieId($categorie_id) {
-            $this->categorie_id = $categorie_id;
-            return $this;
-        }
-
-
+    
+    public function addAdherent($adherent) {
+        $this->adherents[] = $adherent;
+        return $this;
+    }
 }

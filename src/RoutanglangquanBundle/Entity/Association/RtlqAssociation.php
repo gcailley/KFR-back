@@ -12,8 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  * indexes={@ORM\Index(name="id", columns={"id"})})
  * @ORM\Entity
  */
-class RtlqAssociation
-{
+class RtlqAssociation {
+
     /**
      * @var integer
      *
@@ -57,15 +57,13 @@ class RtlqAssociation
      * @ORM\Column(name="email", type="string", length=100, nullable=false)
      */
     private $email;
-    
-    
+
     /**
      * Get id
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -76,8 +74,7 @@ class RtlqAssociation
      *
      * @return RtlqAssociation
      */
-    public function setNom($nom)
-    {
+    public function setNom($nom) {
         $this->nom = $nom;
 
         return $this;
@@ -88,8 +85,7 @@ class RtlqAssociation
      *
      * @return string
      */
-    public function getNom()
-    {
+    public function getNom() {
         return $this->nom;
     }
 
@@ -100,8 +96,7 @@ class RtlqAssociation
      *
      * @return RtlqAssociation
      */
-    public function setDateCreation($dateCreation)
-    {
+    public function setDateCreation($dateCreation) {
         $this->dateCreation = $dateCreation;
 
         return $this;
@@ -112,8 +107,7 @@ class RtlqAssociation
      *
      * @return \DateTime
      */
-    public function getDateCreation()
-    {
+    public function getDateCreation() {
         return $this->dateCreation;
     }
 
@@ -124,8 +118,7 @@ class RtlqAssociation
      *
      * @return RtlqAssociation
      */
-    public function setActive($active)
-    {
+    public function setActive($active) {
         $this->active = $active;
 
         return $this;
@@ -136,8 +129,7 @@ class RtlqAssociation
      *
      * @return boolean
      */
-    public function getActive()
-    {
+    public function getActive() {
         return $this->active;
     }
 
@@ -148,8 +140,7 @@ class RtlqAssociation
      *
      * @return RtlqAssociation
      */
-    public function setSiegeSocial($siegeSocial)
-    {
+    public function setSiegeSocial($siegeSocial) {
         $this->siegeSocial = $siegeSocial;
 
         return $this;
@@ -160,8 +151,7 @@ class RtlqAssociation
      *
      * @return string
      */
-    public function getSiegeSocial()
-    {
+    public function getSiegeSocial() {
         return $this->siegeSocial;
     }
 
@@ -172,8 +162,7 @@ class RtlqAssociation
      *
      * @return RtlqAssociation
      */
-    public function setEmail($email)
-    {
+    public function setEmail($email) {
         $this->email = $email;
 
         return $this;
@@ -184,8 +173,13 @@ class RtlqAssociation
      *
      * @return string
      */
-    public function getEmail()
-    {
+    public function getEmail() {
         return $this->email;
     }
+
+    public function setId($id) {
+        $this->id = $id;
+        return $this;
+    }
+
 }

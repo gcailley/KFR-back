@@ -170,6 +170,27 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 			$this->assertEquals ( $arrayInitial [$name], $arrayResult [$name] );
 		}
 	}
+        protected function getRandomText($length=null,$lengthMin=null,$lengthMax=null) {
+            
+            
+            if ($lengthMin == null) {
+                $lengthMin = rand(10, $lengthMax==null?255:$lengthMax);
+            }
+            if ($lengthMax == null) {
+                $lengthMax = rand($lengthMin, 255);
+            }
+            
+            $length = rand($lengthMin, $lengthMax);
+            $text = array();
+            $alphabe = [" ","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+            
+            for ( $i=0 ; $i < $length ; $i++) {
+                $text[] = $alphabe[rand(0, sizeof($alphabe))];
+            }
+            
+            return implode("",$text);
+        }
+        
 	protected function getRandomDate($yearsRange=[1970,2020], $monthsRange=[1,12], $daysRange=[1,28]) {
 		
 		$month = rand ( $monthsRange[0], $monthsRange[1] );
@@ -178,7 +199,24 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 		$day = $day < 10 ? "0" . $day : $day;
 		return rand ( $yearsRange[0], $yearsRange[1] ) . "-" . $month . "-" . $day;
 	}
-	protected function sendWithAssert($request, $statusCodeExpected){
+        
+        protected  function getRandomEmail(){
+            return $this->getRandomText(10) . "@" . $this->getRandomText(5)."fr";
+        }
+        
+        protected function getRandomNumero($length=null) {
+            $text = array();           
+            for ( $i=0 ; $i < $length ; $i++) {
+                $text[] = rand(0, 9);
+            }
+            return implode("",$text);
+        }
+        
+        protected function getRandomTelephone() {
+            return "0".$this->getRandomNumero(9);
+        }
+        
+        protected function sendWithAssert($request, $statusCodeExpected){
 		try {
 			$response = $request->send();
 			$this->assertEquals ( $statusCodeExpected, $response->getStatusCode () );

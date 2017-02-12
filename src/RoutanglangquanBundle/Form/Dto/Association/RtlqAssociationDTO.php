@@ -1,6 +1,6 @@
 <?php
 
-namespace RoutanglangquanBundle\Form\Dto\Cotisation;
+namespace RoutanglangquanBundle\Form\Dto\Association;
 
 use RoutanglangquanBundle\Form\Dto\AbstractRtlqDTO;
 
@@ -8,68 +8,57 @@ use RoutanglangquanBundle\Form\Dto\AbstractRtlqDTO;
  * @author GREGORY
  *
  */
-class RtlqCotisationDTO extends AbstractRtlqDTO {
-	
-	protected $description;
-	protected $cotisation;
-	protected $repartitionCheque;
-	protected $active;
-	protected $saison_id;
-	protected $categorie_id;
-	
-        public function getDescription() {
-            return $this->description;
-        }
+class RtlqAssociationDTO extends AbstractRtlqDTO {
 
-        public function getCotisation() {
-            return $this->cotisation;
-        }
+    protected $nom;
+    protected $date_creation;
+    protected $active;
+    protected $siege_social;
+    protected $email;
 
-        public function getRepartitionCheque() {
-            return $this->repartitionCheque;
-        }
+    public function getNom() {
+        return $this->nom;
+    }
 
-        public function getActive() {
-            return $this->active;
-        }
+    public function getDateCreation() {
+        return $this->date_creation;
+    }
 
-        public function getSaisonId() {
-            return $this->saison_id;
-        }
+    public function getActive() {
+        return $this->active;
+    }
 
-        public function getCategorieId() {
-            return $this->categorie_id;
-        }
+    public function getSiegeSocial() {
+        return $this->siege_social;
+    }
 
-        public function setDescription($description) {
-            $this->description = $description;
-            return $this;
-        }
+    public function getEmail() {
+        return $this->email;
+    }
 
-        public function setCotisation($cotisation) {
-            $this->cotisation = $cotisation;
-            return $this;
-        }
+    public function setNom($nom) {
+        $this->nom = $nom;
+        return $this;
+    }
 
-        public function setRepartitionCheque($repartitionCheque) {
-            $this->repartitionCheque = $repartitionCheque;
-            return $this;
-        }
+    public function setDateCreation($dateCreation) {
+        $this->date_creation = $dateCreation;
+        return $this;
+    }
 
-        public function setActive($active) {
-            $this->active = $active;
-            return $this;
-        }
+    public function setActive($active) {
+        $this->active = $active;
+        return $this;
+    }
 
-        public function setSaisonId($saison_id) {
-            $this->saison_id = $saison_id;
-            return $this;
-        }
+    public function setSiegeSocial($siegeSocial) {
+        $this->siege_social = $siegeSocial;
+        return $this;
+    }
 
-        public function setCategorieId($categorie_id) {
-            $this->categorie_id = $categorie_id;
-            return $this;
-        }
-
+    public function setEmail($email) {
+        $this->email = $email;
+        return $this;
+    }
 
 }
