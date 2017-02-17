@@ -18,7 +18,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
         $modele->setNom($postModele->getNom());
         $modele->setPrenom($postModele->getPrenom());
         $modele->setDateNaissance($postModele->getDateNaissance());
-        $modele->setActive($postModele->getActive());
+        $modele->setActif($postModele->getActif());
         $modele->setPublic($postModele->getPublic());
         $modele->setAdresse($postModele->getAdresse());
         $modele->setCodePostal($postModele->getCodePostal());
@@ -27,11 +27,11 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
         $modele->setDateCreation($postModele->getDateCreation());
         $modele->setDateLastAuth($postModele->getDateLastAuth());
 
-
-        foreach ($postModele->getGroupesId() as $groupeId) {
+       
+        foreach ($postModele->getGroupes() as $groupeId) {
             $modele->addGroupe($em->getReference("RoutanglangquanBundle\Entity\Association\RtlqGroupe", $groupeId()));
         }
-        foreach ($postModele->getCotisationsId() as $cotisationId) {
+        foreach ($postModele->getCotisations() as $cotisationId) {
             $modele->addCotisation($em->getReference("RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation", $cotisationId()));
         }
 
@@ -40,15 +40,16 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
 
     public function modeleToDto($modele) {
         $dto = new RtlqAdherentDTO ();
-
+        
         $dto->setId($modele->getId());
         $dto->setEmail($modele->getEmail());
-        $dto->setPwd($modele->getPwd());
-        $dto->setTelephone($modele->setTelephone());
+// pour des raisons de sécurité ne doit pas être présent
+        $dto->setPwd(null);
+        $dto->setTelephone($modele->getTelephone());
         $dto->setNom($modele->getNom());
         $dto->setPrenom($modele->getPrenom());
         $dto->setDateNaissance($this->dateToString($modele->getDateNaissance()));
-        $dto->setActive($modele->getActive());
+        $dto->setActif($modele->getActif());
         $dto->setPublic($modele->getPublic());
 
         $dto->setAdresse($modele->getAdresse());

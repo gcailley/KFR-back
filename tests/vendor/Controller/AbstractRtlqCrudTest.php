@@ -33,22 +33,22 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 		return $this->getDataForPost ();
 	}
 	public function testPost() {
-//                $this->logDebug(__METHOD__,true);
+                $this->logDebug(__METHOD__,true);
 		$data = $this->getDataForPost ();
      
-//                $this->logDebug( json_encode ( $data ));
+                $this->logDebug( json_encode ( $data ));
 		$request = $this->getClient ()->post ( self::URL_BACK . $this->getApiName (), null, json_encode ( $data ) );
 		$response = $request->send ();
 		$this->assertEquals ( 201, $response->getStatusCode () );
-		
+
 		$dataResponse = json_decode ( $response->getBody ( true ), true );
 		$this->assertNotNull ( $dataResponse );
-		
+
 		$this->assertDataForPost ( $data, $dataResponse );               
 	}
         
         	public function testGetAll() {
-//		$this->logDebug(__METHOD__,true);
+		$this->logDebug(__METHOD__,true);
                 $request = $this->getClient ()->get ( self::URL_BACK . $this->getApiName (), null, null );
 		$response = $request->send ();
 		$this->assertEquals ( 201, $response->getStatusCode () );
@@ -164,28 +164,34 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 		return $this->client;
 	}
 	protected function assertArrayHasKeyNotNull($name, $arrayResult, $arrayInitial = array()) {
-                $this->assertArrayHasKey ( $name, $arrayResult );
-		$this->assertNotNull ( $arrayResult [$name] );
+                $this->assertArrayHasKey ( $name, $arrayResult , "$name n'est pas dans le tableau de resultats");
+		$this->assertNotNull ( $arrayResult [$name] , "$name est NULL et ne devrait pas");
 		if (array_key_exists ( $name, $arrayInitial )) {
-			$this->assertEquals ( $arrayInitial [$name], $arrayResult [$name] );
+			$this->assertEquals ( $arrayInitial [$name], $arrayResult [$name], "$name n'a pas la même valeur AVANT/APRES stockage en base" );
 		}
+	}
+        protected function assertArrayHasKeyNull($name, $arrayResult, $arrayInitial = array()) {
+                if (array_key_exists ( $name, $arrayResult )) {
+                    $this->assertNull($arrayResult[$name],$name . " n'est pas null");
+                }
 	}
         protected function getRandomText($length=null,$lengthMin=null,$lengthMax=null) {
             
-            
             if ($lengthMin == null) {
-                $lengthMin = rand(10, $lengthMax==null?255:$lengthMax);
+                $lengthMin = random_int(1, $lengthMax==null?50:$lengthMax);
             }
             if ($lengthMax == null) {
-                $lengthMax = rand($lengthMin, 255);
+                $lengthMax = random_int($lengthMin+1, 255);
             }
-            
-            $length = rand($lengthMin, $lengthMax);
+            if ($length == null) {
+                $length = random_int($lengthMin, $lengthMax);
+            }
+
             $text = array();
             $alphabe = [" ","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
             
             for ( $i=0 ; $i < $length ; $i++) {
-                $text[] = $alphabe[rand(0, sizeof($alphabe))];
+                $text[] = $alphabe[random_int(0, sizeof($alphabe))];
             }
             
             return implode("",$text);
@@ -201,7 +207,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 	}
         
         protected  function getRandomEmail(){
-            return $this->getRandomText(10) . "@" . $this->getRandomText(5)."fr";
+            return str_replace(" ","", $this->getRandomText(5) . "@" . $this->getRandomText(4).".fr");
         }
         
         protected function getRandomNumero($length=null) {

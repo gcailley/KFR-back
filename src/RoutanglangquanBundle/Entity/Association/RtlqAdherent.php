@@ -495,5 +495,9 @@ class RtlqAdherent {
         $this->dateLastAuth = $dateLastAuth;
         return $this;
     }
+    public function setId($id) {
+        $this->id = $id;
+        return $this;
+    }
 
 }

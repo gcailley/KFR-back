@@ -27,8 +27,9 @@ class AdherentControllerTest extends AbstractRtlqCrudTest {
             "ville" => $this->getRandomText(6),
             "date_creation" => $this->getRandomDate([1970, 2000]),
             "date_last_auth" => $this->getRandomDate([1970, 2000]),
-            "groupes" => null,
-            "cotisations" => null);
+            "groupes" => [],
+            "cotisations" => []);
+        
         return $data;
     }
 
@@ -48,8 +49,8 @@ class AdherentControllerTest extends AbstractRtlqCrudTest {
             "ville" => $this->getRandomText(6),
             "date_creation" => $this->getRandomDate([1970, 2000]),
             "date_last_auth" => $this->getRandomDate([1970, 2000]),
-            "groupes" => null,
-            "cotisations" => null);
+            "groupes" => [],
+            "cotisations" => []);
         return $data;
     }
 
@@ -63,7 +64,7 @@ class AdherentControllerTest extends AbstractRtlqCrudTest {
         $this->assertArrayHasKeyNotNull('date_naissance', $dataResponse, $data);
         $this->assertArrayHasKeyNotNull('public', $dataResponse, $data);
         $this->assertArrayHasKeyNotNull('actif', $dataResponse, $data);
-        //$this->assertArrayHasKeyNotNull('avatar', $dataResponse, $data);
+        $this->assertArrayHasKeyNotNull('avatar', $dataResponse, $data);
         $this->assertArrayHasKeyNotNull('adresse', $dataResponse, $data);
         $this->assertArrayHasKeyNotNull('code_postal', $dataResponse, $data);
         $this->assertArrayHasKeyNotNull('ville', $dataResponse, $data);

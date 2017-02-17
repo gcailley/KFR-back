@@ -8,7 +8,7 @@ use RoutanglangquanBundle\Form\Dto\Association\RtlqAdherentDTO;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * @Route("/api/association/adherents")
+ * @Route("/api/association/adherent")
  */
 class AdherentController extends AbstractCrudApiController {
 	

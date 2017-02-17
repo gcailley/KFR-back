@@ -38,7 +38,8 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     }
 
     public function addCotisation($cotisation) {
-        $this->$cotisations[] = $cotisation;
+        print($this);
+        $this->cotisations[] = $cotisation;
         return $this;
     }
 
@@ -91,7 +92,7 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     }
 
     public function getDateCreation() {
-        return $this->dateCreation;
+        return $this->date_creation;
     }
 
     public function getDateLastAuth() {
@@ -167,7 +168,7 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     }
 
     public function setDateCreation($dateCreation) {
-        $this->dateCreation = $dateCreation;
+        $this->date_creation = $dateCreation;
         return $this;
     }
 
