@@ -7,12 +7,12 @@ use Controller\MyUtilClassTest;
 class AssociationControllerTest extends AbstractRtlqCrudTest {
 
 
-        protected function getApiName() {
-		return '/api/association'; 
+        public function getApiName() {
+		return '/api/associations'; 
 	}
 	
         
-	protected function getDataForPost() {
+	public function getDataForPost() {
 		$data = array (
 				"nom" => "Association_" .  time(),
                     		"date_creation" => $this->getRandomDate([1970,2000]),
@@ -23,7 +23,7 @@ class AssociationControllerTest extends AbstractRtlqCrudTest {
 		return $data;
 	}
 	
-	protected function getDataForPut() {
+	public function getDataForPut() {
 		$data = array (
 				"nom" => "Association_" .  time(),
                     		"date_creation" => $this->getRandomDate([1970,2000]),

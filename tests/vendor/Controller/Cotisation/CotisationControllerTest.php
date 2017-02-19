@@ -2,19 +2,17 @@
 namespace Controller\Cotisation;
 
 use Controller\AbstractRtlqCrudTest;
-use Controller\MyUtilClassTest;
 
 class CotisationControllerTest extends AbstractRtlqCrudTest {
 
         private $idSaison;
         private $idCategorie;
 
-        protected function getApiName() {
+        public function getApiName() {
 		return '/api/cotisations'; 
 	}
-	
-        
-	protected function getDataForPost() {
+
+	public function getDataForPost() {
 		$data = array (
 				"description" => "Cotisation_" .  time(),
                     		"cotisation" => 200,
@@ -26,7 +24,7 @@ class CotisationControllerTest extends AbstractRtlqCrudTest {
 		return $data;
 	}
 	
-	protected function getDataForPut() {
+	public function getDataForPut() {
 		$data = array (
 				"description" => "Cotisation_" .  time(),
                     		"cotisation" => 250,
@@ -49,8 +47,12 @@ class CotisationControllerTest extends AbstractRtlqCrudTest {
 
         protected function assertPreConditions() {
             parent::assertPreConditions();
-            $this->idSaison = $this->creationSaison();
-            $this->idCategorie = $this->creationCategorie();               
+            $this->init();
+        }
+        
+        public  function init() {
+            $this->idSaison = $this->getUtil()->creationSaison();
+            $this->idCategorie = $this->getUtil()->creationCategorie();               
         }
 
 }

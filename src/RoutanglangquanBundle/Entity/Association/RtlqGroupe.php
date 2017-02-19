@@ -38,7 +38,7 @@ class RtlqGroupe
 
     
     public function __construct() {
-    	$this->$adherents = new \Doctrine\Common\Collections\ArrayCollection();
+    	$this->adherents = new \Doctrine\Common\Collections\ArrayCollection();
     }
         
     
@@ -52,8 +52,13 @@ class RtlqGroupe
     {
         return $this->id;
     }
+    
+    public function setId($id) {
+        $this->id = $id;
+        return $this;
+    }
 
-    /**
+        /**
      * Set nom
      *
      * @param string $nom

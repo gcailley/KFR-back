@@ -8,7 +8,7 @@ use RoutanglangquanBundle\Form\Dto\Association\RtlqAssociationDTO;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * @Route("/api/association")
+ * @Route("/api/associations")
  */
 class AssociationController extends AbstractCrudApiController {
 	

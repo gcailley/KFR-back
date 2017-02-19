@@ -8,11 +8,11 @@ use RoutanglangquanBundle\Controller\Api\Tresorie\TresorieController;
 
 class TresoriesEtatControllerTest extends AbstractRtlqCrudTest {
 	
-	protected function getApiName() {
+	public function getApiName() {
 		return '/api/tresorie/etats'; 
 	}
 	
-	protected function getDataForPost() {
+	public function getDataForPost() {
 		$data = array (
 				"value" => "testEtat". time()
 		);

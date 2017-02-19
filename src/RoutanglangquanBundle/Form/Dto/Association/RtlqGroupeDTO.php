@@ -15,7 +15,7 @@ class RtlqGroupeDTO extends AbstractRtlqDTO {
 
     
     public function __construct() {
-    	$this->$adherents = array();
+    	$this->adherents = array();
     }
     public function getNom() {
         return $this->nom;
@@ -23,6 +23,11 @@ class RtlqGroupeDTO extends AbstractRtlqDTO {
 
     public function getAdherents() {
         return $this->adherents;
+    }
+    
+    public function addAdherent($adherent) {
+        $this->adherents[] = $adherent;
+        return $this;
     }
 
     public function setNom($nom) {
@@ -32,12 +37,6 @@ class RtlqGroupeDTO extends AbstractRtlqDTO {
 
     public function setAdherents($adherents) {
         $this->adherents = $adherents;
-        return $this;
-    }
-
-    
-    public function addAdherent($adherent) {
-        $this->adherents[] = $adherent;
         return $this;
     }
 }

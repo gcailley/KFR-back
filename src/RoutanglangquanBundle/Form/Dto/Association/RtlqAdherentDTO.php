@@ -38,7 +38,6 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     }
 
     public function addCotisation($cotisation) {
-        print($this);
         $this->cotisations[] = $cotisation;
         return $this;
     }

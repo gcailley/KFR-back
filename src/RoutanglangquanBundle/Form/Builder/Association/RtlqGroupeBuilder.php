@@ -9,11 +9,11 @@ use RoutanglangquanBundle\Form\Builder\AbstractRtlqBuilder;
 class RtlqGroupeBuilder extends AbstractRtlqBuilder {
 	public function dtoToModele($em, $postModele) {
 		$modele = new RtlqGroupe ();
-		
+
 		$modele->setId ( $postModele->getId () );
 		$modele->setNom( $postModele->getNom () );
 
-                foreach ($postModele->getAdherentsId() as $adherentId) {
+                foreach ($postModele->getAdherents() as $adherentId) {
                     $modele->addAdherent($em->getReference ( "RoutanglangquanBundle\Entity\Association\RtlqAdherent", $adherentId () )) ;
                 }
                 
@@ -22,7 +22,7 @@ class RtlqGroupeBuilder extends AbstractRtlqBuilder {
 	
 	
 	public function modeleToDto($modele) {
-		$dto = new RtlqSaisonDTO ();
+		$dto = new RtlqGroupeDTO ();
 		
 		$dto->setId ( $modele->getId () );
 		$dto->setNom ( $modele->getNom() );

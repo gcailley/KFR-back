@@ -7,11 +7,11 @@ use function GuzzleHttp\json_encode;
 
 class SaisonsControllerTest extends AbstractRtlqCrudTest {
 	
-	protected function getApiName() {
+	public function getApiName() {
 		return '/api/saisons'; 
 	}
 	
-	protected function getDataForPost() {
+	public function getDataForPost() {
 		$data = array (
 				"nom" => "Saison_" .  time(),
 				"date_debut" =>$this->getRandomDate([1970,2000]),
@@ -21,7 +21,7 @@ class SaisonsControllerTest extends AbstractRtlqCrudTest {
 		return $data;
 	}
 	
-	protected function getDataForPut() {
+	public function getDataForPut() {
 		$data = array (
 				"nom" => "SaisonPut_" .  time(),
 				"date_debut" =>$this->getRandomDate([1970,2000]),

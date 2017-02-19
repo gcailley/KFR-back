@@ -40,7 +40,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
 
     public function modeleToDto($modele) {
         $dto = new RtlqAdherentDTO ();
-        
+
         $dto->setId($modele->getId());
         $dto->setEmail($modele->getEmail());
 // pour des raisons de sécurité ne doit pas être présent
@@ -59,7 +59,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
         $dto->setDateCreation($this->dateToString($modele->getDateCreation()));
         $dto->setDateLastAuth($this->dateToString($modele->getDateLastAuth()));
 
-
+        
         foreach ($modele->getGroupes() as $groupe) {
             $dto->addGroupe($groupe->getId());
         }
