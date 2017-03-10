@@ -3,13 +3,15 @@
 namespace Controller;
 
 use Controller\Association\AdherentControllerTest;
-use Controller\Cotisation\CotisationControllerTest;
 use Controller\Association\GroupeControllerTest;
+use Controller\Cotisation\CotisationControllerTest;
 use Controller\Saison\SaisonsControllerTest;
 use Controller\Tresorie\TresoriesCategorieControllerTest;
+use Controller\Tresorie\TresoriesControllerTest;
 use Controller\Tresorie\TresoriesEtatControllerTest;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\RequestException;
+use Guzzle\Http\Message\RequestInterface;
 use Symfony\Component\Form\FormConfigInterface;
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
@@ -34,7 +36,11 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
             'content-type' => 'application/json'
         ));
         $this->util = new CreatToolsTest();
-        $this->debug = in_array('--verbose', $_SERVER['argv'], true);
+        
+        $this->debug = in_array('-vvv', $_SERVER['argv'], true);
+        $this->info = in_array('-vv', $_SERVER['argv'], true);
+        $this->error = in_array('-v', $_SERVER['argv'], true);
+        
     }
 
     public function init() {
@@ -50,81 +56,83 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     abstract public function getDataForPost();
 
     abstract protected function assertDataForPost($data, $dataResponse);
+    
 
     public function getDataForPut() {
         return $this->getDataForPost();
     }
 
+    protected function assertDataForPut($data, $dataResponse) {
+        return $this->assertDataForPost($data, $dataResponse);
+    }
+
+    protected function assertDataForGet($data, $dataResponse) {
+        return $this->assertDataForPost($data, $dataResponse);
+    }
+    
+    
     public function testPost() {
-        $this->logDebug(__METHOD__, true);
         $data = $this->getDataForPost();
 
         $request = $this->getClient()->post(self::URL_BACK . $this->getApiName(), null, json_encode($data));
-        $response = $request->send();
-        $this->assertEquals(201, $response->getStatusCode());
-
+        $response = $this->send($request, 201, json_encode($data));
         $dataResponse = json_decode($response->getBody(true), true);
         $this->assertNotNull($dataResponse);
 
         $this->assertDataForPost($data, $dataResponse);
+        return $dataResponse;
     }
 
     public function testGetAll() {
-        $this->logDebug(__METHOD__, true);
         $request = $this->getClient()->get(self::URL_BACK . $this->getApiName(), null, null);
-        $response = $request->send();
-        $this->assertEquals(201, $response->getStatusCode());
+        $response = $this->send($request, 201, json_encode($data));
 
         $dataResponse = json_decode($response->getBody(true), true);
         $this->assertNotNull($dataResponse);
 
         $size = sizeof($dataResponse) - 1;
 
-        $this->assertDataForPost(array(), $dataResponse [$size]);
+        $this->assertDataForGet(array(), $dataResponse [$size]);
+        return $dataResponse;
     }
 
     public function testGetLast() {
-        $this->logDebug(__METHOD__, true);
+        $this->logInfo(__METHOD__, true);
         $request = $this->getClient()->get(self::URL_BACK . $this->getApiName(), null, null);
-        $response = $request->send();
+        $response = $this->send($request, 201);
         $dataResponse = json_decode($response->getBody(true), true);
         $this->assertNotNull($dataResponse);
         $size = sizeof($dataResponse) - 1;
 
         $requestOne = $this->getClient()->get(self::URL_BACK . $this->getApiName() . '/' . $dataResponse [$size] ['id'], null, null);
-        $responseOne = $requestOne->send();
+        $responseOne = $this->send($requestOne, 201);
         $dataResponseOne = json_decode($responseOne->getBody(true), true);
 
-        $this->assertEquals(201, $responseOne->getStatusCode());
         $this->assertNotNull($dataResponseOne);
-
         $this->assertDataForPost(array(), $dataResponse [$size]);
     }
 
     public function testPut() {
-        $this->logDebug(__METHOD__, true);
         $dataPost = $this->getDataForPost();
         $dataPut = $this->getDataForPut();
 
         $request = $this->getClient()->get(self::URL_BACK . $this->getApiName(), null, null);
-        $response = $request->send();
+        $response = $this->send($request, 201);
         $dataResponse = json_decode($response->getBody(true), true);
         $this->assertNotNull("dataResponse null", $dataResponse);
 
 
         $idUpdate = $dataResponse [0] ['id'];
         $request = $this->getClient()->put(self::URL_BACK . $this->getApiName() . '/' . $idUpdate, null, json_encode($dataPut));
-        $response = $request->send();
-        $this->assertEquals(201, $response->getStatusCode());
+        $response = $this->send($request, 201, json_encode($dataPut));
 
         $dataResponse = json_decode($response->getBody(true), true);
         $this->assertNotNull($dataResponse);
-        $this->assertDataForPost($dataPut, $dataResponse);
+        $this->assertDataForPut($dataPut, $dataResponse);
     }
 
     public function testPutAvecChampUnknown() {
-        $this->logDebug(__METHOD__, true);
-        $dataPost = $this->getDataForPost();
+        $this->logInfo(__METHOD__, true);
         $dataPut = $this->getDataForPut();
 
         $dataPut ['blabclbqsdpqjdpeoq'] = "qsdq";
@@ -137,29 +145,21 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 
         $idUpdate = $dataResponse[0] ['id'];
         $request = $this->getClient()->put(self::URL_BACK . $this->getApiName() . '/' . $idUpdate, null, json_encode($dataPut));
-        $response = $request->send();
-        $this->assertEquals(201, $response->getStatusCode());
+        $response = $this->send($request, 201, json_encode($dataPut));
 
         $dataResponse = json_decode($response->getBody(true), true);
         $this->assertNotNull($dataResponse);
-        $this->assertDataForPost($dataPut, $dataResponse);
+        $this->assertDataForPut($dataPut, $dataResponse);
     }
 
     public function testPutNotFound() {
-        $this->logDebug(__METHOD__, true);
         $dataPut = $this->getDataForPut();
         $idUpdate = 0;
         $request = $this->getClient()->put(self::URL_BACK . $this->getApiName() . '/' . $idUpdate, null, json_encode($dataPut));
-        try {
-            $response = $request->send();
-            $this->assertEquals(404, $response->getStatusCode());
-        } catch (RequestException $e) {
-            $this->assertEquals(404, $e->getRequest()->getResponse()->getStatusCode());
-        }
+        $response = $this->send($request, 404,  json_encode($dataPut));
     }
 
     public function testDeleteLast() {
-        $this->logDebug(__METHOD__, true);
         $request = $this->getClient()->get(self::URL_BACK . $this->getApiName(), null, null);
         $response = $request->send();
         $dataResponse = json_decode($response->getBody(true), true);
@@ -167,22 +167,15 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         $size = sizeof($dataResponse) - 1;
 
         $requestOne = $this->getClient()->delete(self::URL_BACK . $this->getApiName() . '/' . $dataResponse [$size] ['id'], null, null);
-        $responseOne = $requestOne->send();
+        $responseOne = $this->send($requestOne, 201);
         $dataResponseOne = json_decode($responseOne->getBody(true), true);
-
-        $this->assertEquals(201, $responseOne->getStatusCode());
         $this->assertNull($dataResponseOne);
+        
     }
 
     public function testDeleteNotFound() {
-        $this->logDebug(__METHOD__, true);
-        $requestOne = $this->getClient()->delete(self::URL_BACK . $this->getApiName() . '/0', null, null);
-        try {
-            $responseOne = $requestOne->send();
-            $this->assertEquals(404, $responseOne->getStatusCode());
-        } catch (RequestException $e) {
-            $this->assertEquals(404, $e->getRequest()->getResponse()->getStatusCode());
-        }
+        $request = $this->getClient()->delete(self::URL_BACK . $this->getApiName() . '/0', null, null);
+        $this->send($request, 404);
     }
 
     public function getClient() {
@@ -250,13 +243,20 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         return "0" . $this->getRandomNumero(9);
     }
 
-    protected function sendWithAssert($request, $statusCodeExpected) {
+    public function send(RequestInterface $request, $statusCodeExpected, $data = null) {
         try {
             $response = $request->send();
-            $this->assertEquals($statusCodeExpected, $response->getStatusCode());
         } catch (RequestException $e) {
-            $this->assertEquals($statusCodeExpected, $e->getRequest()->getResponse()->getStatusCode());
             $response = $e->getRequest()->getResponse();
+            if ($response->getStatusCode() == 500 && $response->getStatusCode() !=  $statusCodeExpected) {
+                $this->logError('[' . $request->getMethod() . "] - " . $request->getUrl());
+                $this->logError($data);
+                $this->logError($response->getHeader("x-debug-error"));
+                $this->assertTrue(false, $response->getHeader("x-debug-error"));
+            }
+        }
+        if ($statusCodeExpected != null) {
+            $this->assertEquals($statusCodeExpected, $response->getStatusCode(), 'request : [' . $request->getMethod() . "] - " . $request->getUrl());
         }
         return $response;
     }
@@ -288,21 +288,26 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         $this->setTestResultObject($add_failure);
     }
 
-    public function logDebug($myDebugVar, $newligne = false) {      
-        if (  $this->debug  ) {
-            fwrite(STDOUT, print_r($myDebugVar, TRUE));
+    public function logDebug($myDebugVar, $newligne = true) {
+        if ($this->debug) {
+            fwrite(STDOUT, print_r("   DEBUG > " . $myDebugVar, TRUE));
             if ($newligne)
                 fwrite(STDOUT, print_r("\n", TRUE));
         }
     }
 
-    public function logInfo($myDebugVar, $newligne = false) {
-        fwrite(STDOUT, print_r($myDebugVar, TRUE));
-        if ($newligne) fwrite(STDOUT, print_r("\n", TRUE));
+    public function logInfo($myDebugVar, $newligne = true) {
+        if ($this->info || $this->debug) {
+            fwrite(STDOUT, print_r("INFO > " . $myDebugVar, TRUE));
+            if ($newligne)
+                fwrite(STDOUT, print_r("\n", TRUE));
+        }
     }
 
     public function logError($myDebugVar) {
-        fwrite(STDERR, print_r($myDebugVar . "\n", TRUE));
+        if ($this->error || $this->info || $this->debug) {
+            fwrite(STDERR, print_r("ERROR > " . $myDebugVar . "\n", TRUE));
+        }
     }
 
 }
@@ -316,53 +321,59 @@ class CreatToolsTest {
 
     public function creationSaison() {
         $testEntity = new SaisonsControllerTest();
-        return $this->sendAndExtract($testEntity, null);
+        return $this->sendAndExtract($testEntity);
     }
 
     public function creationCategorie() {
         $testEntity = new TresoriesCategorieControllerTest();
-        return $this->sendAndExtract($testEntity, null);
+        return $this->sendAndExtract($testEntity);
     }
 
     public function creationEtat() {
         $testEntity = new TresoriesEtatControllerTest();
-        return $this->sendAndExtract($testEntity, null);
+        return $this->sendAndExtract($testEntity);
     }
 
-    public function creationCotisation() {
+    public function creationCotisation($data = array()) {
         $testEntity = new CotisationControllerTest();
-        return $this->sendAndExtract($testEntity, null);
+        return $this->sendAndExtract($testEntity, $data);
     }
 
     public function creationAdherent() {
         $testEntity = new AdherentControllerTest();
-        return $this->sendAndExtract($testEntity, null);
+        return $this->sendAndExtract($testEntity);
     }
 
     public function creationGroupe() {
         $testEntity = new GroupeControllerTest();
-        return $this->sendAndExtract($testEntity, null);
+        return $this->sendAndExtract($testEntity);
     }
 
-    private function sendAndExtract(AbstractRtlqCrudTest $testObject, $params) {
+    public function creationTresorie() {
+        $testEntity = new TresoriesControllerTest();
+        return $this->sendAndExtract($testEntity);
+    }
+
+    private function sendAndExtract(AbstractRtlqCrudTest $testObject, $data2 = array(), $params = null) {
         $testObject->init();
         $data = $testObject->getDataForPost();
-        
-        $testObject->logDebug("\n  --------------------- \n");
-        $testObject->logDebug("  Creating " . $testObject->getApiName() . "\n");
-        $testObject->logDebug("  " . AbstractRtlqCrudTest::URL_BACK . $testObject->getApiName() . "\n");
-        $testObject->logDebug("  " . json_encode($data) . "\n");
+        $data = array_replace($data, $data2);
+
+        $testObject->logDebug("Creating " . $testObject->getApiName());
+        $testObject->logDebug(AbstractRtlqCrudTest::URL_BACK . $testObject->getApiName());
+        $testObject->logDebug(json_encode($data));
 
         $request = $testObject->getClient()->post(AbstractRtlqCrudTest::URL_BACK . $testObject->getApiName(), $params, json_encode($data));
-        $response = $request->send();
+        $response = $testObject->send($request);
+
         $dataResponse = json_decode($response->getBody(true), true);
         $id = $dataResponse['id'];
         $testObject->assertNotNull($id);
 
-        $testObject->logDebug("  DONE\n");
-        $testObject->logDebug("  --------------------- \n");
+        $testObject->logDebug("entity $id has been created");
+        $testObject->logDebug("--------------------- ");
 
-        return $id;
+        return $dataResponse;
     }
 
 }

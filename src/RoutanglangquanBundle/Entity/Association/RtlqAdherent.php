@@ -103,12 +103,30 @@ class RtlqAdherent {
 
     /**
      *
-     * @var \DateTime @ORM\Column(name="date_last_auth", type="date", nullable=false)
+     * @var \DateTime @ORM\Column(name="date_last_auth", type="date", nullable=true)
      */
     private $dateLastAuth;
 
     /**
-     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqGroupe", mappedBy="adherents")
+     *
+     * @var string @ORM\Column(name="licence_number", type="string", length=100, nullable=true)
+     */
+    private $licenceNumber;
+    
+    /**
+     *
+     * @var string @ORM\Column(name="licence_etat", type="string", length=100, nullable=true)
+     */
+    private $licenceEtat;
+    
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqGroupe")
+     * @ORM\JoinTable(name="adherents_groupes",
+     *      joinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="groupe_id", referencedColumnName="id")}
+     *      )
+
      */
     private $groupes;
 
@@ -121,12 +139,21 @@ class RtlqAdherent {
      */
     private $cotisations;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie")
+     * @ORM\JoinTable(name="adherents_tresories",
+     *      joinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="tresorie_id", referencedColumnName="id_tresorie")}
+     *      )
+     */
+    private $tresories;
+
     public function __construct() {
         $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->cotisations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tresories = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    // TODO cotisations pour une saison
     // TODO licence as object
     // TODO adherentForum as object
 
@@ -495,9 +522,54 @@ class RtlqAdherent {
         $this->dateLastAuth = $dateLastAuth;
         return $this;
     }
+
     public function setId($id) {
         $this->id = $id;
         return $this;
     }
+
+    /**
+     * Add tresorie
+     *
+     * @param \RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie $tresories
+     *
+     * @return RtlqTresorie
+     */
+    public function addTresorie(\RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie $tresorie) {
+        $this->tresories[] = $tresorie;
+
+        return $this;
+    }
+
+    /**
+     * Remove tresorie
+     *
+     * @param \RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie $tresorie
+     */
+    public function removeTresorie(\RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie $tresorie) {
+        $this->tresories->removeElement($tresorie);
+    }
+    public function getTresories() {
+        return $this->tresories;
+    }
+
+    public function getLicenceNumber() {
+        return $this->licenceNumber;
+    }
+
+    public function getLicenceEtat() {
+        return $this->licenceEtat;
+    }
+
+    public function setLicenceNumber($licenceNumber) {
+        $this->licenceNumber = $licenceNumber;
+        return $this;
+    }
+
+    public function setLicenceEtat($licenceEtat) {
+        $this->licenceEtat = $licenceEtat;
+        return $this;
+    }
+
 
 }

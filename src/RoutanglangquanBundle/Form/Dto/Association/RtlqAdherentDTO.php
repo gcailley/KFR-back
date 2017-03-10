@@ -24,12 +24,16 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     protected $ville;
     protected $date_creation;
     protected $date_last_auth;
+    protected $licence_number;
+    protected $licence_etat;
     protected $groupes;
     protected $cotisations;
+    protected $tresories;
 
     public function __construct() {
         $this->groupes = array();
         $this->cotisations = array();
+        $this->tresories = array();
     }
 
     public function addGroupe($groupe) {
@@ -39,6 +43,11 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
 
     public function addCotisation($cotisation) {
         $this->cotisations[] = $cotisation;
+        return $this;
+    }
+
+    public function addTresorie($tresorie) {
+        $this->tresories[] = $tresorie;
         return $this;
     }
 
@@ -185,5 +194,33 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
         $this->cotisations = $cotisations;
         return $this;
     }
+
+    public function setTresories($tresories) {
+        $this->tresories = $tresories;
+        return $this;
+    }
+
+    public function getTresories() {
+        return $this->tresories;
+    }
+    public function getLicenceNumber() {
+        return $this->licence_number;
+    }
+
+    public function getLicenceEtat() {
+        return $this->licence_etat;
+    }
+
+    public function setLicenceNumber($licence_number) {
+        $this->licence_number = $licence_number;
+        return $this;
+    }
+
+    public function setLicenceEtat($licence_etat) {
+        $this->licence_etat = $licence_etat;
+        return $this;
+    }
+
+
 
 }

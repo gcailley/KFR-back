@@ -51,8 +51,8 @@ class CotisationControllerTest extends AbstractRtlqCrudTest {
         }
         
         public  function init() {
-            $this->idSaison = $this->getUtil()->creationSaison();
-            $this->idCategorie = $this->getUtil()->creationCategorie();               
+            $this->idSaison = $this->getUtil()->creationSaison()['id'];
+            $this->idCategorie = $this->getUtil()->creationCategorie()['id'];               
         }
 
 }

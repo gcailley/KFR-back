@@ -11,7 +11,7 @@ use RoutanglangquanBundle\Entity\AbstractRtlqEntity;
  * @ORM\Table(name="rtlq_saison", 
  * uniqueConstraints={@ORM\UniqueConstraint(name="nom", columns={"nom"})}, 
  * indexes={@ORM\Index(name="id", columns={"id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="RoutanglangquanBundle\Repository\Saison\SaisonRepository")
  */
 class RtlqSaison extends AbstractRtlqEntity {
     /**

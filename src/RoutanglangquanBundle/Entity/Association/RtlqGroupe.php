@@ -2,7 +2,10 @@
 
 namespace RoutanglangquanBundle\Entity\Association;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use RoutanglangquanBundle\Entity\AbstractRtlqEntity;
 
 /**
  * RtlqGroupe
@@ -12,8 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  * indexes={@ORM\Index(name="id", columns={"id"})})
  * @ORM\Entity
  */
-class RtlqGroupe
-{
+class RtlqGroupe extends AbstractRtlqEntity {
+
     /**
      * @var integer
      *
@@ -36,37 +39,32 @@ class RtlqGroupe
      */
     private $adherents;
 
-    
     public function __construct() {
-    	$this->adherents = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->adherents = new ArrayCollection();
     }
-        
-    
 
     /**
      * Get id
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
-    
+
     public function setId($id) {
         $this->id = $id;
         return $this;
     }
 
-        /**
+    /**
      * Set nom
      *
      * @param string $nom
      *
      * @return RtlqGroupe
      */
-    public function setNom($nom)
-    {
+    public function setNom($nom) {
         $this->nom = $nom;
 
         return $this;
@@ -77,20 +75,18 @@ class RtlqGroupe
      *
      * @return string
      */
-    public function getNom()
-    {
+    public function getNom() {
         return $this->nom;
     }
 
     /**
      * Add adherent
      *
-     * @param \RoutanglangquanBundle\Entity\Association\RtlqAdherent $adherent
+     * @param RtlqAdherent $adherent
      *
      * @return RtlqGroupe
      */
-    public function addAdherent(\RoutanglangquanBundle\Entity\Association\RtlqAdherent $adherent)
-    {
+    public function addAdherent(RtlqAdherent $adherent) {
         $this->adherents[] = $adherent;
 
         return $this;
@@ -99,20 +95,19 @@ class RtlqGroupe
     /**
      * Remove adherent
      *
-     * @param \RoutanglangquanBundle\Entity\Association\RtlqAdherent $adherent
+     * @param RtlqAdherent $adherent
      */
-    public function removeAdherent(\RoutanglangquanBundle\Entity\Association\RtlqAdherent $adherent)
-    {
+    public function removeAdherent(RtlqAdherent $adherent) {
         $this->adherents->removeElement($adherent);
     }
 
     /**
      * Get adherents
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getAdherents()
-    {
+    public function getAdherents() {
         return $this->adherents;
     }
+
 }

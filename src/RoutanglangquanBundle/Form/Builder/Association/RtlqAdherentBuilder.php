@@ -26,15 +26,19 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
         $modele->setAvatar($postModele->getAvatar());
         $modele->setDateCreation($postModele->getDateCreation());
         $modele->setDateLastAuth($postModele->getDateLastAuth());
+        $modele->setLicenceNumber($postModele->getLicenceNumber());
+        $modele->setLicenceEtat($postModele->getLicenceEtat());
 
-       
+
         foreach ($postModele->getGroupes() as $groupeId) {
             $modele->addGroupe($em->getReference("RoutanglangquanBundle\Entity\Association\RtlqGroupe", $groupeId()));
         }
         foreach ($postModele->getCotisations() as $cotisationId) {
             $modele->addCotisation($em->getReference("RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation", $cotisationId()));
         }
-
+        foreach ($postModele->getTresories() as $tresorieId) {
+            $modele->addTresorie($em->getReference("RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie", $tresorieId()));
+        }
         return $modele;
     }
 
@@ -58,15 +62,20 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
         $dto->setAvatar($modele->getAvatar());
         $dto->setDateCreation($this->dateToString($modele->getDateCreation()));
         $dto->setDateLastAuth($this->dateToString($modele->getDateLastAuth()));
+        $dto->setLicenceNumber($modele->getLicenceNumber());
+        $dto->setLicenceEtat($modele->getLicenceEtat());
 
         
+
         foreach ($modele->getGroupes() as $groupe) {
             $dto->addGroupe($groupe->getId());
         }
         foreach ($modele->getCotisations() as $cotisation) {
             $dto->addCotisation($cotisation->getId());
         }
-
+        foreach ($modele->getTresories() as $tresorie) {
+            $dto->addTresorie($tresorie->getId());
+        }
 
         return $dto;
     }

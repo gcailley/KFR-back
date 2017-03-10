@@ -3,6 +3,9 @@
 namespace RoutanglangquanBundle\Entity\Cotisation;
 
 use Doctrine\ORM\Mapping as ORM;
+use RoutanglangquanBundle\Entity\AbstractRtlqEntity;
+use RoutanglangquanBundle\Entity\Saison\RtlqSaison;
+use RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie;
 
 /**
  * RtlqCotisation
@@ -11,81 +14,89 @@ use Doctrine\ORM\Mapping as ORM;
  * indexes={@ORM\Index(name="id", columns={"id"})})
  * @ORM\Entity
  */
-class RtlqCotisation {
-	/**
-	 *
-	 * @var integer @ORM\Column(name="id", type="integer", nullable=false)
-	 *      @ORM\Id
-	 *      @ORM\GeneratedValue(strategy="IDENTITY")
-	 */
-	private $id;
-	
-	/**
-	 *
-	 * @var string @ORM\Column(name="description", type="string", length=100, nullable=false)
-	 */
-	private $description;
-	
-	/**
-	 *
-	 * @var string @ORM\Column(name="cotisation", type="integer", nullable=false)
-	 */
-	private $cotisation;
-	
-	/**
-	 *
-	 * @var string @ORM\Column(name="repartition_cheque", type="string", length=15, nullable=false)
-	 */
-	private $repartitionCheque;
-	
-	/**
-	 * @var boolean
-	 *
-	 * @ORM\Column(name="active", type="boolean", nullable=false)
-	 */
-	private $active;
-	
-	/**
-	 *
-	 * @var integer 
-	 * 
-	 * @ORM\ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Saison\RtlqSaison", cascade={"persist"})
-	 * @ORM\JoinColumn(nullable=false)
-	 */
-	private $saison;
-	
-	/**
-	 * @var RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie
-	 *
-	 * @ORM\ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie", cascade={"persist"})
-	 * @ORM\JoinColumn(nullable=false)
-	 */
-	private $categorie;
+class RtlqCotisation extends AbstractRtlqEntity {
+
+    /**
+     *
+     * @var integer @ORM\Column(name="id", type="integer", nullable=false)
+     *      @ORM\Id
+     *      @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     *
+     * @var string @ORM\Column(name="description", type="string", length=100, nullable=false)
+     */
+    private $description;
+
+    /**
+     *
+     * @var string @ORM\Column(name="cotisation", type="integer", nullable=false)
+     */
+    private $cotisation;
+
+    /**
+     *
+     * @var string @ORM\Column(name="repartition_cheque", type="string", length=15, nullable=false)
+     */
+    private $repartitionCheque;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="active", type="boolean", nullable=false)
+     */
+    private $active;
+
+    /**
+     *
+     * @var integer 
+     * 
+     * @ORM\ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Saison\RtlqSaison", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $saison;
+
+    /**
+     * @var RtlqTresorieCategorie
+     *
+     * @ORM\ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $categorie;
+
+    public function isNotIntowithTheSameSeasonInto($collections) {
+        foreach ($collections as $key => $value) {
+            if ($this->isEquals($value) || $this->getSaisonId() == $value->getSaisonId()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Get id
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
-    
+
     public function setId($id) {
         $this->id = $id;
         return $this;
     }
 
-        /**
+    /**
      * Set description
      *
      * @param string $description
      *
      * @return RtlqCotisation
      */
-    public function setDescription($description)
-    {
+    public function setDescription($description) {
         $this->description = $description;
 
         return $this;
@@ -96,8 +107,7 @@ class RtlqCotisation {
      *
      * @return string
      */
-    public function getDescription()
-    {
+    public function getDescription() {
         return $this->description;
     }
 
@@ -108,8 +118,7 @@ class RtlqCotisation {
      *
      * @return RtlqCotisation
      */
-    public function setCotisation($cotisation)
-    {
+    public function setCotisation($cotisation) {
         $this->cotisation = $cotisation;
 
         return $this;
@@ -120,8 +129,7 @@ class RtlqCotisation {
      *
      * @return \int
      */
-    public function getCotisation()
-    {
+    public function getCotisation() {
         return $this->cotisation;
     }
 
@@ -132,8 +140,7 @@ class RtlqCotisation {
      *
      * @return RtlqCotisation
      */
-    public function setRepartitionCheque($repartitionCheque)
-    {
+    public function setRepartitionCheque($repartitionCheque) {
         $this->repartitionCheque = $repartitionCheque;
 
         return $this;
@@ -144,8 +151,7 @@ class RtlqCotisation {
      *
      * @return string
      */
-    public function getRepartitionCheque()
-    {
+    public function getRepartitionCheque() {
         return $this->repartitionCheque;
     }
 
@@ -156,8 +162,7 @@ class RtlqCotisation {
      *
      * @return RtlqCotisation
      */
-    public function setActive($active)
-    {
+    public function setActive($active) {
         $this->active = $active;
 
         return $this;
@@ -168,20 +173,18 @@ class RtlqCotisation {
      *
      * @return boolean
      */
-    public function getActive()
-    {
+    public function getActive() {
         return $this->active;
     }
 
     /**
      * Set saison
      *
-     * @param \RoutanglangquanBundle\Entity\Saison\RtlqSaison $saison
+     * @param RtlqSaison $saison
      *
      * @return RtlqCotisation
      */
-    public function setSaison(\RoutanglangquanBundle\Entity\Saison\RtlqSaison $saison)
-    {
+    public function setSaison(RtlqSaison $saison) {
         $this->saison = $saison;
 
         return $this;
@@ -190,25 +193,24 @@ class RtlqCotisation {
     /**
      * Get saison
      *
-     * @return \RoutanglangquanBundle\Entity\Saison\RtlqSaison
+     * @return RtlqSaison
      */
-    public function getSaison()
-    {
+    public function getSaison() {
         return $this->saison;
     }
-    public function getSaisonId()
-    {
-        return $this->saison!=null?$this->saison->getId():null;
+
+    public function getSaisonId() {
+        return $this->saison != null ? $this->saison->getId() : null;
     }
+
     /**
      * Set categorie
      *
-     * @param \RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie $categorie
+     * @param RtlqTresorieCategorie $categorie
      *
      * @return RtlqCotisation
      */
-    public function setCategorie(\RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie $categorie)
-    {
+    public function setCategorie(RtlqTresorieCategorie $categorie) {
         $this->categorie = $categorie;
 
         return $this;
@@ -217,14 +219,14 @@ class RtlqCotisation {
     /**
      * Get categorie
      *
-     * @return \RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie
+     * @return RtlqTresorieCategorie
      */
-    public function getCategorie()
-    {
+    public function getCategorie() {
         return $this->categorie;
     }
-    public function getCategorieId()
-    {
-        return $this->categorie!=null?$this->categorie->getId():null;
+
+    public function getCategorieId() {
+        return $this->categorie != null ? $this->categorie->getId() : null;
     }
+
 }
