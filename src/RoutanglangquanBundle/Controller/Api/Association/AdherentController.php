@@ -192,7 +192,7 @@ class AdherentController extends AbstractCrudApiController {
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $dto = $this->builder->modeleToDto($entity);
+        $dto = $this->builder->modeleToDto($entity);        
         return new Response(json_encode($dto->getTresories()), 201);
     }
 

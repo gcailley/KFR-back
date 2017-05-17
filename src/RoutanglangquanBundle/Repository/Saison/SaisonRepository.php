@@ -20,10 +20,10 @@ class SaisonRepository extends EntityRepository {
 
     public function findAllSeasonFilterByActive($active) {
 
-        $request = 'SELECT s FROM RoutanglangquanBundle:Saison\RtlqSaison s WHERE s.active';
-        $request .= $active ? "=true" : "=false";
+        $request = 'SELECT s FROM RoutanglangquanBundle:Saison\RtlqSaison s WHERE s.active=:active';
         return $this->getEntityManager()
                         ->createQuery($request)
+                        ->setParameter("active", $active ? "true" : "false")
                         ->getResult();
     }
 

@@ -4,4 +4,7 @@ routanglangquan:
 
 app:
     resource: "@AppBundle/Controller/"
-    type:     annotation	
+    type:     annotation
+    
+logout:
+    path: /logout    

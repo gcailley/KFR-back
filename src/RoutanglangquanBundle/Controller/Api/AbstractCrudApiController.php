@@ -27,6 +27,12 @@ abstract class AbstractCrudApiController extends Controller {
         $this->builder = $this->getBuilder();
     }
 
+    private function newResponse($data, $code) {
+        $response = new Response($data, $code);
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        return $response;
+    }
+    
     /**
      * @Route("/{id}")
      * @Method("GET")
@@ -38,7 +44,8 @@ abstract class AbstractCrudApiController extends Controller {
             throw $this->createNotFoundException();
         }
         $dto_tresorie = $this->builder->modeleToDto($tresorie);
-        return new Response(json_encode($dto_tresorie), 201);
+        
+        return  $this->newResponse(json_encode($dto_tresorie), 201);        
     }
 
     /**
@@ -49,7 +56,7 @@ abstract class AbstractCrudApiController extends Controller {
         $tresories = $this->getDoctrine()->getRepository($this->getName())->findAll();
 
         $dto_tresories = $this->builder->modelesToDtos($tresories);
-        return new Response(json_encode($dto_tresories), 201);
+        return $this->newResponse(json_encode($dto_tresories), 201);
     }
 
     /**
@@ -80,7 +87,7 @@ abstract class AbstractCrudApiController extends Controller {
         $em->flush();
 
         $dto = $this->builder->modeleToDto($entity);
-        return new Response(json_encode($dto), 201);
+        return $this->newResponse(json_encode($dto), 201);
     }
 
     protected function preConditionCreationAction($em, $entityMetier) {
@@ -121,7 +128,7 @@ abstract class AbstractCrudApiController extends Controller {
         $em->flush();
 
         $dto = $this->builder->modeleToDto($entityMetier);
-        return new Response(json_encode($dto), 201);
+        return $this->newResponse(json_encode($dto), 201);
     }
 
     /**
@@ -139,7 +146,7 @@ abstract class AbstractCrudApiController extends Controller {
         $em->remove($tresorie);
         $em->flush();
 
-        return new Response(null, 201);
+        return $this->newResponse(null, 201);
     }
 
     public function createInvalideBean($errors = array()) {

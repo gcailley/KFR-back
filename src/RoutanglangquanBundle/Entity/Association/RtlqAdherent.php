@@ -126,7 +126,6 @@ class RtlqAdherent {
      *      joinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="groupe_id", referencedColumnName="id")}
      *      )
-
      */
     private $groupes;
 
@@ -140,14 +139,12 @@ class RtlqAdherent {
     private $cotisations;
 
     /**
-     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie")
-     * @ORM\JoinTable(name="adherents_tresories",
-     *      joinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="tresorie_id", referencedColumnName="id_tresorie")}
-     *      )
+     * @OneToMany(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie", mappedBy="adherent")
      */
     private $tresories;
 
+    
+    
     public function __construct() {
         $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->cotisations = new \Doctrine\Common\Collections\ArrayCollection();

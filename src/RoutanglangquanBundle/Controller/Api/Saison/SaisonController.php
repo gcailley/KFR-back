@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
 use RoutanglangquanBundle\Repository\Saison\SaisonRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("/api/saisons")
@@ -63,6 +64,7 @@ class SaisonController extends AbstractCrudApiController {
     /**
      * @Route("", name="active")
      * @Method("GET")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function getAllActiveAction(Request $request) {
         $active = $request->query->get('active')=="true";
