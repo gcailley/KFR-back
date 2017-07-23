@@ -15,7 +15,7 @@ use Controller\Saison\SaisonControllerTest;
 use Controller\Tresorie\TresoriesCategorieControllerTest;
 use Controller\Tresorie\TresoriesControllerTest;
 use Controller\Tresorie\TresoriesEtatControllerTest;
-
+use Controller\AbstractRtlqCrudTest;
 
 /**
  * Description of newPHPClass
@@ -25,12 +25,51 @@ use Controller\Tresorie\TresoriesEtatControllerTest;
 class CreateToolsTest {
 
     protected $level;
+    protected $saisonControllerTest = null;
+    protected $saison = null;
+    protected $tresoriesCategorieControllerTest = null;
+    protected $categorie = null;
+    protected $tresoriesEtatControllerTest = null;
+    protected $etat=null;
+    protected $groupeControllerTest=null;
+    protected $groupe=null;
+    protected $cotisationControllerTest=null;
+    protected $cotisation=null;
+    protected $adherentControllerTest =null;
+    protected $adherent=null;
+    protected $tresoriesControllerTest =null;
+    protected $tresories=null;
+    
 
-    public function __construct($level=3) {
+
+    /**
+     * @var Singleton
+     * @access private
+     * @static
+     */
+    private static $_instance = null;
+
+    /**
+     * Méthode qui crée l'unique instance de la classe
+     * si elle n'existe pas encore puis la retourne.
+     *
+     * @param void
+     * @return Singleton
+     */
+    public static function getInstance($level = 3) {
+
+        if (is_null(self::$_instance)) {
+            self::$_instance = new CreateToolsTest($level);
+        }
+
+        return self::$_instance;
+    }
+
+    public function __construct($level) {
         $this->level = $level;
     }
 
-    public function logDebug($myDebugVar, $newligne = true) {        
+    public function logDebug($myDebugVar, $newligne = true) {
         if ($this->level > 2) {
             fwrite(STDOUT, print_r("   DEBUG > " . $myDebugVar, TRUE));
             if ($newligne)
@@ -39,53 +78,131 @@ class CreateToolsTest {
     }
 
     public function creationSaison() {
-        $this->logDebug("SaisonsControllerTest  : initializing");
-        $testEntity = new SaisonControllerTest();
-        $this->logDebug("SaisonsControllerTest  : created");
+        if ($this->saison != null) {
+            return $this->saison;
+        }
 
-        $this->logDebug("Saisons sendAndExtract : running");
-        var_dump($this->sendAndExtract(null));
-        $output = $this->sendAndExtract($testEntity);
-        $this->logDebug("Saisons sendAndExtract : done");
-        
-        return $output;
+        $this->logDebug("=======" . __METHOD__ . "=======");
+        $this->saisonControllerTest = new SaisonControllerTest();
+        $this->saisonControllerTest->init();
+        $this->saison = $this->getData($this->saisonControllerTest);
+        if ($this->saison == null) {
+            $this->saison = $this->sendAndExtract($this->saisonControllerTest);
+        }
+
+        return $this->saison;
     }
 
     public function creationCategorie() {
-        $testEntity = new TresoriesCategorieControllerTest();
-        return $this->sendAndExtract($testEntity);
+        if ($this->categorie != null) {
+            return $this->categorie;
+        }
+        $this->logDebug("=======" . __METHOD__ . "=======");
+
+        $this->tresoriesCategorieControllerTest = new TresoriesCategorieControllerTest();
+        $this->tresoriesCategorieControllerTest->init();
+        $this->categorie= $this->getData($this->tresoriesCategorieControllerTest);
+        if ($this->categorie == null) {
+            $this->categorie = $this->sendAndExtract($this->tresoriesCategorieControllerTest);
+        }
+        return $this->categorie;
     }
 
     public function creationEtat() {
-        $testEntity = new TresoriesEtatControllerTest();
-        return $this->sendAndExtract($testEntity);
+        if ($this->etat != null) {
+            return $this->etat;
+        }
+        
+        $this->logDebug("=======" . __METHOD__ . "=======");
+        $this->tresoriesEtatControllerTest = new TresoriesEtatControllerTest();
+        $this->tresoriesEtatControllerTest->init();
+        
+        $this->etat = $this->getData($this->tresoriesEtatControllerTest);
+        if ($this->etat  == null) {
+            $this->etat = $this->sendAndExtract($this->tresoriesEtatControllerTest);
+        }
+        
+
+        return $this->etat;
     }
 
     public function creationCotisation($data = array()) {
+        if ($this->cotisation != null) {
+            return $this->cotisation;
+        }
+        
+        $this->logDebug("=======" . __METHOD__ . "=======");
+        $this->cotisationControllerTest = new CotisationControllerTest();
+        $this->cotisationControllerTest ->init();
+        $this->cotisation = $this->sendAndExtract($this->cotisationControllerTest );
+
+        return $this->cotisation;
+        
+        
+        $this->logDebug("=======" . __METHOD__ . "=======");
         $testEntity = new CotisationControllerTest();
+        $testEntity->init();
+
         return $this->sendAndExtract($testEntity, $data);
     }
 
     public function creationAdherent() {
-        $testEntity = new AdherentControllerTest();
-        return $this->sendAndExtract($testEntity);
+        if ($this->adherent != null) {
+            return $this->adherent;
+        }
+        
+        $this->logDebug("=======" . __METHOD__ . "=======");
+        $this->adherentControllerTest = new AdherentControllerTest();
+        $this->adherentControllerTest ->init();
+        $this->adherent = $this->sendAndExtract($this->adherentControllerTest );
+
+        return $this->adherent;
     }
 
     public function creationGroupe() {
-        $testEntity = new GroupeControllerTest();
-        return $this->sendAndExtract($testEntity);
+        if ($this->groupe != null) {
+            return $this->groupe;
+        }
+        
+        $this->logDebug("=======" . __METHOD__ . "=======");
+        $this->groupeControllerTest = new GroupeControllerTest();
+        $this->groupeControllerTest->init();
+        $this->groupe = $this->sendAndExtract($this->groupeControllerTest);
+
+        return $this->groupe;
     }
 
-    public function creationTresorie() {
+    public function creationTresorie($createNew=true, $withAdherent=true) {
+        if ($this->tresories != null) {
+            return $this->tresories;
+        }
+        
+        $this->logDebug("=======" . __METHOD__ . "=======");
+        $this->tresoriesControllerTest = new TresoriesControllerTest();
+        $this->tresoriesControllerTest ->init($withAdherent);
+        
+        if (!$createNew) {
+            $this->tresories = $this->getData($this->tresoriesControllerTest);
+        }
+        if ($this->tresories  == null) {
+            $this->tresories = $this->sendAndExtract($this->tresoriesControllerTest);
+        }
+        
+        $this->tresories = $this->sendAndExtract($this->tresoriesControllerTest );
+
+        return $this->tresories;
+        
+        
+        $this->logDebug("=======" . __METHOD__ . "=======");
         $testEntity = new TresoriesControllerTest();
+        $testEntity->init();
+
         return $this->sendAndExtract($testEntity);
     }
 
     private function sendAndExtract(AbstractRtlqCrudTest $testObject, $data2 = array(), $params = null) {
-        print("sendAndExtract : initializing");
-//        $testObject->init();
-        print("sendAndExtract : initialized");
-        
+        $this->logDebug("=======" . __METHOD__ . "=======");
+
         $data = $testObject->getDataForPost();
         $data = array_replace($data, $data2);
 
@@ -94,7 +211,7 @@ class CreateToolsTest {
         $this->logDebug(json_encode($data));
 
         $request = $testObject->getClient()->post(AbstractRtlqCrudTest::URL_BACK . $testObject->getApiName(), $params, json_encode($data));
-        $response = $testObject->send($request);
+        $response = $testObject->send($request, 201);
 
         $dataResponse = json_decode($response->getBody(true), true);
         $id = $dataResponse['id'];
@@ -105,4 +222,27 @@ class CreateToolsTest {
 
         return $dataResponse;
     }
+
+    private function getData(AbstractRtlqCrudTest $testObject) {
+        $this->logDebug("=======" . __METHOD__ . "=======");
+        $this->logDebug("Extracting " . $testObject->getApiName());
+        $this->logDebug(AbstractRtlqCrudTest::URL_BACK . $testObject->getApiName());
+
+        $request = $testObject->getClient()->get(AbstractRtlqCrudTest::URL_BACK . $testObject->getApiName(), null, null);
+        $response = $testObject->send($request, 201);
+
+        $dataResponse = json_decode($response->getBody(true), true);
+        if (sizeof($dataResponse) > 0) {
+            $dataResponse = $dataResponse[0];
+            $id = $dataResponse['id'];
+            $testObject->assertNotNull($id);
+
+            $testObject->logDebug("entity $id has been created");
+            $testObject->logDebug("--------------------- ");
+        } else {
+            $dataResponse = null;
+        }
+        return $dataResponse;
+    }
+
 }

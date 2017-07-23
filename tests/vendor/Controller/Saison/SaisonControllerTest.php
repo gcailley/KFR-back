@@ -6,7 +6,7 @@ use Controller\AbstractRtlqCrudTest;
 use function GuzzleHttp\json_encode;
 
 class SaisonControllerTest extends AbstractRtlqCrudTest {
-
+       
     public function getApiName() {
         return '/api/saisons';
     }
@@ -88,9 +88,6 @@ class SaisonControllerTest extends AbstractRtlqCrudTest {
         } 
     }
 
-    
-    
-    
     public function testPostSaisonActive() {
         //ecriture une saison active
         $data = $this->getDataForPost();

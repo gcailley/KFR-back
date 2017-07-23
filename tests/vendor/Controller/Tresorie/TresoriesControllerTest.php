@@ -11,6 +11,8 @@ class TresoriesControllerTest extends AbstractRtlqCrudTest {
     private $idSaison;
     private $idCategorie;
     private $idEtat;
+    private $idAdherent;
+    private $pathGetByUser = "/by-user-";
 
     public function getApiName() {
         return '/api/tresorie/tresories';
@@ -19,7 +21,7 @@ class TresoriesControllerTest extends AbstractRtlqCrudTest {
     public function getDataForPost() {
         $data = array(
             "description" => "Description" . time(),
-            "adherent" => "Adherent" . time(),
+            "adherent_name" => "Adherent" . time(),
             "montant" => rand(0, 999),
             "responsable" => "Responsable" . time(),
             "numero_cheque" => rand(1, 999999),
@@ -27,7 +29,8 @@ class TresoriesControllerTest extends AbstractRtlqCrudTest {
             "cheque" => false,
             "etat_id" => $this->idEtat,
             "saison_id" => $this->idSaison,
-            "categorie_id" => $this->idCategorie
+            "categorie_id" => $this->idCategorie,
+            "adherent_id" => $this->idAdherent
         );
         return $data;
     }
@@ -35,7 +38,7 @@ class TresoriesControllerTest extends AbstractRtlqCrudTest {
     public function getDataForPut() {
         $data = array(
             "description" => "DescriptionPut" . time(),
-            "adherent" => "AdherentPut" . time(),
+            "adherent_name" => "AdherentPut" . time(),
             "montant" => rand(0, 999),
             "responsable" => "ResponsablePut" . time(),
             "numero_cheque" => rand(1, 999999),
@@ -43,14 +46,15 @@ class TresoriesControllerTest extends AbstractRtlqCrudTest {
             "cheque" => true,
             "etat_id" => $this->idEtat,
             "saison_id" => $this->idSaison,
-            "categorie_id" => $this->idCategorie
+            "categorie_id" => $this->idCategorie,
+            "adherent_id" => $this->idAdherent
         );
         return $data;
     }
 
     protected function assertDataForPost($data, $dataResponse) {
         $this->assertArrayHasKeyNotNull('description', $dataResponse, $data);
-        $this->assertArrayHasKeyNotNull('adherent', $dataResponse, $data);
+        $this->assertArrayHasKeyNotNull('adherent_name', $dataResponse, $data);
         $this->assertArrayHasKeyNotNull('id', $dataResponse, $data);
         $this->assertArrayHasKeyNotNull('montant', $dataResponse, $data);
         $this->assertArrayHasKeyNotNull('responsable', $dataResponse, $data);
@@ -60,6 +64,7 @@ class TresoriesControllerTest extends AbstractRtlqCrudTest {
         $this->assertArrayHasKeyNotNull('etat_id', $dataResponse, $data);
         $this->assertArrayHasKeyNotNull('saison_id', $dataResponse, $data);
         $this->assertArrayHasKeyNotNull('categorie_id', $dataResponse, $data);
+        $this->assertArrayHasKeyNotNull('adherent_id', $dataResponse, $data);
     }
 
     protected function assertPreConditions() {
@@ -67,10 +72,26 @@ class TresoriesControllerTest extends AbstractRtlqCrudTest {
         $this->init();
     }
 
-    public function init() {
-        $this->idSaison = $this->getUtil()->creationSaison();
-        $this->idCategorie = $this->getUtil()->creationCategorie();
-        $this->idEtat = $this->getUtil()->creationEtat();
+    public function init($withAdherent=true) {
+        $this->idSaison = $this->getUtil()->creationSaison()['id'];
+
+        $this->idCategorie = $this->getUtil()->creationCategorie()['id'];
+
+        $this->idEtat = $this->getUtil()->creationEtat()['id'];
+
+        if ($withAdherent) {
+            $this->idAdherent = $this->getUtil()->creationAdherent()['id'];        
+        }
+    }
+
+    public function testGetByUser() {
+        $request = $this->getClient()->get(self::URL_BACK . $this->getApiName() . "/" . $this->pathGetByUser . $this->data->adherent, null, null);
+        $response = $this->send($request, 201, json_encode($data));
+        $dataResponse = json_decode($response->getBody(true), true);
+        $this->assertNotNull($dataResponse);
+
+        $this->assertDataForPost($data, $dataResponse);
+        return $dataResponse;
     }
 
 }

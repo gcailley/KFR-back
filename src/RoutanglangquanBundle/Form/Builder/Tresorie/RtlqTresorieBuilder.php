@@ -16,7 +16,7 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder {
 		$modele->setId ( $postModele->getId () );
 		$modele->setDescription ( $postModele->getDescription () );
 		$modele->setResponsable ( $postModele->getResponsable () );
-		$modele->setAdherent ( $postModele->getAdherent () );
+		$modele->setAdherentName ( $postModele->getAdherentName () );
 		$modele->setDateCreation ( $postModele->getDateCreation () );
 		$modele->setMontant ( $postModele->getMontant () );
 		$modele->setCheque ( $postModele->getCheque () );
@@ -25,7 +25,10 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder {
 		$modele->setEtat ( $em->getReference ( "RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieEtat", $postModele->getEtatId () ) );
 		$modele->setCategorie ( $em->getReference ( "RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie", $postModele->getCategorieId () ) );
 		$modele->setSaison ( $em->getReference ( "RoutanglangquanBundle\Entity\Saison\RtlqSaison", $postModele->getSaisonId () ) );
-		
+		if ($postModele->getAdherentId () != null) {
+                    $modele->setAdherent ( $em->getReference ( "RoutanglangquanBundle\Entity\Association\RtlqAdherent", c ) );
+                }
+                
 		return $modele;
 	}
 	
@@ -36,7 +39,7 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder {
 		$dto->setId ( $modele->getId () );
 		$dto->setDescription ( $modele->getDescription () );
 		$dto->setResponsable ( $modele->getResponsable () );
-		$dto->setAdherent ( $modele->getAdherent () );
+		$dto->setAdherentName ( $modele->getAdherentName () );
 		$dto->setDateCreation ( $this->dateToString ( $modele->getDateCreation () ) );
 		$dto->setMontant ( $modele->getMontant () );
 		$dto->setCheque ( $modele->getCheque () );
@@ -45,7 +48,8 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder {
 		$dto->setEtatId ( $modele->getEtatId () );
 		$dto->setCategorieId ( $modele->getCategorieId () );
 		$dto->setSaisonId ( $modele->getSaisonId () );
-		
+		$dto->setAdherentId ( $modele->getAdherentId () );
+                
 		return $dto;
 	}
 }

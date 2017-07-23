@@ -19,12 +19,13 @@ use RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie;
 class TresorieRepository extends EntityRepository {
 
     public function findAllTresorieFilterByAdherent($adherent_id) {
+        $query = $this->createQueryBuilder('t')
+                        ->innerJoin('t.adherent', 'a')
+                        ->where('a.id = :adherent_id')
+                        ->setParameter('adherent_id', $adherent_id)
+                        ->getQuery()->getResult();
 
-        $request = 'SELECT s FROM RoutanglangquanBundle:Tresorie\RtlqTresorie s WHERE s.adherent_id=:adherent_id';
-        return $this->getEntityManager()
-                        ->createQuery($request)
-                        ->setParameter("adherent_id", $adherent_id)
-                        ->getResult();
+        return $query;
     }
 
 }

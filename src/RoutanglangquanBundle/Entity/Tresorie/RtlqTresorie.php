@@ -15,11 +15,15 @@ use RoutanglangquanBundle\Entity\Saison\RtlqSaison;
  * name="rtlq_tresorie",
  * uniqueConstraints={@ORM\UniqueConstraint(
  * name="TRS_ELT",
- * columns={"description", "date_creation", "montant", "adherentName"})},
+ * columns={"description", "date_creation", "montant", "adherent_name"})},
  * indexes={@ORM\Index(name="FK_KFR_TRESORIE", columns={"etat_id"})})
  * @ORM\Entity(repositoryClass="RoutanglangquanBundle\Repository\Tresorie\TresorieRepository")
  */
 class RtlqTresorie extends AbstractRtlqEntity {
+
+    public function __construct() {
+        $adherent = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      *
@@ -43,7 +47,8 @@ class RtlqTresorie extends AbstractRtlqEntity {
 
     /**
      *
-     * @var string @ORM\Column(name="adherent_name", type="string", length=255, nullable=false)
+     * @var string 
+     * @ORM\Column(name="adherent_name", type="string", length=255, nullable=false)
      */
     private $adherentName;
 
@@ -87,17 +92,18 @@ class RtlqTresorie extends AbstractRtlqEntity {
 
     /**
      *
-     * @var RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie @ORM\ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie", cascade={"persist"})
-     *      @ORM\JoinColumn(nullable=false)
+     * @var RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie
+     * @ORM\ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
      */
     private $categorie;
-
-    /*
-     * @ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqAdherent", inversedBy="tresories")
-     * @JoinColumn(name="adherent_id", referencedColumnName="id")
+    
+     /**
+     * @ORM\ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqAdherent", inversedBy="tresories")
+     * @ORM\JoinColumn(name="adherent_id", referencedColumnName="id")
      */
     private $adherent;
-
+    
     /**
      * Get id
      *
@@ -182,6 +188,14 @@ class RtlqTresorie extends AbstractRtlqEntity {
      */
     public function getAdherent() {
         return $this->adherent;
+    }
+ /**
+     * Get Adherent
+     *
+     * @return Interger
+     */
+    public function getAdherentId() {
+        return $this->adherent== null ? null : $this->adherent->getId();
     }
 
     public function getAdherentName() {

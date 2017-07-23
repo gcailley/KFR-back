@@ -2,13 +2,6 @@
 
 namespace Controller;
 
-use Controller\Association\AdherentControllerTest;
-use Controller\Association\GroupeControllerTest;
-use Controller\Cotisation\CotisationControllerTest;
-use Controller\Saison\SaisonsControllerTest;
-use Controller\Tresorie\TresoriesCategorieControllerTest;
-use Controller\Tresorie\TresoriesControllerTest;
-use Controller\Tresorie\TresoriesEtatControllerTest;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\RequestException;
 use Guzzle\Http\Message\RequestInterface;
@@ -21,8 +14,8 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 
     const URL_BACK = "http://localhost/kfr-back/web/app_dev.php";
 
-    private $util;
-    private $debug;
+    private $util = null;
+    private $level = 0;
     private $client;
 
     /**
@@ -35,19 +28,18 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         $this->client = new Client(self::URL_BACK, array(
             'content-type' => 'application/json'
         ));
-        $this->util = new CreatToolsTest();
-        
-        $this->debug = in_array('-vvv', $_SERVER['argv'], true);
-        $this->info = in_array('-vv', $_SERVER['argv'], true);
-        $this->error = in_array('-v', $_SERVER['argv'], true);
-        
     }
 
-    public function init() {
-        
-    }
+    public function init() {}
 
     public function getUtil() {
+        if ($this->util == null) {
+            //TODO ne marche pas $this->level = in_array('-v', $_SERVER['argv'], 3);
+            if (in_array('-v', $_SERVER['argv'])) $this->level = 3;
+            if (in_array('-vv', $_SERVER['argv'])) $this->level = 2;
+            if (in_array('-vvv', $_SERVER['argv'])) $this->level = 3;
+            $this->util = Tools\CreateToolsTest::getInstance($this->level);
+        }
         return $this->util;
     }
 
@@ -56,7 +48,6 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     abstract public function getDataForPost();
 
     abstract protected function assertDataForPost($data, $dataResponse);
-    
 
     public function getDataForPut() {
         return $this->getDataForPost();
@@ -69,23 +60,27 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     protected function assertDataForGet($data, $dataResponse) {
         return $this->assertDataForPost($data, $dataResponse);
     }
-    
-    
-    public function testPost() {
-        $data = $this->getDataForPost();
 
+    public function testPost() {
+        $this->logInfo(__METHOD__);
+        $this->logInfo("getting DataForPost");
+        $data = $this->getDataForPost();
+        $this->logInfo("creating new entity");
         $request = $this->getClient()->post(self::URL_BACK . $this->getApiName(), null, json_encode($data));
         $response = $this->send($request, 201, json_encode($data));
+        $this->logInfo("decoding response");
         $dataResponse = json_decode($response->getBody(true), true);
-        $this->assertNotNull($dataResponse);
-
+        $this->logInfo("checking response");
+        $this->assertNotNull($dataResponse);       
         $this->assertDataForPost($data, $dataResponse);
+        $this->logInfo("***end***");
         return $dataResponse;
     }
 
     public function testGetAll() {
+        $this->logInfo(__METHOD__);
         $request = $this->getClient()->get(self::URL_BACK . $this->getApiName(), null, null);
-        $response = $this->send($request, 201, json_encode($data));
+        $response = $this->send($request, 201);
 
         $dataResponse = json_decode($response->getBody(true), true);
         $this->assertNotNull($dataResponse);
@@ -97,7 +92,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetLast() {
-        $this->logInfo(__METHOD__, true);
+        $this->logInfo(__METHOD__);
         $request = $this->getClient()->get(self::URL_BACK . $this->getApiName(), null, null);
         $response = $this->send($request, 201);
         $dataResponse = json_decode($response->getBody(true), true);
@@ -113,6 +108,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPut() {
+        $this->logInfo(__METHOD__);
         $dataPost = $this->getDataForPost();
         $dataPut = $this->getDataForPut();
 
@@ -132,7 +128,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPutAvecChampUnknown() {
-        $this->logInfo(__METHOD__, true);
+        $this->logInfo(__METHOD__);
         $dataPut = $this->getDataForPut();
 
         $dataPut ['blabclbqsdpqjdpeoq'] = "qsdq";
@@ -153,13 +149,15 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPutNotFound() {
+        $this->logInfo(__METHOD__);
         $dataPut = $this->getDataForPut();
         $idUpdate = 0;
         $request = $this->getClient()->put(self::URL_BACK . $this->getApiName() . '/' . $idUpdate, null, json_encode($dataPut));
-        $response = $this->send($request, 404,  json_encode($dataPut));
+        $response = $this->send($request, 404, json_encode($dataPut));
     }
 
     public function testDeleteLast() {
+        $this->logInfo(__METHOD__);
         $request = $this->getClient()->get(self::URL_BACK . $this->getApiName(), null, null);
         $response = $request->send();
         $dataResponse = json_decode($response->getBody(true), true);
@@ -170,10 +168,10 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         $responseOne = $this->send($requestOne, 201);
         $dataResponseOne = json_decode($responseOne->getBody(true), true);
         $this->assertNull($dataResponseOne);
-        
     }
 
     public function testDeleteNotFound() {
+        $this->logInfo(__METHOD__);
         $request = $this->getClient()->delete(self::URL_BACK . $this->getApiName() . '/0', null, null);
         $this->send($request, 404);
     }
@@ -185,8 +183,8 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     protected function assertArrayHasKeyNotNull($name, $arrayResult, $arrayInitial = array()) {
         $this->assertArrayHasKey($name, $arrayResult, "$name n'est pas dans le tableau de resultats");
         $this->assertNotNull($arrayResult [$name], "$name est NULL et ne devrait pas");
-        if (array_key_exists($name, $arrayInitial)) {
-            $this->assertEquals(trim($arrayInitial [$name]), $arrayResult [$name], "$name n'a pas la même valeur AVANT/APRES stockage en base");
+        if (array_key_exists($name, $arrayInitial)) {   
+            $this->assertEquals(trim($arrayInitial[$name]), $arrayResult [$name], "$name n'a pas la même valeur AVANT/APRES stockage en base");
         }
     }
 
@@ -197,7 +195,6 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     }
 
     protected function getRandomText($length = null, $lengthMin = null, $lengthMax = null) {
-
         if ($lengthMin == null) {
             $lengthMin = random_int(1, $lengthMax == null ? 50 : $lengthMax);
         }
@@ -212,7 +209,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         $alphabe = [" ", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
         for ($i = 0; $i < $length; $i++) {
-            $text[] = $alphabe[random_int(0, sizeof($alphabe))];
+            $text[] = $alphabe[random_int(0, sizeof($alphabe)-1)];
         }
 
         return implode("", $text);
@@ -248,12 +245,13 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
             $response = $request->send();
         } catch (RequestException $e) {
             $response = $e->getRequest()->getResponse();
-            if ($response->getStatusCode() == 500 && $response->getStatusCode() !=  $statusCodeExpected) {
+            if ($response->getStatusCode() == 500 && $response->getStatusCode() != $statusCodeExpected) {
                 $this->logError('[' . $request->getMethod() . "] - " . $request->getUrl());
                 $this->logError($data);
                 $this->logError($response->getHeader("x-debug-error"));
+                $this->logError($response->getHeader("x-debug-token-link"));
                 $this->assertTrue(false, $response->getHeader("x-debug-error"));
-            }
+            }   
         }
         if ($statusCodeExpected != null) {
             $this->assertEquals($statusCodeExpected, $response->getStatusCode(), 'request : [' . $request->getMethod() . "] - " . $request->getUrl());
@@ -289,7 +287,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function logDebug($myDebugVar, $newligne = true) {
-        if ($this->debug) {
+        if ($this->level > 2) {
             fwrite(STDOUT, print_r("   DEBUG > " . $myDebugVar, TRUE));
             if ($newligne)
                 fwrite(STDOUT, print_r("\n", TRUE));
@@ -297,83 +295,17 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function logInfo($myDebugVar, $newligne = true) {
-        if ($this->info || $this->debug) {
+        if ($this->level > 1) {
             fwrite(STDOUT, print_r("INFO > " . $myDebugVar, TRUE));
             if ($newligne)
                 fwrite(STDOUT, print_r("\n", TRUE));
+        } else {
+            print("INFO ??" . $this->level);
         }
     }
 
     public function logError($myDebugVar) {
-        if ($this->error || $this->info || $this->debug) {
-            fwrite(STDERR, print_r("ERROR > " . $myDebugVar . "\n", TRUE));
-        }
-    }
-
-}
-
-/**
- * Description of newPHPClass
- *
- * @author GREGORY
- */
-class CreatToolsTest {
-
-    public function creationSaison() {
-        $testEntity = new SaisonsControllerTest();
-        return $this->sendAndExtract($testEntity);
-    }
-
-    public function creationCategorie() {
-        $testEntity = new TresoriesCategorieControllerTest();
-        return $this->sendAndExtract($testEntity);
-    }
-
-    public function creationEtat() {
-        $testEntity = new TresoriesEtatControllerTest();
-        return $this->sendAndExtract($testEntity);
-    }
-
-    public function creationCotisation($data = array()) {
-        $testEntity = new CotisationControllerTest();
-        return $this->sendAndExtract($testEntity, $data);
-    }
-
-    public function creationAdherent() {
-        $testEntity = new AdherentControllerTest();
-        return $this->sendAndExtract($testEntity);
-    }
-
-    public function creationGroupe() {
-        $testEntity = new GroupeControllerTest();
-        return $this->sendAndExtract($testEntity);
-    }
-
-    public function creationTresorie() {
-        $testEntity = new TresoriesControllerTest();
-        return $this->sendAndExtract($testEntity);
-    }
-
-    private function sendAndExtract(AbstractRtlqCrudTest $testObject, $data2 = array(), $params = null) {
-        $testObject->init();
-        $data = $testObject->getDataForPost();
-        $data = array_replace($data, $data2);
-
-        $testObject->logDebug("Creating " . $testObject->getApiName());
-        $testObject->logDebug(AbstractRtlqCrudTest::URL_BACK . $testObject->getApiName());
-        $testObject->logDebug(json_encode($data));
-
-        $request = $testObject->getClient()->post(AbstractRtlqCrudTest::URL_BACK . $testObject->getApiName(), $params, json_encode($data));
-        $response = $testObject->send($request);
-
-        $dataResponse = json_decode($response->getBody(true), true);
-        $id = $dataResponse['id'];
-        $testObject->assertNotNull($id);
-
-        $testObject->logDebug("entity $id has been created");
-        $testObject->logDebug("--------------------- ");
-
-        return $dataResponse;
+        fwrite(STDERR, print_r("ERROR > " . $myDebugVar . "\n", TRUE));
     }
 
 }

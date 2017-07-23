@@ -121,7 +121,7 @@ class RtlqAdherent {
     
     
     /**
-     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqGroupe")
+     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqGroupe",inversedBy="adherents" )
      * @ORM\JoinTable(name="adherents_groupes",
      *      joinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="groupe_id", referencedColumnName="id")}
@@ -139,7 +139,7 @@ class RtlqAdherent {
     private $cotisations;
 
     /**
-     * @OneToMany(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie", mappedBy="adherent")
+     * @ORM\OneToMany(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie", mappedBy="adherent")
      */
     private $tresories;
 

@@ -64,7 +64,7 @@ class SaisonController extends AbstractCrudApiController {
     /**
      * @Route("", name="active")
      * @Method("GET")
-     * @Security("has_role('ROLE_ADMIN')")
+     * Security("has_role('ROLE_ADMIN')")
      */
     public function getAllActiveAction(Request $request) {
         $active = $request->query->get('active')=="true";

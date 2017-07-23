@@ -29,8 +29,8 @@ security:
                 
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/saison, roles: ROLE_ADMIN }
-        # - { path: ^/api, roles: ROLE_USER }
+        #- { path: ^/api/saison, roles: ROLE_ADMIN }
+        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # activate different ways to authenticate
         # http_basic: ~
         # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate

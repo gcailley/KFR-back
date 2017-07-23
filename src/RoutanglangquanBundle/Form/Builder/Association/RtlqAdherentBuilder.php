@@ -65,16 +65,22 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
         $dto->setLicenceNumber($modele->getLicenceNumber());
         $dto->setLicenceEtat($modele->getLicenceEtat());
 
-        
 
-        foreach ($modele->getGroupes() as $groupe) {
-            $dto->addGroupe($groupe->getId());
+        if ($modele->getGroupes() != null) {
+            foreach ($modele->getGroupes() as $groupe) {
+                $dto->addGroupe($groupe->getId());
+            }
         }
-        foreach ($modele->getCotisations() as $cotisation) {
-            $dto->addCotisation($cotisation->getId());
+
+        if ($modele->getCotisations() != null) {
+            foreach ($modele->getCotisations() as $cotisation) {
+                $dto->addCotisation($cotisation->getId());
+            }
         }
-        foreach ($modele->getTresories() as $tresorie) {
-            $dto->addTresorie($tresorie->getId());
+        if ($modele->getTresories() != null) {
+            foreach ($modele->getTresories() as $tresorie) {
+                $dto->addTresorie($tresorie->getId());
+            }
         }
 
         return $dto;

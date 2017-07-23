@@ -18,7 +18,6 @@ class AdherentControllerTest extends AbstractRtlqCrudTest {
     }
 
     public function getDataForPost() {
-
         $data = array(
             "email" => $this->getRandomEmail(),
             "pwd" => $this->getRandomText(6),
@@ -39,7 +38,6 @@ class AdherentControllerTest extends AbstractRtlqCrudTest {
             "groupes" => [],
             "cotisations" => [],
             "tresories" => []);
-
         return $data;
     }
 
@@ -142,9 +140,11 @@ class AdherentControllerTest extends AbstractRtlqCrudTest {
         $this->idCotisation = $this->_cotisation['id'];
 
         $this->_groupe = $this->getUtil()->creationGroupe();
-        $this->idGroupe = $this->_groupe['id'];
-
-        $this->_tresorie = $this->getUtil()->creationTresorie();
+        $this->idGroupe = $this->_groupe['id'];        
+    }
+    
+    public function initTresorie(){
+        $this->_tresorie = $this->getUtil()->creationTresorie(false);
         $this->idTresorie = $this->_tresorie['id'];
     }
 
@@ -176,12 +176,12 @@ class AdherentControllerTest extends AbstractRtlqCrudTest {
     }
 
     public function testAddCotisation() {
+        $this->logInfo("Creating new adherent");
         $adherent = $this->testPost();
         $adherentId = $adherent['id'];
         $this->logInfo("Adherent $adherentId was created");
 
-        $this->addCotisation($adherentId, $this->idCotisation, 201);
-
+        $this->addCotisation($adherentId, $this->idCotisation, 200);
         $response = $this->getCotisations($adherentId, 201);
         $dataResponse = json_decode($response->getBody(true), true);
         $found = false;
@@ -290,7 +290,7 @@ class AdherentControllerTest extends AbstractRtlqCrudTest {
     }
 
     private function getGroupes($adherentId, $statusCodeExpected = null) {
-        $request = $this->getClient()->get($this->getUrlAddGroupe($adherentId), null, null);
+        $request = $this->getClient()->get($this->getUrlGetGroupes($adherentId), null, null);
         return $this->send($request, $statusCodeExpected);
     }
 
@@ -389,11 +389,12 @@ class AdherentControllerTest extends AbstractRtlqCrudTest {
     }
 
     private function getTresories($adherentId, $statusCodeExpected = null) {
-        $request = $this->getClient()->get($this->getUrlAddTresorie($adherentId), null, null);
+        $request = $this->getClient()->get($this->getUrlGetTresories($adherentId), null, null);
         return $this->send($request, $statusCodeExpected);
     }
 
     public function testAddTresorie() {
+        $this->logDebug("=======" . __METHOD__ . "=======");
         $adherent = $this->testPost();
         $adherentId = $adherent['id'];
         $this->logInfo("Adherent $adherentId was created");
