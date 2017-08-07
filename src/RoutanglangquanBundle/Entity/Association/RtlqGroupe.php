@@ -35,6 +35,7 @@ class RtlqGroupe extends AbstractRtlqEntity {
 
     /**
      * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqAdherent", inversedBy="groupes")
+     * 
      */
     private $adherents;
 
@@ -107,6 +108,10 @@ class RtlqGroupe extends AbstractRtlqEntity {
      */
     public function getAdherents() {
         return $this->adherents;
+    }
+    
+    public function removeAllAdherents() {
+        $this->adherents=[];
     }
 
 }

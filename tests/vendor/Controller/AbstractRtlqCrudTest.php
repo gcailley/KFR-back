@@ -5,6 +5,7 @@ namespace Controller;
 use Guzzle\Http\Client;
 use Guzzle\Http\Exception\RequestException;
 use Guzzle\Http\Message\RequestInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormConfigInterface;
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
@@ -62,25 +63,27 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPost() {
-        $this->logInfo(__METHOD__);
-        $this->logInfo("getting DataForPost");
+        $this->logDebug("======= START =========", __METHOD__);
+        
+        $this->logInfo("getting DataForPost", __METHOD__);
         $data = $this->getDataForPost();
-        $this->logInfo("creating new entity");
+        $this->logInfo("creating new entity", __METHOD__);
+        
         $request = $this->getClient()->post(self::URL_BACK . $this->getApiName(), null, json_encode($data));
-        $response = $this->send($request, 201, json_encode($data));
-        $this->logInfo("decoding response");
+        $response = $this->send($request, Response::HTTP_CREATED, json_encode($data));
+        $this->logInfo("decoding response", __METHOD__);
         $dataResponse = json_decode($response->getBody(true), true);
-        $this->logInfo("checking response");
+        $this->logInfo("checking response", __METHOD__);
         $this->assertNotNull($dataResponse);       
         $this->assertDataForPost($data, $dataResponse);
-        $this->logInfo("***end***");
+
         return $dataResponse;
     }
 
     public function testGetAll() {
         $this->logInfo(__METHOD__);
         $request = $this->getClient()->get(self::URL_BACK . $this->getApiName(), null, null);
-        $response = $this->send($request, 201);
+        $response = $this->send($request, Response::HTTP_ACCEPTED);
 
         $dataResponse = json_decode($response->getBody(true), true);
         $this->assertNotNull($dataResponse);
@@ -92,15 +95,16 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testGetLast() {
-        $this->logInfo(__METHOD__);
+        $this->logDebug("======= START =========", __METHOD__);
+        
         $request = $this->getClient()->get(self::URL_BACK . $this->getApiName(), null, null);
-        $response = $this->send($request, 201);
+        $response = $this->send($request, Response::HTTP_ACCEPTED);
         $dataResponse = json_decode($response->getBody(true), true);
         $this->assertNotNull($dataResponse);
         $size = sizeof($dataResponse) - 1;
 
         $requestOne = $this->getClient()->get(self::URL_BACK . $this->getApiName() . '/' . $dataResponse [$size] ['id'], null, null);
-        $responseOne = $this->send($requestOne, 201);
+        $responseOne = $this->send($requestOne, Response::HTTP_ACCEPTED);
         $dataResponseOne = json_decode($responseOne->getBody(true), true);
 
         $this->assertNotNull($dataResponseOne);
@@ -113,14 +117,14 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         $dataPut = $this->getDataForPut();
 
         $request = $this->getClient()->get(self::URL_BACK . $this->getApiName(), null, null);
-        $response = $this->send($request, 201);
+        $response = $this->send($request, Response::HTTP_ACCEPTED);
         $dataResponse = json_decode($response->getBody(true), true);
         $this->assertNotNull("dataResponse null", $dataResponse);
 
 
         $idUpdate = $dataResponse [0] ['id'];
         $request = $this->getClient()->put(self::URL_BACK . $this->getApiName() . '/' . $idUpdate, null, json_encode($dataPut));
-        $response = $this->send($request, 201, json_encode($dataPut));
+        $response = $this->send($request, Response::HTTP_ACCEPTED, json_encode($dataPut));
 
         $dataResponse = json_decode($response->getBody(true), true);
         $this->assertNotNull($dataResponse);
@@ -141,7 +145,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
 
         $idUpdate = $dataResponse[0] ['id'];
         $request = $this->getClient()->put(self::URL_BACK . $this->getApiName() . '/' . $idUpdate, null, json_encode($dataPut));
-        $response = $this->send($request, 201, json_encode($dataPut));
+        $response = $this->send($request, Response::HTTP_ACCEPTED, json_encode($dataPut));
 
         $dataResponse = json_decode($response->getBody(true), true);
         $this->assertNotNull($dataResponse);
@@ -153,7 +157,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         $dataPut = $this->getDataForPut();
         $idUpdate = 0;
         $request = $this->getClient()->put(self::URL_BACK . $this->getApiName() . '/' . $idUpdate, null, json_encode($dataPut));
-        $response = $this->send($request, 404, json_encode($dataPut));
+        $response = $this->send($request, Response::HTTP_NOT_FOUND, json_encode($dataPut));
     }
 
     public function testDeleteLast() {
@@ -165,7 +169,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         $size = sizeof($dataResponse) - 1;
 
         $requestOne = $this->getClient()->delete(self::URL_BACK . $this->getApiName() . '/' . $dataResponse [$size] ['id'], null, null);
-        $responseOne = $this->send($requestOne, 201);
+        $responseOne = $this->send($requestOne, Response::HTTP_ACCEPTED);
         $dataResponseOne = json_decode($responseOne->getBody(true), true);
         $this->assertNull($dataResponseOne);
     }
@@ -173,7 +177,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
     public function testDeleteNotFound() {
         $this->logInfo(__METHOD__);
         $request = $this->getClient()->delete(self::URL_BACK . $this->getApiName() . '/0', null, null);
-        $this->send($request, 404);
+        $this->send($request, Response::HTTP_NOT_FOUND);
     }
 
     public function getClient() {
@@ -245,7 +249,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
             $response = $request->send();
         } catch (RequestException $e) {
             $response = $e->getRequest()->getResponse();
-            if ($response->getStatusCode() == 500 && $response->getStatusCode() != $statusCodeExpected) {
+            if ($response->getStatusCode() == Response::HTTP_INTERNAL_SERVER_ERROR && $response->getStatusCode() != $statusCodeExpected) {
                 $this->logError('[' . $request->getMethod() . "] - " . $request->getUrl());
                 $this->logError($data);
                 $this->logError($response->getHeader("x-debug-error"));
@@ -286,17 +290,17 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         $this->setTestResultObject($add_failure);
     }
 
-    public function logDebug($myDebugVar, $newligne = true) {
+    public function logDebug($myDebugVar, $methodeName="TODO", $newligne = true) {
         if ($this->level > 2) {
-            fwrite(STDOUT, print_r("   DEBUG > " . $myDebugVar, TRUE));
+            fwrite(STDOUT, print_r("   DEBUG > $methodeName > $myDebugVar", TRUE));
             if ($newligne)
                 fwrite(STDOUT, print_r("\n", TRUE));
         }
     }
 
-    public function logInfo($myDebugVar, $newligne = true) {
+    public function logInfo($myDebugVar, $methodeName="TODO", $newligne = true) {
         if ($this->level > 1) {
-            fwrite(STDOUT, print_r("INFO > " . $myDebugVar, TRUE));
+            fwrite(STDOUT, print_r("INFO > $methodeName > $myDebugVar", TRUE));
             if ($newligne)
                 fwrite(STDOUT, print_r("\n", TRUE));
         } else {
@@ -304,8 +308,8 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    public function logError($myDebugVar) {
-        fwrite(STDERR, print_r("ERROR > " . $myDebugVar . "\n", TRUE));
+    public function logError($myDebugVar, $methodeName="TODO") {
+        fwrite(STDERR, print_r("ERROR > $methodeName > $myDebugVar\n", TRUE));
     }
 
 }

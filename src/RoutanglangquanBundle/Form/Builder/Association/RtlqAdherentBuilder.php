@@ -25,7 +25,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
         $modele->setVille($postModele->getVille());
         $modele->setAvatar($postModele->getAvatar());
         $modele->setDateCreation($postModele->getDateCreation());
-        $modele->setDateLastAuth($postModele->getDateLastAuth());
+        if ($postModele->getDateLastAuth()!=null) $modele->setDateLastAuth($postModele->getDateLastAuth());
         $modele->setLicenceNumber($postModele->getLicenceNumber());
         $modele->setLicenceEtat($postModele->getLicenceEtat());
 
@@ -33,8 +33,8 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
         foreach ($postModele->getGroupes() as $groupeId) {
             $modele->addGroupe($em->getReference("RoutanglangquanBundle\Entity\Association\RtlqGroupe", $groupeId()));
         }
-        foreach ($postModele->getCotisations() as $cotisationId) {
-            $modele->addCotisation($em->getReference("RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation", $cotisationId()));
+        if ($postModele->getCotisationId() != null) {
+            $modele->setCotisation($em->getReference("RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation", $postModele->getCotisationId() ));
         }
         foreach ($postModele->getTresories() as $tresorieId) {
             $modele->addTresorie($em->getReference("RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie", $tresorieId()));
@@ -72,14 +72,16 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
             }
         }
 
-        if ($modele->getCotisations() != null) {
-            foreach ($modele->getCotisations() as $cotisation) {
-                $dto->addCotisation($cotisation->getId());
-            }
+        if ($modele->getCotisation() != null) {
+            $dto->setCotisationId($modele->getCotisation()->getId());
         }
+        
         if ($modele->getTresories() != null) {
             foreach ($modele->getTresories() as $tresorie) {
                 $dto->addTresorie($tresorie->getId());
+                $dto->addMontantTotalEncaisse($tresorie->getMontant());
+                $dto->addMontantTotalPrevisionnel($tresorie->getMontant());
+                $dto->addMontantTotalEnRetard($tresorie->getMontant());
             }
         }
 

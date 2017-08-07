@@ -26,12 +26,8 @@ class RtlqAdherentValidator extends RtlqValidator {
         return parent::doPostValidate($dto, $entity);
     }
 
-    public function hasNotCotisationSameSeason(RtlqAdherent $adherent, RtlqCotisation $cotisation) {
-        return $cotisation->isNotIntowithTheSameSeasonInto($adherent->getCotisations());
-    }
-
     public function hasCotisation(RtlqAdherent $adherent, RtlqCotisation $cotisation) {
-        return $cotisation->isInto($adherent->getCotisations());
+        return $cotisation->isEquals($adherent->getCotisation());
     }
 
     public function hasGroupe(RtlqAdherent $adherent, RtlqGroupe $groupe) {

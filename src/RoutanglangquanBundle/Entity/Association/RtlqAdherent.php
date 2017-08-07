@@ -112,16 +112,15 @@ class RtlqAdherent {
      * @var string @ORM\Column(name="licence_number", type="string", length=100, nullable=true)
      */
     private $licenceNumber;
-    
+
     /**
      *
      * @var string @ORM\Column(name="licence_etat", type="string", length=100, nullable=true)
      */
     private $licenceEtat;
-    
-    
+
     /**
-     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqGroupe",inversedBy="adherents" )
+     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqGroupe", inversedBy="adherents" )
      * @ORM\JoinTable(name="adherents_groupes",
      *      joinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="groupe_id", referencedColumnName="id")}
@@ -130,24 +129,19 @@ class RtlqAdherent {
     private $groupes;
 
     /**
-     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation")
-     * @ORM\JoinTable(name="adherents_cotisations",
-     *      joinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="cotisation_id", referencedColumnName="id")}
-     *      )
+     * @ORM\ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation")
+     * @ORM\JoinColumn(name="cotisation_id", referencedColumnName="id")
      */
-    private $cotisations;
+    private $cotisation;
 
     /**
      * @ORM\OneToMany(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie", mappedBy="adherent")
      */
     private $tresories;
 
-    
-    
     public function __construct() {
         $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->cotisations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->cotisation = null;
         $this->tresories = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -470,7 +464,13 @@ class RtlqAdherent {
     public function removeGroupe(\RoutanglangquanBundle\Entity\Association\RtlqGroupe $groupe) {
         $this->groupes->removeElement($groupe);
     }
-
+    /**
+     * Remove All groupes
+     *
+     */
+    public function removeAllGroupes() {
+        $this->groupes= [];
+    }
     /**
      * Get groupes
      *
@@ -479,38 +479,19 @@ class RtlqAdherent {
     public function getGroupes() {
         return $this->groupes;
     }
+    
+    public function getCotisation() {
+        return $this->cotisation;
+    }
 
-    /**
-     * Add cotisation
-     *
-     * @param \RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation $cotisation
-     *
-     * @return RtlqAdherent
-     */
-    public function addCotisation(\RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation $cotisation) {
-        $this->cotisations[] = $cotisation;
-
+    public function setCotisation($cotisation) {
+        $this->cotisation = $cotisation;
         return $this;
     }
-
-    /**
-     * Remove cotisation
-     *
-     * @param \RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation $cotisation
-     */
-    public function removeCotisation(\RoutanglangquanBundle\Entity\Cotisation\RtlqCotisation $cotisation) {
-        $this->cotisations->removeElement($cotisation);
+    public function removeCotisation() {
+        $this->cotisation = null;
     }
-
-    /**
-     * Get cotisations
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getCotisations() {
-        return $this->cotisations;
-    }
-
+    
     public function getDateLastAuth() {
         return $this->dateLastAuth;
     }
@@ -546,6 +527,16 @@ class RtlqAdherent {
     public function removeTresorie(\RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie $tresorie) {
         $this->tresories->removeElement($tresorie);
     }
+    
+    /**
+     * Remove All tresorie
+     *
+     * @param \RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie $tresorie
+     */
+    public function removeAllTresories() {
+        $this->tresories= [];
+    }
+
     public function getTresories() {
         return $this->tresories;
     }
@@ -567,6 +558,4 @@ class RtlqAdherent {
         $this->licenceEtat = $licenceEtat;
         return $this;
     }
-
-
 }

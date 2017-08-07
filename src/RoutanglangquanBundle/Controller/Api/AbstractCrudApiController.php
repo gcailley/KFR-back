@@ -27,7 +27,7 @@ abstract class AbstractCrudApiController extends Controller {
         $this->builder = $this->getBuilder();
     }
 
-    private function newResponse($data, $code) {
+    protected function newResponse($data, $code) {
         $response = new Response($data, $code);
         $response->headers->set('Access-Control-Allow-Origin', '*');
         return $response;
@@ -45,7 +45,7 @@ abstract class AbstractCrudApiController extends Controller {
         }
         $dto_tresorie = $this->builder->modeleToDto($tresorie);
         
-        return  $this->newResponse(json_encode($dto_tresorie), 201);        
+        return  $this->newResponse(json_encode($dto_tresorie), Response::HTTP_ACCEPTED);        
     }
 
     /**
@@ -56,7 +56,7 @@ abstract class AbstractCrudApiController extends Controller {
         $tresories = $this->getDoctrine()->getRepository($this->getName())->findAll();
 
         $dto_tresories = $this->builder->modelesToDtos($tresories);
-        return $this->newResponse(json_encode($dto_tresories), 201);
+        return $this->newResponse(json_encode($dto_tresories), Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -87,7 +87,7 @@ abstract class AbstractCrudApiController extends Controller {
         $em->flush();
 
         $dto = $this->builder->modeleToDto($entity);
-        return $this->newResponse(json_encode($dto), 201);
+        return $this->newResponse(json_encode($dto), Response::HTTP_ACCEPTED);
     }
 
     protected function preConditionCreationAction($em, $entityMetier) {
@@ -128,7 +128,7 @@ abstract class AbstractCrudApiController extends Controller {
         $em->flush();
 
         $dto = $this->builder->modeleToDto($entityMetier);
-        return $this->newResponse(json_encode($dto), 201);
+        return $this->newResponse(json_encode($dto), Response::HTTP_CREATED);
     }
 
     /**
@@ -143,14 +143,18 @@ abstract class AbstractCrudApiController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
+        $this->internalDeleteByIdAction($em, $tresorie);
         $em->remove($tresorie);
         $em->flush();
 
-        return $this->newResponse(null, 201);
+        return $this->newResponse(null, Response::HTTP_NO_CONTENT);
     }
 
+    protected  function internalDeleteByIdAction($em , $entity) {
+    }
+    
     public function createInvalideBean($errors = array()) {
-        return new HttpException(400, implode($errors));
+        return new HttpException(Response::HTTP_BAD_REQUEST, implode($errors));
     }
 
     /**

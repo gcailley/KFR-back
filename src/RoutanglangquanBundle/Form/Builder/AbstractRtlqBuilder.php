@@ -23,6 +23,7 @@ abstract class AbstractRtlqBuilder
     }
     
     protected function  dateToString($date) {
-    	return $date->format('Y-m-d');
+        
+    	return $date==null ? null : $date->format('Y-m-d');
     }
 }

@@ -24,25 +24,22 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     protected $ville;
     protected $date_creation;
     protected $date_last_auth;
-    protected $licence_number;
-    protected $licence_etat;
+    protected $licence_number = "TODO";
+    protected $licence_etat = "TODO";
     protected $groupes;
-    protected $cotisations;
+    protected $cotisation_id;
     protected $tresories;
+    protected $montant_total_encaisse = 0;
+    protected $montant_total_previsionnel = 0;
+    protected $montant_total_en_retard = 0;
 
     public function __construct() {
         $this->groupes = array();
-        $this->cotisations = array();
         $this->tresories = array();
     }
 
     public function addGroupe($groupe) {
         $this->groupes[] = $groupe;
-        return $this;
-    }
-
-    public function addCotisation($cotisation) {
-        $this->cotisations[] = $cotisation;
         return $this;
     }
 
@@ -111,8 +108,13 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
         return $this->groupes;
     }
 
-    public function getCotisations() {
-        return $this->cotisations;
+    public function getCotisationId() {
+        return $this->cotisation_id;
+    }
+
+    public function setCotisationId($cotisation_id) {
+        $this->cotisation_id = $cotisation_id;
+        return $this;
     }
 
     public function setEmail($email) {
@@ -190,11 +192,6 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
         return $this;
     }
 
-    public function setCotisations($cotisations) {
-        $this->cotisations = $cotisations;
-        return $this;
-    }
-
     public function setTresories($tresories) {
         $this->tresories = $tresories;
         return $this;
@@ -203,6 +200,7 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     public function getTresories() {
         return $this->tresories;
     }
+
     public function getLicenceNumber() {
         return $this->licence_number;
     }
@@ -221,6 +219,44 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
         return $this;
     }
 
+    public function getMontantTotalEncaisse() {
+        return $this->montant_total_encaisse;
+    }
 
+    public function getMontantTotalPrevisionnel() {
+        return $this->montant_total_previsionnel;
+    }
+
+    public function setMontantTotalEncaisse($montant_total_encaisse) {
+        $this->montant_total_encaisse = $montant_total_encaisse;
+        return $this;
+    }
+
+    public function setMontantTotalPrevisionnel($montant_total_previsionnel) {
+        $this->montant_total_previsionnel = $montant_total_previsionnel;
+        return $this;
+    }
+
+    public function addMontantTotalEncaisse($montant_total_encaisse) {
+        $this->montant_total_encaisse += $montant_total_encaisse;
+    }
+
+    public function addMontantTotalPrevisionnel($montant_total_previsionnel) {
+        $this->montant_total_previsionnel += $montant_total_previsionnel;
+    }
+
+    public function getMontantTotalEnRetard() {
+        return $this->montant_total_en_retard;
+    }
+
+    public function setMontantTotalEnRetard($montant_total_en_retard) {
+        $this->montant_total_en_retard = $montant_total_en_retard;
+        return $this;
+    }
+
+    public function addMontantTotalEnRetard($montant_total_en_retard) {
+        $this->montant_total_en_retard += $montant_total_en_retard;
+        return $this;
+    }
 
 }

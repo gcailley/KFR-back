@@ -52,8 +52,6 @@ class TresorieController extends AbstractCrudApiController {
         if ($entity == null) {
             throw new NotFoundHttpException("No tresorie Found for $id");
         }
-
-        dump($entity);
         
         $dtos = $this->builder->modelesToDtos($entity);        
         return new Response(json_encode($dtos), 201);

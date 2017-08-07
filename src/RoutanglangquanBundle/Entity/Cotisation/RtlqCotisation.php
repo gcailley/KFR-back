@@ -66,15 +66,6 @@ class RtlqCotisation extends AbstractRtlqEntity {
      */
     private $categorie;
 
-    public function isNotIntowithTheSameSeasonInto($collections) {
-        foreach ($collections as $key => $value) {
-            if ($this->isEquals($value) || $this->getSaisonId() == $value->getSaisonId()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * Get id
      *

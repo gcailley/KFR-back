@@ -41,26 +41,34 @@ class AdherentController extends AbstractCrudApiController {
     public function getValidator() {
         return new RtlqAdherentValidator();
     }
-
-    
-    // ********************************* COTISATION **********************************************//
     
     /**
-     * @Route("/{id}/cotisations/")
+     * Cas spécifique de détachement des tresories. 
+     */
+    protected function internalDeleteByIdAction($em, $entity) {
+        //$entity->removeAllTresories();
+        //$entity->removeCotisation();
+        //$entity->removeAllGroupes();
+    }
+
+    // ********************************* COTISATION **********************************************//
+
+    /**
+     * @Route("/{id}/cotisation")
      * @Method("GET")
      */
-    public function getUserCotisations($id) {
+    public function getUserCotisation($id) {
         $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
         $dto = $this->builder->modeleToDto($entity);
-        return new Response(json_encode($dto->getCotisations()), 201);
+        return new Response(json_encode($dto->getCotisationId()), Response::HTTP_ACCEPTED);
     }
 
     /**
-     * @Route("/{id}/cotisations/{idCotisation}")
+     * @Route("/{id}/cotisation/{idCotisation}")
      * @Method("POST")
      */
     public function addCotisationToUser($id, $idCotisation) {
@@ -72,26 +80,18 @@ class AdherentController extends AbstractCrudApiController {
         if (!is_object($cotisation)) {
             throw new NotFoundHttpException("Cotisation $idCotisation not found");
         }
-        if ($this->getValidator()->hasNotCotisationSameSeason($entity, $cotisation)) {
-            //add cotisation to adherent
-            $entity->addCotisation($cotisation);
+        //add cotisation to adherent
+        $entity->setCotisation($cotisation);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->merge($entity);
-            $em->flush();
+        $em = $this->getDoctrine()->getManager();
+        $em->merge($entity);
+        $em->flush();
 
-            return new Response(null, 201);
-        } else {
-            //cas de l'injection du meme id.
-            if ($this->getValidator()->hasCotisation($entity, $cotisation)) {
-                return new Response(null, 201);
-            }
-            throw new ConflictHttpException("Cotisation sur la même Saison détectée");
-        }
+        return new Response(null, Response::HTTP_CREATED);
     }
 
     /**
-     * @Route("/{id}/cotisations/{idCotisation}")
+     * @Route("/{id}/cotisation/{idCotisation}")
      * @Method("DELETE")
      */
     public function removeCotisationToUser($id, $idCotisation) {
@@ -105,20 +105,20 @@ class AdherentController extends AbstractCrudApiController {
         }
         if ($this->getValidator()->hasCotisation($entity, $cotisation)) {
             //add cotisation to adherent
-            $entity->removeCotisation($cotisation);
+            $entity->setCotisation(null);
 
             $em = $this->getDoctrine()->getManager();
             $em->merge($entity);
             $em->flush();
         }
 
-        return new Response(null, 201);
+        return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
     // ********************************* GROUPE **********************************************//
-    
+
     /**
-     * @Route("/{id}/groupes/")
+     * @Route("/{id}/groupes")
      * @Method("GET")
      */
     public function getUserGroupes($id) {
@@ -128,7 +128,7 @@ class AdherentController extends AbstractCrudApiController {
         }
 
         $dto = $this->builder->modeleToDto($entity);
-        return new Response(json_encode($dto->getGroupes()), 201);
+        return new Response(json_encode($dto->getGroupes()), Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -153,7 +153,7 @@ class AdherentController extends AbstractCrudApiController {
             $em->merge($entity);
             $em->flush();
         }
-        return new Response(null, 201);
+        return new Response(null, Response::HTTP_CREATED);
     }
 
     /**
@@ -178,12 +178,12 @@ class AdherentController extends AbstractCrudApiController {
             $em->flush();
         }
 
-        return new Response(null, 201);
+        return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
     // ********************************* TRESORIE **********************************************//
     /**
-     * @Route("/{id}/tresories/")
+     * @Route("/{id}/tresories")
      * @Method("GET")
      */
     public function getUserTresories($id) {
@@ -192,15 +192,15 @@ class AdherentController extends AbstractCrudApiController {
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $dto = $this->builder->modeleToDto($entity);        
-        return new Response(json_encode($dto->getTresories()), 201);
+        $dto = $this->builder->modeleToDto($entity);
+        return new Response(json_encode($dto->getTresories()), Response::HTTP_ACCEPTED);
     }
 
     /**
      * @Route("/{id}/tresories/{idEntityAssociate}")
      * @Method("POST")
      */
-    public function addTresorieToUser($id, $idEntityAssociate ) {
+    public function addTresorieToUser($id, $idEntityAssociate) {
         $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
@@ -213,12 +213,16 @@ class AdherentController extends AbstractCrudApiController {
         if (!$this->getValidator()->hasTresorie($entity, $entityAssociate)) {
             //add tresorie to adherent
             $entity->addTresorie($entityAssociate);
+            $entityAssociate->setAdherent($entity);
 
             $em = $this->getDoctrine()->getManager();
             $em->merge($entity);
+            $em->merge($entityAssociate);
             $em->flush();
+
         }
-        return new Response(null, 201);
+
+        return $this->newResponse(json_encode($entity), Response::HTTP_CREATED);
     }
 
     /**
@@ -243,7 +247,7 @@ class AdherentController extends AbstractCrudApiController {
             $em->flush();
         }
 
-        return new Response(null, 201);
+        return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
 }

@@ -26,7 +26,7 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder {
 		$modele->setCategorie ( $em->getReference ( "RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie", $postModele->getCategorieId () ) );
 		$modele->setSaison ( $em->getReference ( "RoutanglangquanBundle\Entity\Saison\RtlqSaison", $postModele->getSaisonId () ) );
 		if ($postModele->getAdherentId () != null) {
-                    $modele->setAdherent ( $em->getReference ( "RoutanglangquanBundle\Entity\Association\RtlqAdherent", c ) );
+                    $modele->setAdherent ( $em->getReference ( "RoutanglangquanBundle\Entity\Association\RtlqAdherent",  $postModele->getAdherentId() ) );
                 }
                 
 		return $modele;

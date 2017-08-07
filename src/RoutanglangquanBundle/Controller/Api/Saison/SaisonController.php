@@ -75,7 +75,7 @@ class SaisonController extends AbstractCrudApiController {
         $saisons = $saisonRepo->findAllSeasonFilterByActive($active);
         
         $dto_saisons = $this->builder->modelesToDtos($saisons);
-        return new Response(json_encode($dto_saisons), 201);
+        return new Response(json_encode($dto_saisons), Response::HTTP_ACCEPTED);
     }
 
 }
