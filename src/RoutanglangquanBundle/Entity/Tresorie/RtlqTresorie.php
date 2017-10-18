@@ -78,15 +78,17 @@ class RtlqTresorie extends AbstractRtlqEntity {
 
     /**
      *
-     * @var RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieEtat @ORM\OneToOne(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieEtat", cascade={"persist"})
-     *      @ORM\JoinColumn(nullable=false)
+     * @var RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieEtat 
+     * @ORM\ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieEtat", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
      */
     private $etat;
 
     /**
      *
-     * @var integer @ORM\ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Saison\RtlqSaison", cascade={"persist"})
-     *      @ORM\JoinColumn(nullable=false)
+     * @var integer 
+     * @ORM\ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Saison\RtlqSaison", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
      */
     private $saison;
 
@@ -100,7 +102,7 @@ class RtlqTresorie extends AbstractRtlqEntity {
     
      /**
      * @ORM\ManyToOne(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqAdherent", inversedBy="tresories")
-     * @ORM\JoinColumn(name="adherent_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="adherent_id", referencedColumnName="id", nullable=true)
      */
     private $adherent;
     
@@ -326,6 +328,16 @@ class RtlqTresorie extends AbstractRtlqEntity {
         return $this->etat == null ? null : $this->etat->getId();
     }
 
+
+    /**
+     * Get etat
+     *
+     * @return Interger
+     */
+    public function getEtatName() {
+        return $this->etat == null ? null : $this->etat->getValue();
+    }
+
     /**
      * Set idSaison
      *
@@ -356,6 +368,15 @@ class RtlqTresorie extends AbstractRtlqEntity {
     public function getSaisonId() {
         return $this->saison == null ? null : $this->saison->getId();
     }
+        /**
+     * Get saison Nom
+     *
+     * @return Interger
+     */
+    public function getSaisonNom() {
+        return $this->saison == null ? null : $this->saison->getNom();
+    }
+
 
     /**
      * Set categorie
@@ -387,14 +408,14 @@ class RtlqTresorie extends AbstractRtlqEntity {
     public function getCategorieId() {
         return $this->categorie == null ? null : $this->categorie->getId();
     }
-
-    public function getDate_creation() {
-        return $this->date_creation;
-    }
-
-    public function setDate_creation(\DateTime $date_creation) {
-        $this->date_creation = $date_creation;
-        return $this;
+    
+    /**
+     * Get categorie
+     *
+     * @return Interger
+     */
+    public function getCategorieNom() {
+        return $this->categorie == null ? null : $this->categorie->getValue();
     }
 
 }

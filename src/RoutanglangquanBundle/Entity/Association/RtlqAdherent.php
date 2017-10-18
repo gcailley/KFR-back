@@ -506,6 +506,17 @@ class RtlqAdherent {
         return $this;
     }
 
+
+    
+    /**
+     * has tresories ?
+     *
+     * @return boolean
+     */
+     public function hasTresories() {
+        return sizeof($this->tresories) > 0;
+    }
+
     /**
      * Add tresorie
      *
@@ -526,6 +537,7 @@ class RtlqAdherent {
      */
     public function removeTresorie(\RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie $tresorie) {
         $this->tresories->removeElement($tresorie);
+        $tresorie->setAdherent(null);
     }
     
     /**
@@ -534,7 +546,9 @@ class RtlqAdherent {
      * @param \RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie $tresorie
      */
     public function removeAllTresories() {
-        $this->tresories= [];
+        foreach ($this->tresories as $tresorie) {
+            $this->removeTresorie($tresorie);
+        }
     }
 
     public function getTresories() {

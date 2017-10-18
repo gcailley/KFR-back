@@ -136,15 +136,15 @@ abstract class AbstractCrudApiController extends Controller {
      * @Method("DELETE")
      */
     public function deleteByIdAction($id) {
-        $tresorie = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
 
-        if (!is_object($tresorie)) {
+        if (!is_object($entity)) {
             throw $this->createNotFoundException();
         }
 
         $em = $this->getDoctrine()->getManager();
-        $this->internalDeleteByIdAction($em, $tresorie);
-        $em->remove($tresorie);
+        $this->internalDeleteByIdAction($em, $entity);
+        $em->remove($entity);
         $em->flush();
 
         return $this->newResponse(null, Response::HTTP_NO_CONTENT);

@@ -14,8 +14,11 @@ class RtlqTresorieDTO extends AbstractRtlqDTO {
     protected $cheque;
     protected $numero_cheque;
     protected $etat_id;
+    protected $etat_name;
     protected $saison_id;
+    protected $saison_name;
     protected $categorie_id;
+    protected $categorie_name;
     protected $adherent_id;
 
     /**
@@ -185,6 +188,23 @@ class RtlqTresorieDTO extends AbstractRtlqDTO {
         return $this->etat_id;
     }
 
+
+
+    public function setEtatName($etatName) {
+        $this->etat_name = $etatName;
+
+        return $this;
+    }
+
+    /**
+     * Get etat
+     */
+    public function getEtatName() {
+        return $this->etat_name;
+    }
+
+  
+
     public function setSaisonId($saisonId) {
         $this->saison_id = $saisonId;
 
@@ -224,5 +244,26 @@ class RtlqTresorieDTO extends AbstractRtlqDTO {
         $this->adherent_id = $adherent_id;
         return $this;
     }
+
+    
+
+    public function getSaisonName() {
+        return $this->saison_name;
+    }
+
+    public function getCategorieName() {
+        return $this->categorie_name;
+    }
+
+    public function setSaisonName($saison_name) {
+        $this->saison_name = $saison_name;
+        return $this;
+    }
+
+    public function setCategorieName($categorie_name) {
+        $this->categorie_name = $categorie_name;
+        return $this;
+    }
+
 
 }

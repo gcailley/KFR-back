@@ -11,18 +11,21 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 
-abstract class AbstractRtlqType extends AbstractType {
+abstract class AbstractRtlqType extends AbstractType
+{
 
-    public function getDateFormat() {
+    public function getDateFormat()
+    {
         return array(
             'widget' => 'single_text',
-            'format' => 'yyyy-MM-dd');
+            'format' => 'yyyy-MM-dd'
+        );
     }
 
-    public function configureOptions(OptionsResolver $resolver) {
+    public function configureOptions(OptionsResolver $resolver)
+    {
         $resolver->setDefaults(array(
             'csrf_protection' => false,
         ));
     }
-
 }

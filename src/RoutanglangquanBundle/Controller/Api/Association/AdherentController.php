@@ -5,6 +5,7 @@ namespace RoutanglangquanBundle\Controller\Api\Association;
 use RoutanglangquanBundle\Controller\Api\AbstractCrudApiController;
 use RoutanglangquanBundle\Form\Builder\Association\RtlqAdherentBuilder;
 use RoutanglangquanBundle\Form\Dto\Association\RtlqAdherentDTO;
+use RoutanglangquanBundle\Entity\Association\RtlqAdherent;
 use RoutanglangquanBundle\Form\Validator\Association\RtlqAdherentValidator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -46,9 +47,9 @@ class AdherentController extends AbstractCrudApiController {
      * Cas spécifique de détachement des tresories. 
      */
     protected function internalDeleteByIdAction($em, $entity) {
-        //$entity->removeAllTresories();
-        //$entity->removeCotisation();
-        //$entity->removeAllGroupes();
+        $entity->removeAllTresories();
+        $entity->removeCotisation();
+        $entity->removeAllGroupes();
     }
 
     // ********************************* COTISATION **********************************************//
