@@ -11,7 +11,11 @@ abstract class AbstractRtlqBuilder
     abstract public function dtoToModele($em, $postModele);
     
     abstract public function modeleToDto($modele);
-    
+	
+	public function modeleToDtoLight($modele) {
+		return $this->modeleToDto($modele);
+	}
+
     
     public function modelesToDtos($modeles) {
     	$dto_array = array();

@@ -14,8 +14,11 @@ class RtlqCotisationDTO extends AbstractRtlqDTO {
 	protected $cotisation;
 	protected $repartitionCheque;
 	protected $active;
-	protected $saison_id;
-	protected $categorie_id;
+    protected $saison_id;
+    protected $saison_name;
+    protected $categorie_id;
+    protected $categorie_name;
+    
 	
         public function getDescription() {
             return $this->description;
@@ -68,6 +71,17 @@ class RtlqCotisationDTO extends AbstractRtlqDTO {
 
         public function setCategorieId($categorie_id) {
             $this->categorie_id = $categorie_id;
+            return $this;
+        }
+
+        
+        public function setSaisonName($saison_name) {
+            $this->saison_name = $saison_name;
+            return $this;
+        }
+
+        public function setCategorieName($categorie_name) {
+            $this->categorie_name = $categorie_name;
             return $this;
         }
 

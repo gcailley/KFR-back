@@ -18,7 +18,7 @@ abstract class AbstractRtlqType extends AbstractType
     {
         return array(
             'widget' => 'single_text',
-            'format' => 'yyyy-MM-dd'
+            'format' => "yyyy-MM-dd'T'HH:mm:ss.sss'Z'"
         );
     }
 

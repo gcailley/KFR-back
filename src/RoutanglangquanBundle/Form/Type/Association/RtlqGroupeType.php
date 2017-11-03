@@ -3,21 +3,34 @@
 namespace RoutanglangquanBundle\Form\Type\Association;
 
 use RoutanglangquanBundle\Form\Type\AbstractRtlqType;
+use RoutanglangquanBundle\Form\Type\Association\RtlqAdherentType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class RtlqGroupeType extends AbstractRtlqType {
+class RtlqGroupeType extends AbstractRtlqType
+{
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
+                ->add('id', NumberType::class)
                 ->add('nom', TextType::class)
-                ->add('adherents', CollectionType::class, array('entry_type' => NumberType::class));
+                ->add('nb_adherents', NumberType::class)
+                ->add('adherents', CollectionType::class, array(
+                    'entry_type'   => RtlqAdherentType::class,
+                    'allow_add'     => true,
+                    'allow_delete'  => true,
+                    'prototype'     => true,
+                    'label'         => false,
+                    'by_reference'  => false
+                    )
+                );
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'Groupe';
     }
-
 }

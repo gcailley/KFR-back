@@ -79,7 +79,7 @@ class RtlqAdherent {
 
     /**
      *
-     * @var string @ORM\Column(name="avatar", type="string", length=100, nullable=false)
+     * @var string @ORM\Column(name="avatar", type="string", length=100, nullable=true)
      */
     private $avatar;
 

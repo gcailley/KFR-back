@@ -5,32 +5,42 @@ namespace RoutanglangquanBundle\Form\Builder\Association;
 use RoutanglangquanBundle\Form\Dto\Association\RtlqGroupeDTO;
 use RoutanglangquanBundle\Entity\Association\RtlqGroupe;
 use RoutanglangquanBundle\Form\Builder\AbstractRtlqBuilder;
+use RoutanglangquanBundle\Form\Builder\Association\RtlqAdherentBuilder;
 
-class RtlqGroupeBuilder extends AbstractRtlqBuilder {
-	public function dtoToModele($em, $postModele) {
-		$modele = new RtlqGroupe ();
+class RtlqGroupeBuilder extends AbstractRtlqBuilder
+{
+    private $rtlqAdherentBuilder;
 
-		$modele->setId ( $postModele->getId () );
-		$modele->setNom( $postModele->getNom () );
+    public function __construct()
+    {
+        $this->rtlqAdherentBuilder = new RtlqAdherentBuilder();
+    }
+    
 
-                foreach ($postModele->getAdherents() as $adherentId) {
-                    $modele->addAdherent($em->getReference ( "RoutanglangquanBundle\Entity\Association\RtlqAdherent", $adherentId () )) ;
-                }
-                
-		return $modele;
-	}
-	
-	
-	public function modeleToDto($modele) {
-		$dto = new RtlqGroupeDTO ();
+    public function dtoToModele($em, $postModele)
+    {
+        $modele = new RtlqGroupe ();
+        $modele->setId ( $postModele->getId () );
+        $modele->setNom( $postModele->getNom () );
+        foreach ($postModele->getAdherents() as $adherentDto) {
+            $modele->addAdherent($em->getReference ( "RoutanglangquanBundle\Entity\Association\RtlqAdherent", $adherentDto['id'] )) ;
+        }
+        return $modele;
+    }
+    
+    
+    public function modeleToDto($modele)
+    {
+        $dto = new RtlqGroupeDTO ();
+        
+        $dto->setId ( $modele->getId () );
+        $dto->setNom ( $modele->getNom() );
+
+        foreach ($modele->getAdherents() as $adherent) {
+			$adherentDto = $this->rtlqAdherentBuilder->modeleToDtoLight($adherent);
+            $dto->addAdherent( $adherentDto );
+        }
 		
-		$dto->setId ( $modele->getId () );
-		$dto->setNom ( $modele->getNom() );
-
-                foreach ($modele->getAdherents() as $adherent) {
-                    $dto->addAdherent( $adherent->getId () );
-                }
-                
-                return $dto;
-	}
+		return $dto;
+    }
 }

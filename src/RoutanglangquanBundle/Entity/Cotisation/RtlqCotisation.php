@@ -194,6 +194,9 @@ class RtlqCotisation extends AbstractRtlqEntity {
         return $this->saison != null ? $this->saison->getId() : null;
     }
 
+    public function getSaisonNom() {
+        return $this->saison != null ? $this->saison->getNom() : null;
+    }
     /**
      * Set categorie
      *
@@ -218,6 +221,10 @@ class RtlqCotisation extends AbstractRtlqEntity {
 
     public function getCategorieId() {
         return $this->categorie != null ? $this->categorie->getId() : null;
+    }
+
+    public function getCategorieNom() {
+        return $this->categorie != null ? $this->categorie->getValue() : null;
     }
 
 }

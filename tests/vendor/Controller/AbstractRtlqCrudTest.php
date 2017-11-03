@@ -225,7 +225,7 @@ abstract class AbstractRtlqCrudTest extends \PHPUnit_Framework_TestCase {
         $month = $month < 10 ? "0" . $month : $month;
         $day = rand($daysRange[0], $daysRange[1]);
         $day = $day < 10 ? "0" . $day : $day;
-        return rand($yearsRange[0], $yearsRange[1]) . "-" . $month . "-" . $day;
+        return  rand($yearsRange[0], $yearsRange[1])."-".$month."-".$day;
     }
 
     protected function getRandomEmail() {

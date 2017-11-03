@@ -6,9 +6,11 @@ use RoutanglangquanBundle\Form\Dto\Association\RtlqAdherentDTO;
 use RoutanglangquanBundle\Entity\Association\RtlqAdherent;
 use RoutanglangquanBundle\Form\Builder\AbstractRtlqBuilder;
 
-class RtlqAdherentBuilder extends AbstractRtlqBuilder {
+class RtlqAdherentBuilder extends AbstractRtlqBuilder
+{
 
-    public function dtoToModele($em, $postModele) {
+    public function dtoToModele($em, $postModele)
+    {
         $modele = new RtlqAdherent ();
 
         $modele->setId($postModele->getId());
@@ -25,7 +27,9 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
         $modele->setVille($postModele->getVille());
         $modele->setAvatar($postModele->getAvatar());
         $modele->setDateCreation($postModele->getDateCreation());
-        if ($postModele->getDateLastAuth()!=null) $modele->setDateLastAuth($postModele->getDateLastAuth());
+        if ($postModele->getDateLastAuth()!=null) {
+            $modele->setDateLastAuth($postModele->getDateLastAuth());
+        }
         $modele->setLicenceNumber($postModele->getLicenceNumber());
         $modele->setLicenceEtat($postModele->getLicenceEtat());
 
@@ -42,12 +46,13 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
         return $modele;
     }
 
-    public function modeleToDto($modele) {
+    public function modeleToDtoLight($modele)
+    {
         $dto = new RtlqAdherentDTO ();
 
         $dto->setId($modele->getId());
         $dto->setEmail($modele->getEmail());
-// pour des raisons de sécurité ne doit pas être présent
+    // pour des raisons de sécurité ne doit pas être présent
         $dto->setPwd(null);
         $dto->setTelephone($modele->getTelephone());
         $dto->setNom($modele->getNom());
@@ -64,7 +69,13 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
         $dto->setDateLastAuth($this->dateToString($modele->getDateLastAuth()));
         $dto->setLicenceNumber($modele->getLicenceNumber());
         $dto->setLicenceEtat($modele->getLicenceEtat());
+        return $dto;
+    }
+        
 
+    public function modeleToDto($modele)
+    {
+        $dto = $this->modeleToDtoLight($modele);
 
         if ($modele->getGroupes() != null) {
             foreach ($modele->getGroupes() as $groupe) {
@@ -87,5 +98,4 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder {
 
         return $dto;
     }
-
 }

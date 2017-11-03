@@ -71,12 +71,12 @@ abstract class AbstractCrudApiController extends Controller {
 
         $entityDto = $this->newDto();
         $form = $this->createForm($this->getNameType(), $entityDto);
+dump($data);
         $form->submit($data);
-
         $em = $this->getDoctrine()->getManager();
-        $entity = $this->builder->dtoToModele($em, $entityDto);
+        $entity = $this->builder->dtoToModele($em, $entityDto);        
         $entity->setId($id);
-
+dump($entity);
         //dovalidation
         $errors = $this->getValidator()->doPutValidate($entityDto, $entity);
         if ($errors != null && sizeof($errors) != 0) {
