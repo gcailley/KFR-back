@@ -7,3 +7,4 @@
 /var/sessions/*
 *.cache
 /var/logs/*
+.vscode/
