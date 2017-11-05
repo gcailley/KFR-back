@@ -35,7 +35,7 @@ class RtlqNewsBuilder extends AbstractRtlqBuilder
         $dto->setTitle ( $modele->getTitle() );
         $dto->setDescription ( $modele->getDescription() );
         $dto->setLink ( $modele->getLink() );
-        $dto->setDateCreation ( $modele->getDateCreation() );
+        $dto->setDateCreation ( $this->dateToString($modele->getDateCreation()));
         $dto->setActif ( $modele->isActif() );
 		
 		return $dto;

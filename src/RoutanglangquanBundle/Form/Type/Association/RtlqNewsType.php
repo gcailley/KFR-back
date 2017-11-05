@@ -11,11 +11,11 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+class RtlqNewsType extends AbstractRtlqType
+{
 
-
-class RtlqNewsType extends AbstractRtlqType {
-
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
                 ->add('title', TextType::class)
                 ->add('description', TextType::class)
@@ -24,8 +24,8 @@ class RtlqNewsType extends AbstractRtlqType {
                 ->add('date_creation', DateType::class, $this->getDateFormat());
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'News';
     }
-
 }
