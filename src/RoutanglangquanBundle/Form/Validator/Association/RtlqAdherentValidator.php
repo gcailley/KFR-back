@@ -22,10 +22,6 @@ use RoutanglangquanBundle\Form\Validator\RtlqValidator;
 
 class RtlqAdherentValidator extends RtlqValidator {
 
-    function doPostValidate($dto, $entity) {
-        return parent::doPostValidate($dto, $entity);
-    }
-
     public function hasCotisation(RtlqAdherent $adherent, RtlqCotisation $cotisation) {
         return $cotisation->isEquals($adherent->getCotisation());
     }

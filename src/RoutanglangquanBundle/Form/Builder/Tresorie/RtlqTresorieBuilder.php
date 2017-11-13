@@ -11,7 +11,7 @@ use RoutanglangquanBundle\Form\Builder\AbstractRtlqBuilder;
 
 class RtlqTresorieBuilder extends AbstractRtlqBuilder
 {
-    public function dtoToModele($em, $postModele)
+    public function dtoToModele($em, $postModele, $controller)
     {
         $modele = new RtlqTresorie ();
         

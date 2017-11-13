@@ -13,7 +13,7 @@ abstract class AbstractRtlqEnumBuilder extends AbstractRtlqBuilder {
 	abstract protected function getModele();
 	abstract protected function getDto();
 	
-	public function dtoToModele($em, $postModele) {
+	public function dtoToModele($em, $postModel, $controller) {
 		$modele = $this->getModele();
 		
 		$modele->setId ( $postModele->getId () );

@@ -20,6 +20,7 @@ class RtlqAdherentType extends AbstractRtlqType
         $builder
             ->add('id', NumberType::class)
             ->add('email', EmailType::class)
+            ->add('username', TextType::class)
             ->add('pwd', PasswordType::class)
             ->add('telephone', TextType::class)
             ->add('nom', TextType::class)

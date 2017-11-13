@@ -8,7 +8,7 @@ use Symfony\Component\Intl\Exception\NotImplementedException;
 abstract class AbstractRtlqBuilder 
 {
 
-    abstract public function dtoToModele($em, $postModele);
+    abstract public function dtoToModele($em, $postModele, $controller);
     
     abstract public function modeleToDto($modele);
 	

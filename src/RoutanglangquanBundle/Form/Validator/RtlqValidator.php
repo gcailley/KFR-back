@@ -3,10 +3,12 @@
 namespace RoutanglangquanBundle\Form\Validator;
 
 class RtlqValidator {
-	function doPostValidate($dto, $entity) {
+
+	function doPostValidateDto($dto) {
 		return null;
 	}
-	function doPutValidate($dto, $entity) {
-		return $this->doPostValidate($dto, $entity);
+	function doPutValidateDto($dto) {
+		return $this->doPostValidateDto($dto);
 	}
+
 }

@@ -12,7 +12,7 @@ class RtlqNewsBuilder extends AbstractRtlqBuilder
 
  
 
-    public function dtoToModele($em, $postModele)
+    public function dtoToModele($em, $postModele, $controller)
     {
         $modele = new RtlqNews ();
 

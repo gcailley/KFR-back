@@ -19,6 +19,7 @@ use function GuzzleHttp\json_encode;
  */
 class AdherentController extends AbstractCrudApiController {
 
+
     protected function getName() {
         return 'RoutanglangquanBundle:Association\RtlqAdherent';
     }

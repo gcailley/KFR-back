@@ -7,7 +7,7 @@ use RoutanglangquanBundle\Entity\Association\RtlqAssociation;
 use RoutanglangquanBundle\Form\Builder\AbstractRtlqBuilder;
 
 class RtlqAssociationBuilder extends AbstractRtlqBuilder {
-	public function dtoToModele($em, $postModele) {
+	public function dtoToModele($em, $postModele, $controller) {
 		$modele = new RtlqAssociation ();
 		
 		$modele->setId ( $postModele->getId () );

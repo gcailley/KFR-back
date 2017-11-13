@@ -56,19 +56,19 @@ abstract class AbstractCrudApiController extends AbstractApiController
         //looking for object into the database.
         $this->getByIdAction($id);
 
+        $em = $this->getDoctrine()->getManager();
         $entityDto = $this->newDto();
         $form = $this->createForm($this->getNameType(), $entityDto);
         $form->submit($data);
 
-        $em = $this->getDoctrine()->getManager();
-        $entity = $this->builder->dtoToModele($em, $entityDto);
-        $entity->setId($id);
-
-        //dovalidation
-        $errors = $this->getValidator()->doPutValidate($entityDto, $entity);
+        //validation de l'object DTO
+        $errors = $this->getValidator()->doPutValidateDto($entityDto, $em);
         if ($errors != null && sizeof($errors) != 0) {
             throw $this->createInvalideBean($errors);
         }
+
+        $entity = $this->builder->dtoToModele($em, $entityDto, $this);
+        $entity->setId($id);
 
         $em->merge($entity);
         $em->flush();
@@ -89,14 +89,18 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $form = $this->createForm($this->getNameType(), $entityDto);
         $form->submit($data);
 
+        // recuperation entityManager
         $em = $this->getDoctrine()->getManager();
-        $entityMetier = $this->builder->dtoToModele($em, $entityDto);
 
-        //dovalidation
-        $errors = $this->getValidator()->doPostValidate($entityDto, $entityMetier);
+        //validation de l'object DTO
+        $validator = $this->getValidator();
+        $errors = $validator->doPostValidateDto($entityDto);
         if ($errors != null && sizeof($errors) != 0) {
             throw $this->createInvalideBean($errors);
         }
+
+        //convertir en objet metier
+        $entityMetier = $this->builder->dtoToModele($em, $entityDto, $this);
 
         try {
             $preConditionErrors = $this->preConditionCreationAction($em, $entityMetier);

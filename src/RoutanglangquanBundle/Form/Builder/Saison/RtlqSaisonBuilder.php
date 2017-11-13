@@ -7,7 +7,7 @@ use RoutanglangquanBundle\Entity\Saison\RtlqSaison;
 use RoutanglangquanBundle\Form\Builder\AbstractRtlqBuilder;
 
 class RtlqSaisonBuilder extends AbstractRtlqBuilder {
-	public function dtoToModele($em, $postModele) {
+	public function dtoToModele($em, $postModele, $controller) {
 		$modele = new RtlqSaison ();
 		
 		$modele->setId ( $postModele->getId () );

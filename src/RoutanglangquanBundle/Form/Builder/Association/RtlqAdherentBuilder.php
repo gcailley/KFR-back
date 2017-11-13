@@ -9,13 +9,13 @@ use RoutanglangquanBundle\Form\Builder\AbstractRtlqBuilder;
 class RtlqAdherentBuilder extends AbstractRtlqBuilder
 {
 
-    public function dtoToModele($em, $postModele)
+    public function dtoToModele($em, $postModele, $controller)
     {
         $modele = new RtlqAdherent ();
 
         $modele->setId($postModele->getId());
+        $modele->setUsername($postModele->getUsername());
         $modele->setEmail($postModele->getEmail());
-        $modele->setPwd($postModele->getPwd());
         $modele->setTelephone($postModele->getTelephone());
         $modele->setNom($postModele->getNom());
         $modele->setPrenom($postModele->getPrenom());
@@ -43,6 +43,15 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         foreach ($postModele->getTresories() as $tresorieId) {
             $modele->addTresorie($em->getReference("RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie", $tresorieId()));
         }
+
+        if ($postModele->getPwd() != null) {
+            $encoder = $controller->getEncoder();
+            // le mot de passe en claire est encodé avant la sauvegarde
+            $encoded = $encoder->encodePassword($modele, $postModele->getPwd());
+            $modele->setPassword($encoded);
+        }
+
+
         return $modele;
     }
 

@@ -3,6 +3,9 @@
 namespace RoutanglangquanBundle\Entity\Association;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use RoutanglangquanBundle\Entity\AbstractRtlqEntity;
+
 
 /**
  * RtlqAdherent
@@ -10,9 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="rtlq_adherent",
  * uniqueConstraints={@ORM\UniqueConstraint(name="email", columns={"email"})},
  * indexes={@ORM\Index(name="id", columns={"id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="RoutanglangquanBundle\Repository\Association\AdherentRepository")
  */
-class RtlqAdherent {
+class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
 
     /**
      *
@@ -23,6 +26,11 @@ class RtlqAdherent {
     private $id;
 
     /**
+    * @ORM\Column(type="string", length=25, unique=true, nullable=false)
+    */
+    private $username;
+
+    /**
      *
      * @var string @ORM\Column(name="email", type="string", length=100, nullable=false)
      */
@@ -30,10 +38,10 @@ class RtlqAdherent {
 
     /**
      *
-     * @var string //TODO encrypted
-     *      @ORM\Column(name="pwd", type="string", length=100, nullable=false)
+     * @var string
+     * @ORM\Column(name="password", type="string", length=64, nullable=false)
      */
-    private $pwd;
+    private $password;
 
     /**
      *
@@ -180,26 +188,22 @@ class RtlqAdherent {
     }
 
     /**
-     * Set pwd
+     * Set password
      *
-     * @param string $pwd
+     * @param string $password
      *
      * @return RtlqAdherent
      */
-    public function setPwd($pwd) {
-        $this->pwd = $pwd;
+    public function setPassword($value) {
+        $this->password = $value;
 
         return $this;
     }
-
-    /**
-     * Get pwd
-     *
-     * @return string
-     */
-    public function getPwd() {
-        return $this->pwd;
+    public function getPassword()
+    {
+        return $this->password;
     }
+
 
     /**
      * Set telephone
@@ -479,7 +483,7 @@ class RtlqAdherent {
     public function getGroupes() {
         return $this->groupes;
     }
-    
+
     public function getCotisation() {
         return $this->cotisation;
     }
@@ -491,7 +495,7 @@ class RtlqAdherent {
     public function removeCotisation() {
         $this->cotisation = null;
     }
-    
+
     public function getDateLastAuth() {
         return $this->dateLastAuth;
     }
@@ -507,7 +511,7 @@ class RtlqAdherent {
     }
 
 
-    
+
     /**
      * has tresories ?
      *
@@ -539,7 +543,7 @@ class RtlqAdherent {
         $this->tresories->removeElement($tresorie);
         $tresorie->setAdherent(null);
     }
-    
+
     /**
      * Remove All tresorie
      *
@@ -572,4 +576,50 @@ class RtlqAdherent {
         $this->licenceEtat = $licenceEtat;
         return $this;
     }
+
+    public function setUsername($value)
+    {
+        $this->username=$value;
+        return $this;
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+    }
+
+    public function eraseCredentials()
+    {
+    }
+    /** @see \Serializable::serialize() */
+        public function serialize()
+        {
+            return serialize(array(
+                $this->id,
+                $this->username,
+                $this->password,
+                $this->actif,
+            ));
+        }
+
+        /** @see \Serializable::unserialize() */
+        public function unserialize($serialized)
+        {
+            list (
+                $this->id,
+                $this->username,
+                $this->password,
+                $this->actif,
+            ) = unserialize($serialized);
+        }
 }

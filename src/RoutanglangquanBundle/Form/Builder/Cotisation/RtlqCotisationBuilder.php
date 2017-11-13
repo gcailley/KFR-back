@@ -8,7 +8,7 @@ use RoutanglangquanBundle\Form\Dto\Cotisation\RtlqCotisationDTO;
 
 class RtlqCotisationBuilder extends AbstractRtlqBuilder
 {
-    public function dtoToModele($em, $dto)
+    public function dtoToModele($em, $dto, $controller)
     {
         $modele = new RtlqCotisation ();
         

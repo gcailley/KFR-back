@@ -13,6 +13,7 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     protected $email;
     protected $pwd;
     protected $telephone;
+    protected $username;
     protected $nom;
     protected $prenom;
     protected $date_naissance;
@@ -58,6 +59,10 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
 
     public function getTelephone() {
         return $this->telephone;
+    }
+
+    public function getUsername() {
+        return $this->username;
     }
 
     public function getNom() {
@@ -119,6 +124,11 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
 
     public function setEmail($email) {
         $this->email = $email;
+        return $this;
+    }
+    
+    public function setUsername($value) {
+        $this->username = $value;
         return $this;
     }
 
