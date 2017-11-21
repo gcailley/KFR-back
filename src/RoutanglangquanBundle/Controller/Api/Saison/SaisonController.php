@@ -18,21 +18,26 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 /**
  * @Route("/api/saisons")
  */
-class SaisonController extends AbstractCrudApiController {
+class SaisonController extends AbstractCrudApiController
+{
 
-    protected function getName() {
+    function getName()
+    {
         return 'RoutanglangquanBundle:Saison\RtlqSaison';
     }
 
-    protected function getNameType() {
+    function getNameType()
+    {
         return "RoutanglangquanBundle\Form\Type\Saison\RtlqSaisonType";
     }
 
-    protected function getBuilder() {
+    protected function getBuilder()
+    {
         return new RtlqSaisonBuilder();
     }
 
-    protected function newDto() {
+    function newDto()
+    {
         return new RtlqSaisonDTO();
     }
 
@@ -40,11 +45,13 @@ class SaisonController extends AbstractCrudApiController {
      * Validateur par defaut ne faisant aucune validation spécifique sur le bean.
      *
      */
-    public function getValidator() {
+    public function getValidator()
+    {
         return new RtlqSaisonValidator();
     }
 
-    public function preConditionCreationAction($em, $entityMetier) {
+    public function preConditionCreationAction($em, $entityMetier)
+    {
         // uniquement si cette saison et la saison active
         // précondution
         if ($entityMetier->getActive()) {
@@ -66,7 +73,8 @@ class SaisonController extends AbstractCrudApiController {
      * @Method("GET")
      * Security("has_role('ROLE_ADMIN')")
      */
-    public function getAllActiveAction(Request $request) {
+    public function getAllActiveAction(Request $request)
+    {
         $active = $request->query->get('active')=="true";
         
         $em = $this->getDoctrine()->getManager();
@@ -77,5 +85,4 @@ class SaisonController extends AbstractCrudApiController {
         $dto_saisons = $this->builder->modelesToDtos($saisons);
         return new Response(json_encode($dto_saisons), Response::HTTP_ACCEPTED);
     }
-
 }

@@ -10,7 +10,4 @@ class RtlqKungfuStyleBuilder extends AbstractRtlqEnumBuilder {
 	protected function getModele() {
 		return new RtlqKungfuStyle ();
 	}
-	protected function getDto() {
-		return new RtlqKungfuStyleDTO ();
-	}
 }

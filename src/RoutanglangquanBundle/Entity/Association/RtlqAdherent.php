@@ -128,11 +128,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
     private $licenceEtat;
 
     /**
-     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqGroupe", inversedBy="adherents" )
-     * @ORM\JoinTable(name="adherents_groupes",
-     *      joinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="groupe_id", referencedColumnName="id")}
-     *      )
+     * 
+     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqGroupe", mappedBy="adherents")
      */
     private $groupes;
 
@@ -455,6 +452,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @return RtlqAdherent
      */
     public function addGroupe(\RoutanglangquanBundle\Entity\Association\RtlqGroupe $groupe) {
+        $groupe->addAdherent($this);
         $this->groupes[] = $groupe;
 
         return $this;
@@ -595,7 +593,11 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
 
     public function getRoles()
     {
-        return array('ROLE_USER');
+        $roles = array('ANONYMOUS');
+         foreach ($this->groupes as $groupe) {
+             $roles[] = $groupe->getRole();
+         };
+         return $roles;
     }
 
     public function eraseCredentials()

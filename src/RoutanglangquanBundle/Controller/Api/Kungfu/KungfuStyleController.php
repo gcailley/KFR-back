@@ -16,22 +16,26 @@ use RoutanglangquanBundle\Controller\Api\AbstractCrudApiController;
 /**
  * @Route("/api/kungfu/styles")
  */
-class KungfuStyleController extends AbstractCrudApiController {
-	
-	protected function getName() {
-		return 'RoutanglangquanBundle:Kungfu\RtlqKungfuStyle';
-	}
+class KungfuStyleController extends AbstractCrudApiController
+{
+    
+    public function getName()
+    {
+        return 'RoutanglangquanBundle:Kungfu\RtlqKungfuStyle';
+    }
 
-	protected function getNameType() {
-		return "RoutanglangquanBundle\Form\Type\Kungfu\RtlqKungfuStyleType";
-	}
+    public function getNameType()
+    {
+        return "RoutanglangquanBundle\Form\Type\Kungfu\RtlqKungfuStyleType";
+    }
 
-	protected function getBuilder() {
-		return new RtlqKungfuStyleBuilder();
-	}
-	
-	protected  function newDto() {
-		return new RtlqKungfuStyleDTO();
-	}
-
+    protected function getBuilder()
+    {
+        return new RtlqKungfuStyleBuilder();
+    }
+    
+    public function newDto()
+    {
+        return new RtlqKungfuStyleDTO();
+    }
 }

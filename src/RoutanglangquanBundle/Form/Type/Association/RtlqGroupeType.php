@@ -17,9 +17,11 @@ class RtlqGroupeType extends AbstractRtlqType
         $builder
                 ->add('id', NumberType::class)
                 ->add('nom', TextType::class)
+                ->add('role', TextType::class)
                 ->add('nb_adherents', NumberType::class)
                 ->add('adherents', CollectionType::class, array(
                     'entry_type'   => RtlqAdherentType::class,
+                    'allow_extra_fields' => true,
                     'allow_add'     => true,
                     'allow_delete'  => true,
                     'prototype'     => true,

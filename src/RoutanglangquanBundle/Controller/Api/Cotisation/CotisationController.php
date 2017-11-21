@@ -10,22 +10,26 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 /**
  * @Route("/api/cotisations")
  */
-class CotisationController extends AbstractCrudApiController {
-	
-	protected function getName() {
-		return 'RoutanglangquanBundle:Cotisation\RtlqCotisation';
-	}
+class CotisationController extends AbstractCrudApiController
+{
+    
+    function getName()
+    {
+        return 'RoutanglangquanBundle:Cotisation\RtlqCotisation';
+    }
 
-	protected function getNameType() {
-		return "RoutanglangquanBundle\Form\Type\Cotisation\RtlqCotisationType";
-	}
+    function getNameType()
+    {
+        return "RoutanglangquanBundle\Form\Type\Cotisation\RtlqCotisationType";
+    }
 
-	protected function getBuilder() {
-		return new RtlqCotisationBuilder();
-	}
-	
-	protected  function newDto() {
-		return new RtlqCotisationDTO();
-	}
-
+    protected function getBuilder()
+    {
+        return new RtlqCotisationBuilder();
+    }
+    
+    function newDto()
+    {
+        return new RtlqCotisationDTO();
+    }
 }

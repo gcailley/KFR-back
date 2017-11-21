@@ -8,11 +8,8 @@ use RoutanglangquanBundle\Form\Dto\Cotisation\RtlqCotisationDTO;
 
 class RtlqCotisationBuilder extends AbstractRtlqBuilder
 {
-    public function dtoToModele($em, $dto, $controller)
+    public function dtoToModele($em, $dto, $modele, $controller)
     {
-        $modele = new RtlqCotisation ();
-        
-        $modele->setId ( $dto->getId () );
         $modele->setDescription ( $dto->getDescription () );
         $modele->setCotisation ( $dto->getCotisation() );
         $modele->setRepartitionCheque($dto->getRepartitionCheque() );
@@ -25,9 +22,9 @@ class RtlqCotisationBuilder extends AbstractRtlqBuilder
     }
     
     
-    public function modeleToDto($modele)
+    public function modeleToDto($modele, $controller)
     {
-        $dto = new RtlqCotisationDTO ();
+        $dto = $controller->newDto();
         
         $dto->setId ( $modele->getId () );
         $dto->setDescription ( $modele->getDescription () );

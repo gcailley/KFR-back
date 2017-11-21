@@ -25,6 +25,7 @@ abstract class AbstractRtlqType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
+            // 'allow_extra_fields' => true,
             'csrf_protection' => false,
         ));
     }

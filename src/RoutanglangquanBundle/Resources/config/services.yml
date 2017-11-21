@@ -9,3 +9,6 @@ services:
     routanglangquanbundle.auth_token_authenticator:
         class: RoutanglangquanBundle\Service\Security\User\AuthTokenAuthenticator
         arguments: ["@security.http_utils"]
+
+    routanglangquanbundle.adherent_controller:
+        class: RoutanglangquanBundle\Controller\Api\Association\AdherentController

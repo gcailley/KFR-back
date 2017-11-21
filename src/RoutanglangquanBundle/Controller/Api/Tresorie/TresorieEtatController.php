@@ -16,22 +16,26 @@ use RoutanglangquanBundle\Form\Dto\Tresorie\RtlqTresorieEtatDTO;
 /**
  * @Route("/api/tresorie/etats")
  */
-class TresorieEtatController extends AbstractCrudApiController {
-	
-	protected function getName() {
-		return 'RoutanglangquanBundle:Tresorie\RtlqTresorieEtat';
-	}
+class TresorieEtatController extends AbstractCrudApiController
+{
+    
+    function getName()
+    {
+        return 'RoutanglangquanBundle:Tresorie\RtlqTresorieEtat';
+    }
 
-	protected function getNameType() {
-		return "RoutanglangquanBundle\Form\Type\Tresorie\RtlqTresorieEtatType";
-	}
+    function getNameType()
+    {
+        return "RoutanglangquanBundle\Form\Type\Tresorie\RtlqTresorieEtatType";
+    }
 
-	protected function getBuilder() {
-		return new RtlqTresorieEtatBuilder();
-	}
-	
-	protected  function newDto() {
-		return new RtlqTresorieEtatDTO();
-	}
-
+    protected function getBuilder()
+    {
+        return new RtlqTresorieEtatBuilder();
+    }
+    
+    function newDto()
+    {
+        return new RtlqTresorieEtatDTO();
+    }
 }

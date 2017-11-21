@@ -9,9 +9,10 @@ use RoutanglangquanBundle\Entity\Security\RtlqAuthToken;
 use RoutanglangquanBundle\Form\Builder\AbstractRtlqBuilder;
 use RoutanglangquanBundle\Entity\Association\RtlqAdherent;
 
-class RtlqCredentialsBuilder extends AbstractRtlqBuilder {
-	public function dtoToModele($em, $dto, $controller) {
-		$modele = new RtlqAuthToken ();
+class RtlqCredentialsBuilder extends AbstractRtlqBuilder
+{
+    public function dtoToModele($em, $dto, $modele, $controller)
+    {
 
         $adherentRepo = $em->getRepository('RoutanglangquanBundle:Association\RtlqAdherent');
         $adherentPossible = $adherentRepo->loadUserByUsername($dto->getLogin());
@@ -20,28 +21,28 @@ class RtlqCredentialsBuilder extends AbstractRtlqBuilder {
             throw new UsernameNotFoundException('Invalid username or password');
         }
 
-		$encoder = $controller->getEncoder();
+        $encoder = $controller->getEncoder();
         $isPasswordValid = $encoder->isPasswordValid($adherentPossible, $dto->getPassword());
 
         if (!$isPasswordValid) { // Le mot de passe n'est pas correct
             throw new UsernameNotFoundException('Invalid username or password');
         }
 
-		$modele->setValue(base64_encode(random_bytes(50)));
-		$modele->setCreatedAt(new \DateTime('now'));
+        $modele->setValue(base64_encode(random_bytes(50)));
+        $modele->setCreatedAt(new \DateTime('now'));
 
-		//get adhernent from database to create the credentials
-		$adherentRepo = $em->getRepository("RoutanglangquanBundle\Entity\Association\RtlqAdherent");
-		$adherent = $adherentRepo->find($adherentPossible->getId());
+        //get adhernent from database to create the credentials
+        $adherentRepo = $em->getRepository("RoutanglangquanBundle\Entity\Association\RtlqAdherent");
+        $adherent = $adherentRepo->find($adherentPossible->getId());
         $modele->setUser($adherent);
-		return $modele;
-	}	
-	
-	public function modeleToDto($modele) {
-		$dto = new RtlqCredentialsDTO ();
+        return $modele;
+    }
+    
+    public function modeleToDto($modele,  $controller)
+    {
+		$dto = $controller->newDto();
+        $dto->setToken ( $modele->getValue());
 
-		$dto->setToken ( $modele->getValue());
-
-		return $dto;
-	}
+        return $dto;
+    }
 }

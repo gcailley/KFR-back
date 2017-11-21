@@ -27,7 +27,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
         if (!is_object($tresorie)) {
             throw $this->createNotFoundException();
         }
-        $dto_tresorie = $this->builder->modeleToDto($tresorie);
+        $dto_tresorie = $this->builder->modeleToDto($tresorie, $this);
         
         return  $this->newResponse(json_encode($dto_tresorie), Response::HTTP_ACCEPTED);
     }
@@ -41,7 +41,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
     {
         $tresories = $this->getDoctrine()->getRepository($this->getName())->findAll();
 
-        $dto_tresories = $this->builder->modelesToDtos($tresories);
+        $dto_tresories = $this->builder->modelesToDtos($tresories, $this);
         return $this->newResponse(json_encode($dto_tresories), Response::HTTP_ACCEPTED);
     }
 
@@ -54,7 +54,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $data = json_decode($request->getContent(), true);
 
         //looking for object into the database.
-        $this->getByIdAction($id);
+        $entityDB = $this->getDoctrine()->getRepository($this->getName())->find($id);
 
         $em = $this->getDoctrine()->getManager();
         $entityDto = $this->newDto();
@@ -67,13 +67,13 @@ abstract class AbstractCrudApiController extends AbstractApiController
             throw $this->createInvalideBean($errors);
         }
 
-        $entity = $this->builder->dtoToModele($em, $entityDto, $this);
-        $entity->setId($id);
+        // convertion to Modele
+        $entity = $this->builder->dtoToModele($em, $entityDto, $entityDB, $this);
 
         $em->merge($entity);
         $em->flush();
 
-        $dto = $this->builder->modeleToDto($entity);
+        $dto = $this->builder->modeleToDto($entity, $this);
         return $this->newResponse(json_encode($dto), Response::HTTP_ACCEPTED);
     }
 
@@ -100,7 +100,10 @@ abstract class AbstractCrudApiController extends AbstractApiController
         }
 
         //convertir en objet metier
-        $entityMetier = $this->builder->dtoToModele($em, $entityDto, $this);
+        $modele = $this->getNewModeleInstance();
+dump($entityDto);        
+dump($modele);
+        $entityMetier = $this->builder->dtoToModele($em, $entityDto, $modele, $this);
 
         try {
             $preConditionErrors = $this->preConditionCreationAction($em, $entityMetier);
@@ -115,7 +118,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $em->persist($entityMetier);
         $em->flush();
 
-        $dto = $this->builder->modeleToDto($entityMetier);
+        $dto = $this->builder->modeleToDto($entityMetier, $this);
         return $this->newResponse(json_encode($dto), Response::HTTP_CREATED);
     }
 
@@ -146,5 +149,12 @@ abstract class AbstractCrudApiController extends AbstractApiController
 
     protected function internalDeleteByIdAction($em, $entity)
     {
+    }
+
+
+    protected function getNewModeleInstance() {
+        
+        $entityname = str_replace(":", "\\Entity\\", $this->getName()) ;
+        return new $entityname;
     }
 }

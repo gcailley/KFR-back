@@ -15,7 +15,7 @@ use RoutanglangquanBundle\Entity\Kungfu\RtlqKungfuNiveau;
  * indexes={@ORM\Index(name="id", columns={"id"})})
  * @ORM\Entity
  */
-class RtlqTao extends AbstractRtlqEntity{
+class RtlqKungfuTao extends AbstractRtlqEntity{
 
 
     /**
@@ -27,12 +27,12 @@ class RtlqTao extends AbstractRtlqEntity{
     private $id;
     public function setId($value)
     {
-        $this->$id = $value;
+        $this->id = $value;
         return $this;
     }
 
     public  function getId() {
-        return $this->$id;
+        return $this->id;
     }
 
 
@@ -43,12 +43,12 @@ class RtlqTao extends AbstractRtlqEntity{
     private $nom;
     public function setNom($value)
     {
-        $this->$nom = $value;
+        $this->nom = $value;
         return $this;
     }
 
     public  function getNom() {
-        return $this->$nom;
+        return $this->nom;
     }
 
 
@@ -59,12 +59,12 @@ class RtlqTao extends AbstractRtlqEntity{
     private $nomChinois;
     public function setNomChinois($value)
     {
-        $this->$nomChinois = $value;
+        $this->nomChinois = $value;
         return $this;
     }
 
     public  function getNomChinois() {
-        return $this->$nomChinois;
+        return $this->nomChinois;
     }
 
     /**
@@ -74,12 +74,12 @@ class RtlqTao extends AbstractRtlqEntity{
     private $description;
     public function setDescription($value)
     {
-        $this->$description = $value;
+        $this->description = $value;
         return $this;
     }
 
     public  function getDescription() {
-        return $this->$description;
+        return $this->description;
     }
 
 
@@ -91,18 +91,18 @@ class RtlqTao extends AbstractRtlqEntity{
     private $style;
     public function setStyle($value)
     {
-        $this->$style = $value;
+        $this->style = $value;
         return $this;
     }
 
     public  function getStyle() {
-        return $this->$style;
+        return $this->style;
     }
     public  function getStyleId() {
-        return ($this->$style==null)?null:$this->$style->getId();
+        return ($this->style==null)?null:$this->style->getId();
     }
     public  function getStyleName() {
-        return ($this->$style==null)?null:$this->$style->getName();
+        return ($this->style==null)?null:$this->style->getValue();
     }
     
 
@@ -114,32 +114,32 @@ class RtlqTao extends AbstractRtlqEntity{
     private $niveau;
     public function setNiveau($value)
     {
-        $this->$niveau = $value;
+        $this->niveau = $value;
         return $this;
     }
 
     public  function getNiveau() {
-        return $this->$niveau;
+        return $this->niveau;
     }
     public  function getNiveauId() {
-        return ($this->$niveau==null)?null:$this->$niveau->getId();
+        return ($this->niveau==null)?null:$this->niveau->getId();
     }
     public  function getNiveauName() {
-        return ($this->$niveau==null)?null:$this->$niveau->getName();
+        return ($this->niveau==null)?null:$this->niveau->getValue();
     }
     /**
      *
-     * @var string @ORM\Column(name="armes", type="string", length=100, nullable=false)
+     * @var string @ORM\Column(name="arme", type="string", length=100, nullable=true)
      */
-    private $armes;
+    private $arme;
     public function setArme($value)
     {
-        $this->$arme = $value;
+        $this->arme = $value;
         return $this;
     }
 
     public  function getArme() {
-        return $this->$arme;
+        return $this->arme;
     }
 
     /**
@@ -149,12 +149,12 @@ class RtlqTao extends AbstractRtlqEntity{
     private $armeUrl;
     public function setArmeUrl($value)
     {
-        $this->$armeUrl = $value;
+        $this->armeUrl = $value;
         return $this;
     }
 
     public  function getArmeUrl() {
-        return $this->$armeUrl;
+        return $this->armeUrl;
     }
 
     /**
@@ -165,12 +165,12 @@ class RtlqTao extends AbstractRtlqEntity{
 
     public function setVideoUrl($value)
     {
-        $this->$videoUrl = $value;
+        $this->videoUrl = $value;
         return $this;
     }
 
     public  function getVideoUrl() {
-        return $this->$videoUrl;
+        return $this->videoUrl;
     }
 
     /**

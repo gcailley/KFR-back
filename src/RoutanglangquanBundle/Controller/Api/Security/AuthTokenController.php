@@ -18,25 +18,31 @@ use RoutanglangquanBundle\Form\Dto\Security\RtlqCredentialsDTO;
 use RoutanglangquanBundle\Form\Validator\Security\RtlqCredentialsValidator;
 use RoutanglangquanBundle\Entity\Association\RtlqAdherent;
 use RoutanglangquanBundle\Service\Security\User\AuthTokenAuthenticator;
+
 /**
  * @Route("/security/tokens")
  */
-class AuthTokenController extends AbstractCrudApiController {
+class AuthTokenController extends AbstractCrudApiController
+{
 
     
-    protected function getName() {
+    function getName()
+    {
         return 'RoutanglangquanBundle:Security\RtlqAuthToken';
     }
 
-    protected function getNameType() {
+    function getNameType()
+    {
         return "RoutanglangquanBundle\Form\Type\Security\RtlqCredentialsType";
     }
 
-    protected function getBuilder() {
+    protected function getBuilder()
+    {
         return new RtlqCredentialsBuilder();
     }
 
-    protected function newDto() {
+    function newDto()
+    {
         return new RtlqCredentialsDTO();
     }
 
@@ -44,11 +50,13 @@ class AuthTokenController extends AbstractCrudApiController {
      * Validateur par defaut ne faisant aucune validation spécifique sur le bean.
      *
      */
-    public function getValidator() {
+    public function getValidator()
+    {
         return new RtlqCredentialsValidator();
     }
 
-    public function preConditionCreationAction($em, $entityMetier) {
+    public function preConditionCreationAction($em, $entityMetier)
+    {
         return null;
     }
 
@@ -95,5 +103,4 @@ class AuthTokenController extends AbstractCrudApiController {
     {
         return $this->newResponse(null, Response::HTTP_METHOD_NOT_ALLOWED);
     }
-
 }

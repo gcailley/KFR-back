@@ -8,26 +8,29 @@ use RoutanglangquanBundle\Form\Dto\Association\RtlqNewsDTO;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-
 /**
  * @Route("/api/association/news")
  */
-class NewsController extends AbstractCrudApiController {
+class NewsController extends AbstractCrudApiController
+{
 
-    protected function getName() {
+    function getName()
+    {
         return 'RoutanglangquanBundle:Association\RtlqNews';
     }
 
-    protected function getNameType() {
+    function getNameType()
+    {
         return "RoutanglangquanBundle\Form\Type\Association\RtlqNewsType";
     }
 
-    protected function getBuilder() {
+    protected function getBuilder()
+    {
         return new RtlqNewsBuilder();
     }
 
-    protected function newDto() {
+    function newDto()
+    {
         return new RtlqNewsDTO();
     }
-
 }

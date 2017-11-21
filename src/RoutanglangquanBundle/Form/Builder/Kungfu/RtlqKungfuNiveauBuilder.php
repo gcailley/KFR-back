@@ -10,7 +10,4 @@ class RtlqKungfuNiveauBuilder extends AbstractRtlqEnumBuilder {
 	protected function getModele() {
 		return new RtlqKungfuNiveau ();
 	}
-	protected function getDto() {
-		return new RtlqKungfuNiveauDTO ();
-	}
 }

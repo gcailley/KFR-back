@@ -4,132 +4,122 @@ namespace RoutanglangquanBundle\Form\Dto\Kungfu;
 
 use RoutanglangquanBundle\Form\Dto\AbstractRtlqDTO;
 
-class RtlqKungfuDTO extends AbstractRtlqDTO {
-    private $id;
-    public function setId($value)
-    {
-        $this->$id = $value;
-        return $this;
-    }
+class RtlqKungfuTaoDTO extends AbstractRtlqDTO {
 
-    public  function getId() {
-        return $this->$id;
-    }
-
-    private $nom;
+    protected $nom;
     public function setNom($value)
     {
-        $this->$nom = $value;
+        $this->nom = $value;
         return $this;
     }
 
     public  function getNom() {
-        return $this->$nom;
+        return $this->nom;
     }
 
 
-    private $nom_chinois;
+    protected $nom_chinois;
     public function setNomChinois($value)
     {
-        $this->$nom_chinois = $value;
+        $this->nom_chinois = $value;
         return $this;
     }
 
     public  function getNomChinois() {
-        return $this->$nom_chinois;
+        return $this->nom_chinois;
     }
 
-    private $description;
+    protected $description;
     public function setDescription($value)
     {
-        $this->$description = $value;
+        $this->description = $value;
         return $this;
     }
 
     public  function getDescription() {
-        return $this->$description;
+        return $this->description;
     }
 
 
-    private $style_id;
+    protected $style_id;
     public function setStyleId($value)
     {
-        $this->$style_id = $value;
+        $this->style_id = $value;
         return $this;
     }
 
     public  function getStyleId() {
-        return $this->$style_id;
+        return $this->style_id;
     }
     
 
-    private $style_name;
+    protected $style_name;
     public function setStyleName($value)
     {
-        $this->$style_name = $value;
+        $this->style_name = $value;
         return $this;
     }
 
     public  function getStyleName() {
-        return $this->$style_name;
+        return $this->style_name;
     }
     
 
-    private $niveau_id;
+    protected $niveau_id;
     public function setNiveauId($value)
     {
-        $this->$niveau_id = $value;
+        $this->niveau_id = $value;
         return $this;
     }
 
     public  function getNiveauId() {
-        return $this->$niveau_id;
+        return $this->niveau_id;
     }
 
 
-    private $niveau_name;
+    protected $niveau_name;
     public function setNiveauName($value)
     {
-        $this->$niveau_name = $value;
+        $this->niveau_name = $value;
         return $this;
     }
 
     public  function getNiveauName() {
-        return $this->$niveau_name;
+        return $this->niveau_name;
     }
 
 
-    private $arme;
+    protected $arme;
     public function setArme($value)
     {
-        $this->$arme = $value;
+        $this->arme = $value;
         return $this;
     }
 
     public  function getArme() {
-        return $this->$arme;
+        return $this->arme;
     }
 
-    private $arme_url;
+    protected $arme_url;
     public function setArmeUrl($value)
     {
-        $this->$arme_url = $value;
+        $this->arme_url = $value;
         return $this;
     }
 
     public  function getArmeUrl() {
-        return $this->$arme_url;
+        return $this->arme_url;
     }
 
-    private $video_url;
+    protected $video_url;
     public function setVideoUrl($value)
     {
-        $this->$video_url = $value;
+        $this->video_url = $value;
         return $this;
     }
 
     public  function getVideoUrl() {
-        return $this->$video_url;
+        return $this->video_url;
     }
 
     protected $actif;

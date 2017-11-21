@@ -14,6 +14,10 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 abstract class AbstractController extends Controller
 {
 
+    public function getController($value) {
+        return $this->get($value);
+    }
+
     protected function newResponse($data, $code)
     {
         $response = new Response($data, $code);

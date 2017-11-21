@@ -17,22 +17,26 @@ use RoutanglangquanBundle\Controller\Api\AbstractCrudApiController;
 /**
  * @Route("/api/tresorie/categories")
  */
-class TresorieCategorieController extends AbstractCrudApiController {
-	
-	protected function getName() {
-		return 'RoutanglangquanBundle:Tresorie\RtlqTresorieCategorie';
-	}
+class TresorieCategorieController extends AbstractCrudApiController
+{
+    
+    function getName()
+    {
+        return 'RoutanglangquanBundle:Tresorie\RtlqTresorieCategorie';
+    }
 
-	protected function getNameType() {
-		return "RoutanglangquanBundle\Form\Type\Tresorie\RtlqTresorieCategorieType";
-	}
+    function getNameType()
+    {
+        return "RoutanglangquanBundle\Form\Type\Tresorie\RtlqTresorieCategorieType";
+    }
 
-	protected function getBuilder() {
-		return new RtlqTresorieCategorieBuilder();
-	}
-	
-	protected  function newDto() {
-		return new RtlqTresorieCategorieDTO();
-	}
-
+    protected function getBuilder()
+    {
+        return new RtlqTresorieCategorieBuilder();
+    }
+    
+    function newDto()
+    {
+        return new RtlqTresorieCategorieDTO();
+    }
 }

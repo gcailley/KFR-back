@@ -16,22 +16,26 @@ use RoutanglangquanBundle\Controller\Api\AbstractCrudApiController;
 /**
  * @Route("/api/kungfu/niveaux")
  */
-class KungfuNiveauController extends AbstractCrudApiController {
-	
-	protected function getName() {
-		return 'RoutanglangquanBundle:Kungfu\RtlqKungfuNiveau';
-	}
+class KungfuNiveauController extends AbstractCrudApiController
+{
+    
+    function getName()
+    {
+        return 'RoutanglangquanBundle:Kungfu\RtlqKungfuNiveau';
+    }
 
-	protected function getNameType() {
-		return "RoutanglangquanBundle\Form\Type\Kungfu\RtlqKungfuNiveauType";
-	}
+    function getNameType()
+    {
+        return "RoutanglangquanBundle\Form\Type\Kungfu\RtlqKungfuNiveauType";
+    }
 
-	protected function getBuilder() {
-		return new RtlqKungfuNiveauBuilder();
-	}
-	
-	protected  function newDto() {
-		return new RtlqKungfuNiveauDTO();
-	}
-
+    protected function getBuilder()
+    {
+        return new RtlqKungfuNiveauBuilder();
+    }
+    
+    function newDto()
+    {
+        return new RtlqKungfuNiveauDTO();
+    }
 }

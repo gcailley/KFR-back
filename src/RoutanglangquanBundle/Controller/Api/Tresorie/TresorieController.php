@@ -20,30 +20,36 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * @Route("/api/tresorie/tresories")
  */
-class TresorieController extends AbstractCrudApiController {
-	
-	protected function getName() {
-		return 'RoutanglangquanBundle:Tresorie\RtlqTresorie';
-	}
+class TresorieController extends AbstractCrudApiController
+{
+    
+    function getName()
+    {
+        return 'RoutanglangquanBundle:Tresorie\RtlqTresorie';
+    }
 
-	protected function getNameType() {
-		return "RoutanglangquanBundle\Form\Type\Tresorie\RtlqTresorieType";
-	}
+    function getNameType()
+    {
+        return "RoutanglangquanBundle\Form\Type\Tresorie\RtlqTresorieType";
+    }
 
-	protected function getBuilder() {
-		return new RtlqTresorieBuilder();
-	}
-	
-	protected  function newDto() {
-		return new RtlqTresorieDTO();
-	}
+    protected function getBuilder()
+    {
+        return new RtlqTresorieBuilder();
+    }
+    
+    function newDto()
+    {
+        return new RtlqTresorieDTO();
+    }
 
         
      /**
      * @Route("/by-user-{id}")
      * @Method("GET")
      */
-    public function getTresoriesByUser($id) {
+    public function getTresoriesByUser($id)
+    {
         
         $em = $this->getDoctrine()->getManager();
         $tresorieRepo = $em->getRepository("RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie");
@@ -53,7 +59,7 @@ class TresorieController extends AbstractCrudApiController {
             throw new NotFoundHttpException("No tresorie Found for $id");
         }
         
-        $dtos = $this->builder->modelesToDtos($entity);        
+        $dtos = $this->builder->modelesToDtos($entity);
         return new Response(json_encode($dtos), 201);
     }
 }

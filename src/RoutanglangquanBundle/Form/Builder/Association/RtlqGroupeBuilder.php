@@ -17,30 +17,32 @@ class RtlqGroupeBuilder extends AbstractRtlqBuilder
     }
     
 
-    public function dtoToModele($em, $postModele, $controller)
+    public function dtoToModele($em, $postModele, $modele, $controller)
     {
-        $modele = new RtlqGroupe ();
-        $modele->setId ( $postModele->getId () );
+
         $modele->setNom( $postModele->getNom () );
+        $modele->setRole( $postModele->getRole () );
         foreach ($postModele->getAdherents() as $adherentDto) {
-            $modele->addAdherent($em->getReference ( "RoutanglangquanBundle\Entity\Association\RtlqAdherent", $adherentDto['id'] )) ;
+            $modelAdh = $em->getReference ( "RoutanglangquanBundle\Entity\Association\RtlqAdherent", $adherentDto['id'] );
+            $modele->addAdherent($modelAdh);
         }
         return $modele;
     }
     
     
-    public function modeleToDto($modele)
+    public function modeleToDto($modele, $controller)
     {
-        $dto = new RtlqGroupeDTO ();
-        
+        $dto = $controller->newDto();
         $dto->setId ( $modele->getId () );
         $dto->setNom ( $modele->getNom() );
+        $dto->setRole ( $modele->getRole() );
 
+        $adherentController = $controller->getController('routanglangquanbundle.adherent_controller');
         foreach ($modele->getAdherents() as $adherent) {
-			$adherentDto = $this->rtlqAdherentBuilder->modeleToDtoLight($adherent);
+            $adherentDto = $this->rtlqAdherentBuilder->modeleToDtoLight($adherent, $adherentController);
             $dto->addAdherent( $adherentDto );
         }
-		
-		return $dto;
+        
+        return $dto;
     }
 }

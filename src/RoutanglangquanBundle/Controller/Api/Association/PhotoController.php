@@ -19,12 +19,12 @@ use RoutanglangquanBundle\Controller\Api\AbstractApiController;
 class PhotoController extends AbstractApiController
 {
 
-    protected function getName()
+    function getName()
     {
         return 'RoutanglangquanBundle:Association\RtlqNews';
     }
 
-    protected function getNameType()
+    function getNameType()
     {
         return "RoutanglangquanBundle\Form\Type\Association\RtlqNewsType";
     }
@@ -34,7 +34,7 @@ class PhotoController extends AbstractApiController
         return new RtlqNewsBuilder();
     }
 
-    protected function newDto()
+    function newDto()
     {
         return new RtlqNewsDTO();
     }
@@ -75,5 +75,4 @@ class PhotoController extends AbstractApiController
     {
         return  $this->newResponse(json_encode(null), Response::HTTP_NOT_IMPLEMENTED);
     }
-
 }

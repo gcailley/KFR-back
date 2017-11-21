@@ -32,9 +32,20 @@ class RtlqGroupe extends AbstractRtlqEntity {
      * @ORM\Column(name="nom", type="string", length=100, nullable=false)
      */
     private $nom;
-
+    
     /**
-     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqAdherent", mappedBy="groupes")
+     * @var string
+     *
+     * @ORM\Column(name="role", type="string", length=20, nullable=false)
+     */
+    private $role;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqAdherent", inversedBy="groupes")
+     * @ORM\JoinTable(name="adherents_groupes",
+     *      joinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="groupe_id", referencedColumnName="id")}
+     *      )
      * 
      */
     private $adherents;
@@ -79,6 +90,30 @@ class RtlqGroupe extends AbstractRtlqEntity {
         return $this->nom;
     }
 
+
+/**
+     * Set nom
+     *
+     * @param string $role
+     *
+     * @return RtlqGroupe
+     */
+    public function setRole($value) {
+        $this->role = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get role
+     *
+     * @return string
+     */
+    public function getRole() {
+        return $this->role;
+    }
+
+
     /**
      * Add adherent
      *
@@ -87,6 +122,7 @@ class RtlqGroupe extends AbstractRtlqEntity {
      * @return RtlqGroupe
      */
     public function addAdherent(RtlqAdherent $adherent) {
+        
         $this->adherents[] = $adherent;
 
         return $this;

@@ -10,22 +10,26 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 /**
  * @Route("/api/associations")
  */
-class AssociationController extends AbstractCrudApiController {
-	
-	protected function getName() {
-		return 'RoutanglangquanBundle:Association\RtlqAssociation';
-	}
+class AssociationController extends AbstractCrudApiController
+{
+    
+    function getName()
+    {
+        return 'RoutanglangquanBundle:Association\RtlqAssociation';
+    }
 
-	protected function getNameType() {
-		return "RoutanglangquanBundle\Form\Type\Association\RtlqAssociationType";
-	}
+    function getNameType()
+    {
+        return "RoutanglangquanBundle\Form\Type\Association\RtlqAssociationType";
+    }
 
-	protected function getBuilder() {
-		return new RtlqAssociationBuilder();
-	}
-	
-	protected  function newDto() {
-		return new RtlqAssociationDTO();
-	}
-
+    protected function getBuilder()
+    {
+        return new RtlqAssociationBuilder();
+    }
+    
+    function newDto()
+    {
+        return new RtlqAssociationDTO();
+    }
 }

@@ -15,7 +15,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use RoutanglangquanBundle\Form\Type\AbstractRtlqType;
 
-class RtlqKungfuType extends AbstractRtlqType
+class RtlqKungfuTaoType extends AbstractRtlqType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -30,7 +30,7 @@ class RtlqKungfuType extends AbstractRtlqType
         ->add ( 'style_name', TextType::class )
         ->add ( 'niveau_id', NumberType::class )
         ->add ( 'niveau_name', TextType::class )
-        ->add ( 'actif', BooleanType::class );
+        ->add ( 'actif', CheckBoxType::class );
     }
     
     public function getName()

@@ -21,7 +21,7 @@ abstract class AbstractApiController extends AbstractController {
 
     abstract protected function getBuilder();
 
-    abstract protected function newDto();
+    abstract public function newDto();
 
     public function __construct() {
         $this->builder = $this->getBuilder();

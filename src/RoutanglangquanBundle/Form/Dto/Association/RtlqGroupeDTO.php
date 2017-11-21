@@ -11,6 +11,7 @@ use RoutanglangquanBundle\Form\Dto\AbstractRtlqDTO;
 class RtlqGroupeDTO extends AbstractRtlqDTO {
 	
     protected $nom;
+    protected $role;
     protected $adherents;
     protected $nb_adherents = 0;
 
@@ -21,6 +22,10 @@ class RtlqGroupeDTO extends AbstractRtlqDTO {
     public function getNom() {
         return $this->nom;
     }
+    public function getRole() {
+        return $this->role;
+    }
+
 
     public function getAdherents() {
         return $this->adherents;
@@ -34,6 +39,10 @@ class RtlqGroupeDTO extends AbstractRtlqDTO {
 
     public function setNom($nom) {
         $this->nom = $nom;
+        return $this;
+    }
+    public function setRole($value) {
+        $this->role = $value;
         return $this;
     }
 

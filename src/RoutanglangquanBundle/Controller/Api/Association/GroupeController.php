@@ -14,11 +14,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
  */
 class GroupeController extends AbstractCrudApiController {
 
-    protected function getName() {
+    function getName() {
         return 'RoutanglangquanBundle:Association\RtlqGroupe';
     }
 
-    protected function getNameType() {
+    function getNameType() {
         return "RoutanglangquanBundle\Form\Type\Association\RtlqGroupeType";
     }
 
@@ -26,10 +26,9 @@ class GroupeController extends AbstractCrudApiController {
         return new RtlqGroupeBuilder();
     }
 
-    protected function newDto() {
+    function newDto() {
         return new RtlqGroupeDTO();
     }
-
     
     protected function internalDeleteByIdAction($em, $entity) {
         $entity->removeAllAdherents();

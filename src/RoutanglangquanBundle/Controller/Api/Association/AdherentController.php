@@ -20,11 +20,11 @@ use function GuzzleHttp\json_encode;
 class AdherentController extends AbstractCrudApiController {
 
 
-    protected function getName() {
+    function getName() {
         return 'RoutanglangquanBundle:Association\RtlqAdherent';
     }
 
-    protected function getNameType() {
+    function getNameType() {
         return "RoutanglangquanBundle\Form\Type\Association\RtlqAdherentType";
     }
 
@@ -32,7 +32,7 @@ class AdherentController extends AbstractCrudApiController {
         return new RtlqAdherentBuilder();
     }
 
-    protected function newDto() {
+    function newDto() {
         return new RtlqAdherentDTO();
     }
 
@@ -65,7 +65,7 @@ class AdherentController extends AbstractCrudApiController {
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $dto = $this->builder->modeleToDto($entity);
+        $dto = $this->builder->modeleToDto($entity, $this);
         return new Response(json_encode($dto->getCotisationId()), Response::HTTP_ACCEPTED);
     }
 
@@ -129,7 +129,7 @@ class AdherentController extends AbstractCrudApiController {
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $dto = $this->builder->modeleToDto($entity);
+        $dto = $this->builder->modeleToDto($entity, $this);
         return new Response(json_encode($dto->getGroupes()), Response::HTTP_ACCEPTED);
     }
 
@@ -194,7 +194,7 @@ class AdherentController extends AbstractCrudApiController {
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $dto = $this->builder->modeleToDto($entity);
+        $dto = $this->builder->modeleToDto($entity, $this);
         return new Response(json_encode($dto->getTresories()), Response::HTTP_ACCEPTED);
     }
 

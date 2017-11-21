@@ -8,19 +8,19 @@ use Symfony\Component\Intl\Exception\NotImplementedException;
 abstract class AbstractRtlqBuilder 
 {
 
-    abstract public function dtoToModele($em, $postModele, $controller);
+    abstract public function dtoToModele($em, $postModele, $modele, $controller);
     
-    abstract public function modeleToDto($modele);
+    abstract public function modeleToDto($modele, $controller);
 	
-	public function modeleToDtoLight($modele) {
-		return $this->modeleToDto($modele);
+	public function modeleToDtoLight($modele, $controller) {
+		return $this->modeleToDto($modele, $controller);
 	}
 
     
-    public function modelesToDtos($modeles) {
+    public function modelesToDtos($modeles, $controller) {
     	$dto_array = array();
     	foreach ($modeles as $modele) {
-    		$dto = $this->modeleToDto($modele);
+    		$dto = $this->modeleToDto($modele, $controller);
     		array_push($dto_array, $dto);
     	}
     	 return $dto_array;

@@ -9,11 +9,9 @@ use RoutanglangquanBundle\Form\Builder\AbstractRtlqBuilder;
 class RtlqAdherentBuilder extends AbstractRtlqBuilder
 {
 
-    public function dtoToModele($em, $postModele, $controller)
+    public function dtoToModele($em, $postModele, $modele, $controller)
     {
-        $modele = new RtlqAdherent ();
 
-        $modele->setId($postModele->getId());
         $modele->setUsername($postModele->getUsername());
         $modele->setEmail($postModele->getEmail());
         $modele->setTelephone($postModele->getTelephone());
@@ -55,13 +53,12 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         return $modele;
     }
 
-    public function modeleToDtoLight($modele)
+    public function modeleToDtoLight($modele, $controller)
     {
-        $dto = new RtlqAdherentDTO ();
-
+        $dto = $controller->newDto();      
         $dto->setId($modele->getId());
         $dto->setEmail($modele->getEmail());
-    // pour des raisons de sécurité ne doit pas être présent
+        // pour des raisons de sécurité ne doit pas être présent
         $dto->setPwd(null);
         $dto->setTelephone($modele->getTelephone());
         $dto->setNom($modele->getNom());
@@ -82,10 +79,9 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
     }
         
 
-    public function modeleToDto($modele)
+    public function modeleToDto($modele, $controller)
     {
-        $dto = $this->modeleToDtoLight($modele);
-
+        $dto = $this->modeleToDtoLight($modele, $controller);
         if ($modele->getGroupes() != null) {
             foreach ($modele->getGroupes() as $groupe) {
                 $dto->addGroupe($groupe->getId());
