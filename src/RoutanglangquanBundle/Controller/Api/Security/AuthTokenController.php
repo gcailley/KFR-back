@@ -60,11 +60,23 @@ class AuthTokenController extends AbstractCrudApiController
         return null;
     }
 
+
     /**
-     * @Route("/logout")
-     * @Method("DELETE")
+     * @Route("/checkuser")
+     * @Method("GET")
      */
-    public function logoutAction(Request $request)
+    public function checkuserAction(Request $request)
+    {
+        $entity = $this->getTokenByValue($request);
+
+        if (!is_object($entity)) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $this->newResponse(json_encode($entity), Response::HTTP_ACCEPTED);
+    }
+
+    private function getTokenByValue(Request $request) 
     {
         $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
         if (!$authTokenHeader) {
@@ -74,6 +86,18 @@ class AuthTokenController extends AbstractCrudApiController
         $entity = $this->getDoctrine()
                             ->getRepository($this->getName())
                                 ->findOneBy(array("value"=>$authTokenHeader));
+
+        return $entity;
+    }
+
+
+    /**
+     * @Route("/logout")
+     * @Method("DELETE")
+     */
+    public function logoutAction(Request $request)
+    {
+        $entity = $this->getTokenByValue($request);
 
         if (!is_object($entity)) {
             throw $this->createNotFoundException();

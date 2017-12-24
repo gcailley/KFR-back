@@ -19,9 +19,9 @@ class RtlqGroupeBuilder extends AbstractRtlqBuilder
 
     public function dtoToModele($em, $postModele, $modele, $controller)
     {
-
         $modele->setNom( $postModele->getNom () );
         $modele->setRole( $postModele->getRole () );
+        $modele->removeAllAdherents();
         foreach ($postModele->getAdherents() as $adherentDto) {
             $modelAdh = $em->getReference ( "RoutanglangquanBundle\Entity\Association\RtlqAdherent", $adherentDto['id'] );
             $modele->addAdherent($modelAdh);

@@ -12,7 +12,7 @@ security:
 
     firewalls:
         debug:
-            pattern: ^/(_(profiler|wdt)|css|images|js|api)/
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             pattern: ^/api

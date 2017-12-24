@@ -71,18 +71,21 @@ class SaisonController extends AbstractCrudApiController
     /**
      * @Route("", name="active")
      * @Method("GET")
-     * Security("has_role('ROLE_ADMIN')")
      */
-    public function getAllActiveAction(Request $request)
+    public function getAllActionActive(Request $request)
     {
-        $active = $request->query->get('active')=="true";
+        if ($request->query->get('active') == null) {
+            return parent::getAllAction($request);
+        } else {
+            $active = $request->query->get('active')=="true";
+ 
+            $em = $this->getDoctrine()->getManager();
+            $saisonRepo = $em->getRepository("RoutanglangquanBundle\Entity\Saison\RtlqSaison");
         
-        $em = $this->getDoctrine()->getManager();
-        $saisonRepo = $em->getRepository("RoutanglangquanBundle\Entity\Saison\RtlqSaison");
+            $saisons = $saisonRepo->findAllSeasonFilterByActive($active);
         
-        $saisons = $saisonRepo->findAllSeasonFilterByActive($active);
-        
-        $dto_saisons = $this->builder->modelesToDtos($saisons);
-        return new Response(json_encode($dto_saisons), Response::HTTP_ACCEPTED);
+            $dto_saisons = $this->builder->modelesToDtos($saisons, $this);
+            return new Response(json_encode($dto_saisons), Response::HTTP_ACCEPTED);
+        }
     }
 }

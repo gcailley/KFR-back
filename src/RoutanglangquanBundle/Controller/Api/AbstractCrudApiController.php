@@ -22,6 +22,8 @@ abstract class AbstractCrudApiController extends AbstractApiController
      */
     public function getByIdAction($id)
     {
+        dump($id);
+        
         $tresorie = $this->getDoctrine()->getRepository($this->getName())->find($id);
 
         if (!is_object($tresorie)) {
@@ -101,8 +103,6 @@ abstract class AbstractCrudApiController extends AbstractApiController
 
         //convertir en objet metier
         $modele = $this->getNewModeleInstance();
-dump($entityDto);        
-dump($modele);
         $entityMetier = $this->builder->dtoToModele($em, $entityDto, $modele, $this);
 
         try {
