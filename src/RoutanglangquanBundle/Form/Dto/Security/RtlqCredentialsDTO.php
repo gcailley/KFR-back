@@ -9,6 +9,8 @@ class RtlqCredentialsDTO
 
     public $token;
 
+    public $roles;
+
     public function getLogin()
     {
         return $this->login;
@@ -40,4 +42,16 @@ class RtlqCredentialsDTO
         $this->token = $value;
         return $this;
     }
+
+    
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+    public function setRoles($value)
+    {
+        $this->roles = $value;
+        return $this;
+    }
+
 }

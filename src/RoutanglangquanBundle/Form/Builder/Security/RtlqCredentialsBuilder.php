@@ -42,6 +42,7 @@ class RtlqCredentialsBuilder extends AbstractRtlqBuilder
     {
 		$dto = $controller->newDto();
         $dto->setToken ( $modele->getValue());
+        $dto->setRoles ( $modele->getUser()->getRoles());
 
         return $dto;
     }

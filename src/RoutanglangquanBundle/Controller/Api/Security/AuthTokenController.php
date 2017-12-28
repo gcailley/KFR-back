@@ -62,7 +62,7 @@ class AuthTokenController extends AbstractCrudApiController
 
 
     /**
-     * @Route("/checkuser")
+     * @Route("/check-user")
      * @Method("GET")
      */
     public function checkuserAction(Request $request)

@@ -58,6 +58,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         $dto = $controller->newDto();      
         $dto->setId($modele->getId());
         $dto->setEmail($modele->getEmail());
+        $dto->setUsername($modele->getUsername());
         // pour des raisons de sécurité ne doit pas être présent
         $dto->setPwd(null);
         $dto->setTelephone($modele->getTelephone());
