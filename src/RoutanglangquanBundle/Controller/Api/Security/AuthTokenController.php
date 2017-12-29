@@ -72,7 +72,6 @@ class AuthTokenController extends AbstractCrudApiController
         if (!is_object($entity)) {
             throw $this->createAccessDeniedException();
         }
-
         return $this->newResponse(json_encode($entity), Response::HTTP_ACCEPTED);
     }
 

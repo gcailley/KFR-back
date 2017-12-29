@@ -2,6 +2,7 @@
 
 namespace RoutanglangquanBundle\Controller\Api\Association;
 
+use Symfony\Component\HttpFoundation\Request;
 use RoutanglangquanBundle\Controller\Api\AbstractCrudApiController;
 use RoutanglangquanBundle\Form\Builder\Association\RtlqAdherentBuilder;
 use RoutanglangquanBundle\Form\Dto\Association\RtlqAdherentDTO;
@@ -12,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use RoutanglangquanBundle\Service\Security\User\AuthTokenAuthenticator;
 use function GuzzleHttp\json_encode;
 
 /**
@@ -252,4 +254,20 @@ class AdherentController extends AbstractCrudApiController {
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
+
+    /**
+     * @Route("/by-token")
+     * @Method("GET")
+     */
+    public function getUserByToken(Request $request) {
+        $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
+        $entityAssociate = $this->getDoctrine()
+                ->getRepository("RoutanglangquanBundle\Entity\Security\RtlqAuthToken")
+                    ->findOneBy(array("value"=>$authTokenHeader));
+        if (!is_object($entityAssociate)) {
+            throw new createAccessDeniedException();
+        }
+        //get user information based on the id associate from the token
+        return $this->getByIdAction($entityAssociate->getUser()->getId());
+    }
 }
