@@ -45,7 +45,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
 
     /**
      *
-     * @var string @ORM\Column(name="telephone", type="string", length=10, nullable=false)
+     * @var string @ORM\Column(name="telephone", type="string", length=20, nullable=false)
      */
     private $telephone;
 
@@ -87,7 +87,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
 
     /**
      *
-     * @var string @ORM\Column(name="avatar", type="string", length=100, nullable=true)
+     * @var string @ORM\Column(name="avatar", type="blob", nullable=true)
      */
     private $avatar;
 
@@ -359,7 +359,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
     /**
      * Set avatar
      *
-     * @param string $avatar
+     * @param blob $avatar
      *
      * @return RtlqAdherent
      */
@@ -372,7 +372,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
     /**
      * Get avatar
      *
-     * @return string
+     * @return blob
      */
     public function getAvatar() {
         return $this->avatar;

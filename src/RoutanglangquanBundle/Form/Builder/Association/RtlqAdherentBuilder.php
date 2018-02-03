@@ -71,7 +71,11 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         $dto->setAdresse($modele->getAdresse());
         $dto->setCodePostal($modele->getCodePostal());
         $dto->setVille($modele->getVille());
-        $dto->setAvatar($modele->getAvatar());
+        if ("resource" === gettype($modele->getAvatar())) {
+            $dto->setAvatar(stream_get_contents($modele->getAvatar()));
+        } else {
+            $dto->setAvatar($modele->getAvatar());
+        }
         $dto->setDateCreation($this->dateToString($modele->getDateCreation()));
         $dto->setDateLastAuth($this->dateToString($modele->getDateLastAuth()));
         $dto->setLicenceNumber($modele->getLicenceNumber());

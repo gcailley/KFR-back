@@ -1,12 +1,13 @@
 # This file is auto-generated during the composer install
 parameters:
-    database_host: localhost
+    database_host: null
     database_port: 3306
-    database_name: routanglangquan
-    database_user: root
+    database_name: null
+    database_user: null
     database_password: null
     mailer_transport: smtp
     mailer_host: 'ssl://smtp.googlemail.com'
-    mailer_user: kungfurennes@gmail.com
-    mailer_password: Rennes090807
-    secret: kqsdljosidjaohfubsbdoqoziidjoiqjsuhveviosn
+    mailer_user: null
+    mailer_password: null
+    secret: null
+    user_drive_basedir: /tmp

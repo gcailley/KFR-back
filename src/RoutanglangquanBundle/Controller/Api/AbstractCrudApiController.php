@@ -30,7 +30,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
             throw $this->createNotFoundException();
         }
         $dto_tresorie = $this->builder->modeleToDto($tresorie, $this);
-        
+
         return  $this->newResponse(json_encode($dto_tresorie), Response::HTTP_ACCEPTED);
     }
 
