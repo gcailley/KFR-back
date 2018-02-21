@@ -34,6 +34,7 @@ class RtlqSaisonDTO extends AbstractRtlqDTO {
 		return $this->nom;
 	}
 	
+
 	/**
 	 * Set dateDebut
 	 *

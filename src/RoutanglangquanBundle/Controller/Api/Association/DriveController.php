@@ -51,6 +51,38 @@ class DriveController extends AbstractController {
         return ($return && is_writable($prev_path)) ? mkdir($path) : false;
     }
 
+
+    private /**
+    * 
+    * Generate Thumbnail using Imagick class
+    *  
+    * @param string $img
+    * @param string $width
+    * @param string $height
+    * @param int $quality
+    * @return boolean on true
+    * @throws Exception
+    * @throws ImagickException
+    */
+   function generateThumbnail($img, $width, $height, $quality = 90)
+   {
+       if (is_file($img)) {
+           $imagick = new Imagick(realpath($img));
+           $imagick->setImageFormat('jpeg');
+           $imagick->setImageCompression(Imagick::COMPRESSION_JPEG);
+           $imagick->setImageCompressionQuality($quality);
+           $imagick->thumbnailImage($width, $height, false, false);
+           $filename_no_ext = reset(explode('.', $img));
+           if (file_put_contents($filename_no_ext . '_thumb' . '.jpg', $imagick) === false) {
+               throw new Exception("Could not put contents.");
+           }
+           return true;
+       }
+       else {
+           throw new Exception("No valid image provided with {$img}.");
+       }
+   }
+
     private function getAllByUserId($id) {
         $baseDir = $this->getParameter("user_drive_basedir");
         $userDrive = "${baseDir}/${id}/drive";
@@ -63,9 +95,11 @@ class DriveController extends AbstractController {
         $json = [];
         foreach ($list as $key => $value) {
             $filename = $userDrive .'/'. $value;
-            $ext = pathinfo($filename, PATHINFO_EXTENSION);
+            $ext = mime_content_type($filename);
             $size = $this->humanFilesize($filename);
-            $json[] = array( 'name' => $value, 'type' => $ext , 'size' => $size );
+            $thumbnail = "";
+            //$thumbnail = imagecreate($filename);
+            $json[] = array( 'name' => $value, 'type' => $ext , 'size' => $size, 'thumbnail'=>$thumbnail );
         }
         
         return $this->newResponse(json_encode($json), Response::HTTP_ACCEPTED);
