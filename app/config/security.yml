@@ -14,7 +14,13 @@ security:
         debug:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
+
+        public_photo_api:
+            pattern: ^/api/association/photo
+            methods: [GET]
+            anonymous: ~
+
+        internal_api:
             pattern: ^/api
             stateless: true
             simple_preauth:
@@ -23,10 +29,14 @@ security:
             anonymous: ~
 
     access_control:
+        - { path: ^/api/association/photo_directories, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/association/photos, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, roles: ROLE_USER }
+        
         
 
     role_hierarchy:
+        ROLE_ANONYMOUS:   [ROLE_USER]
         ROLE_USER:        [ROLE_USER]
         ROLE_ADMIN:       [ROLE_ADMIN, ROLE_USER]
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_SUPER_ADMIN]

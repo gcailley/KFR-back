@@ -20,10 +20,8 @@ abstract class AbstractCrudApiController extends AbstractApiController
      * @Route("/{id}")
      * @Method("GET")
      */
-    public function getByIdAction($id)
+    public function getByIdAction(Request $request, $id)
     {
-        dump($id);
-        
         $tresorie = $this->getDoctrine()->getRepository($this->getName())->find($id);
 
         if (!is_object($tresorie)) {
@@ -105,6 +103,9 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $modele = $this->getNewModeleInstance();
         $entityMetier = $this->builder->dtoToModele($em, $entityDto, $modele, $this);
 
+        //action à faire dans le controller
+        $this->innerCreateAction($em, $entityMetier);
+
         try {
             $preConditionErrors = $this->preConditionCreationAction($em, $entityMetier);
             if ($preConditionErrors != null && sizeof($preConditionErrors) != 0) {
@@ -120,6 +121,10 @@ abstract class AbstractCrudApiController extends AbstractApiController
 
         $dto = $this->builder->modeleToDto($entityMetier, $this);
         return $this->newResponse(json_encode($dto), Response::HTTP_CREATED);
+    }
+
+    protected function innerCreateAction($em, $entityMetier) {
+
     }
 
     protected function preConditionCreationAction($em, $entityMetier)

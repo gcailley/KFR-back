@@ -32,7 +32,7 @@ abstract class AbstractApiController extends AbstractController {
      * @Route("/{id}")
      * @Method("GET")
      */
-    abstract public function getByIdAction($id);
+    abstract public function getByIdAction(Request $request, $id);
     /**
      * @Route("")
      * @Method("GET")

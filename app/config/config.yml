@@ -78,3 +78,32 @@ nelmio_cors:
         max_age: 3600
         hosts: []
         origin_regex: false
+
+# LiipImagineBundle
+liip_imagine:
+    filter_sets:
+        my_heighten_filter:
+            format: jpeg
+            filters:
+                # use and setup the "relative_resize" filter
+                relative_resize:
+                    # given 50x40px, output 75x60px using "heighten" option
+                    heighten: 60
+        my_widen_filter:
+            filters:
+                # use and setup the "relative_resize" filter
+                relative_resize:
+                    # given 50x40px, output 32x26px using "widen" option
+                    widen: 32
+        my_increase_filter:
+            format: jpeg
+            filters:
+                # use and setup the "relative_resize" filter
+                relative_resize:
+                    # given 50x40px, output 60x50px, using "increase" option
+                    increase: 0
+        my_scale_filter:
+            format: jpeg
+            filters:
+                relative_resize:
+                    scale: 1

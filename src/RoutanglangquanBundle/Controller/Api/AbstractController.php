@@ -18,9 +18,9 @@ abstract class AbstractController extends Controller
         return $this->get($value);
     }
 
-    protected function newResponse($data, $code)
+    protected function newResponse($data, $code, $array=array())
     {
-        $response = new Response($data, $code);
+        $response = new Response($data, $code, $array);
         $response->headers->set('Access-Control-Allow-Origin', '*');
         return $response;
     }
