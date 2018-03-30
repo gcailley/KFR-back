@@ -23,7 +23,7 @@ class SaisonRepository extends EntityRepository {
         $request = 'SELECT s FROM RoutanglangquanBundle:Saison\RtlqSaison s WHERE s.active=:active';
         return $this->getEntityManager()
                         ->createQuery($request)
-                        ->setParameter("active", $active ? "true" : "false")
+                        ->setParameter("active", $active ? "1" : "0")
                         ->getResult();
     }
 
