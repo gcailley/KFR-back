@@ -9,3 +9,4 @@
 /var/logs/*
 .vscode/
 app/config/parameters_dev.yml
+*.dist
