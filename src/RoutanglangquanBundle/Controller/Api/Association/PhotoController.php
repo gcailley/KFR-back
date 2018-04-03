@@ -16,7 +16,7 @@ use RoutanglangquanBundle\Entity\Association\RtlqPhotoDirectory;
 
 use Liip\ImagineBundle\Model\FileBinary;
 /**
- * @Route("/api/association/photos")
+ * @Route("/association/photos")
  */
 class PhotoController extends AbstractCrudApiController
 {

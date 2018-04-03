@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
- * @Route("/api/kungfu/taos")
+ * @Route("/kungfu/taos")
  */
 class KungfuTaoController extends AbstractCrudApiController
 {

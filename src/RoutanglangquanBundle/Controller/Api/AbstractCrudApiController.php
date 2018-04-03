@@ -37,12 +37,16 @@ abstract class AbstractCrudApiController extends AbstractApiController
      * @Route("")
      * @Method("GET")
      */
-    public function getAllAction(Request $request)
+    public function getAllAction(Request $request, $response=true)
     {
         $tresories = $this->getDoctrine()->getRepository($this->getName())->findAll();
 
         $dto_tresories = $this->builder->modelesToDtos($tresories, $this);
-        return $this->newResponse(json_encode($dto_tresories), Response::HTTP_ACCEPTED);
+        if ($response) {
+            return $this->newResponse(json_encode($dto_tresories), Response::HTTP_ACCEPTED);
+        } else {
+            return $dto_tresories;
+        }
     }
 
     /**

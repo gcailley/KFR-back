@@ -16,7 +16,7 @@ use RoutanglangquanBundle\Repository\Saison\SaisonRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
- * @Route("/api/saisons")
+ * @Route("/saisons")
  */
 class SaisonController extends AbstractCrudApiController
 {

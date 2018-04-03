@@ -17,7 +17,7 @@ use RoutanglangquanBundle\Service\Security\User\AuthTokenAuthenticator;
 use function GuzzleHttp\json_encode;
 
 /**
- * @Route("/api/association/drive")
+ * @Route("/association/drive")
  */
 class DriveController extends AbstractController {
 

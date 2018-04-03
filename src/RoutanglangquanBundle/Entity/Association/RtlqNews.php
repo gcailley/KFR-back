@@ -11,7 +11,7 @@ use RoutanglangquanBundle\Entity\AbstractRtlqEntity;
  * RtlqNews
  *
  * @ORM\Table(name="rtlq_news")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="RoutanglangquanBundle\Repository\Association\NewsRepository")
  */
 class RtlqNews extends AbstractRtlqEntity
 {

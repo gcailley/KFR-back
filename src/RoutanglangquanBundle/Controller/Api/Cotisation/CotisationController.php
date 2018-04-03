@@ -8,7 +8,7 @@ use RoutanglangquanBundle\Form\Dto\Cotisation\RtlqCotisationDTO;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 /**
- * @Route("/api/cotisations")
+ * @Route("/cotisations")
  */
 class CotisationController extends AbstractCrudApiController
 {

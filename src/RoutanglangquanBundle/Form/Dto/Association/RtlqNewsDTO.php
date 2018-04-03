@@ -20,8 +20,8 @@ class RtlqNewsDTO extends AbstractRtlqDTO
     
     public function __construct()
     {
-        $this->adherents = [];
     }
+    
     public function getTitle()
     {
         return $this->title;

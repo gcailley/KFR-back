@@ -42,7 +42,7 @@ class RtlqGroupe extends AbstractRtlqEntity {
     
     /**
      * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqAdherent", inversedBy="groupes")
-     * @ORM\JoinTable(name="adherents_groupes",
+     * @ORM\JoinTable(name="rtlq_adherents_groupes",
      *      joinColumns={@ORM\JoinColumn(name="groupe_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")}
      *      )

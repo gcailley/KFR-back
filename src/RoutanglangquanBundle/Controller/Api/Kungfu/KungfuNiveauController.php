@@ -14,7 +14,7 @@ use RoutanglangquanBundle\Form\Dto\Kungfu\RtlqKungfuNiveauDTO;
 use RoutanglangquanBundle\Controller\Api\AbstractCrudApiController;
 
 /**
- * @Route("/api/kungfu/niveaux")
+ * @Route("/kungfu/niveaux")
  */
 class KungfuNiveauController extends AbstractCrudApiController
 {

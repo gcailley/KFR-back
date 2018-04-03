@@ -14,7 +14,7 @@ use RoutanglangquanBundle\Form\Builder\Tresorie\RtlqTresorieEtatBuilder;
 use RoutanglangquanBundle\Form\Dto\Tresorie\RtlqTresorieEtatDTO;
 
 /**
- * @Route("/api/tresorie/etats")
+ * @Route("/tresorie/etats")
  */
 class TresorieEtatController extends AbstractCrudApiController
 {

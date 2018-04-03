@@ -18,7 +18,7 @@ use RoutanglangquanBundle\Repository\Tresorie\TresorieRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @Route("/api/tresorie/tresories")
+ * @Route("/tresorie/tresories")
  */
 class TresorieController extends AbstractCrudApiController
 {

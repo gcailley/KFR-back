@@ -14,7 +14,7 @@ use RoutanglangquanBundle\Form\Dto\Kungfu\RtlqKungfuStyleDTO;
 use RoutanglangquanBundle\Controller\Api\AbstractCrudApiController;
 
 /**
- * @Route("/api/kungfu/styles")
+ * @Route("/kungfu/styles")
  */
 class KungfuStyleController extends AbstractCrudApiController
 {

@@ -16,27 +16,27 @@ security:
             security: false
 
         public_photos_api:
-            pattern: ^/api/association/photo
+            pattern: ^/association/photo
             methods: [GET]
             anonymous: ~
 
         public_cotisations_api:
-            pattern: ^/api/cotisations
+            pattern: ^/cotisations
             methods: [GET]
             anonymous: ~
 
         public_saisons_api:
-            pattern: ^/api/saisons
+            pattern: ^/saisons
             methods: [GET]
             anonymous: ~
 
         public_news_api:
-            pattern: ^/api/association/news
+            pattern: ^/association/news
             methods: [GET]
             anonymous: ~
 
         internal_api:
-            pattern: ^/api
+            pattern: ^/
             stateless: true
             simple_preauth:
                 authenticator: routanglangquanbundle.auth_token_authenticator
@@ -44,12 +44,12 @@ security:
             anonymous: ~
 
     access_control:
-        - { path: ^/api/association/photo_directories, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/association/photos, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/cotisations, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/saisons, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/association/news, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api, roles: ROLE_USER }
+        - { path: ^/association/photo_directories, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/photos, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/cotisations, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/saisons, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/news, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: ROLE_USER }
         
         
 

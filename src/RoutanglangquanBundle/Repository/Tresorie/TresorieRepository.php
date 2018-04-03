@@ -23,7 +23,8 @@ class TresorieRepository extends EntityRepository {
                         ->innerJoin('t.adherent', 'a')
                         ->where('a.id = :adherent_id')
                         ->setParameter('adherent_id', $adherent_id)
-                        ->getQuery()->getResult();
+                        ->getQuery()
+                        ->getResult();
 
         return $query;
     }

@@ -17,7 +17,7 @@ use RoutanglangquanBundle\Service\Security\User\AuthTokenAuthenticator;
 use function GuzzleHttp\json_encode;
 
 /**
- * @Route("/api/association/adherents")
+ * @Route("/association/adherents")
  */
 class AdherentController extends AbstractCrudApiController {
 

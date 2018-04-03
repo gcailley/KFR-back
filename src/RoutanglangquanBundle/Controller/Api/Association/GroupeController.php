@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 
 /**
- * @Route("/api/association/groupes")
+ * @Route("/association/groupes")
  */
 class GroupeController extends AbstractCrudApiController {
 

@@ -14,7 +14,7 @@ use RoutanglangquanBundle\Form\Dto\Association\RtlqPhotoDirectoryDTO;
 use RoutanglangquanBundle\Controller\Api\AbstractApiController;
 
 /**
- * @Route("/api/association/photo_directories")
+ * @Route("/association/photo_directories")
  */
 class PhotoDirectoryController extends AbstractCrudApiController
 {

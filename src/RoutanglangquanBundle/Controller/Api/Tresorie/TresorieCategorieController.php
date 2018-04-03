@@ -15,7 +15,7 @@ use RoutanglangquanBundle\Form\Dto\Tresorie\RtlqTresorieCategorieDTO;
 use RoutanglangquanBundle\Controller\Api\AbstractCrudApiController;
 
 /**
- * @Route("/api/tresorie/categories")
+ * @Route("/tresorie/categories")
  */
 class TresorieCategorieController extends AbstractCrudApiController
 {
