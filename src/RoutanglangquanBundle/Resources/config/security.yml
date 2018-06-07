@@ -20,7 +20,7 @@ security:
             methods: [GET]
             anonymous: ~
 
-        public_cotisations_active/api:
+        public_cotisations_active_api:
             pattern: ^/cotisations/active
             methods: [GET]
             anonymous: ~
