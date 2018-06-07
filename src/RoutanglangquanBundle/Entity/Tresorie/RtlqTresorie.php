@@ -76,6 +76,12 @@ class RtlqTresorie extends AbstractRtlqEntity {
      */
     private $numeroCheque;
 
+        /**
+     *
+     * @var string @ORM\Column(name="numero_remise_cheque", type="string", length=20, nullable=true)
+     */
+    private $numeroRemiseCheque;
+
     /**
      *
      * @var RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieEtat 
@@ -296,6 +302,15 @@ class RtlqTresorie extends AbstractRtlqEntity {
     public function getNumeroCheque() {
         return $this->numeroCheque;
     }
+
+    public function setNumeroRemiseCheque($value) {
+        $this->numeroRemiseCheque = $value;
+        return $this;
+    }
+    public function getNumeroRemiseCheque() {
+        return $this->numeroRemiseCheque;
+    }
+
 
     /**
      * Set etat

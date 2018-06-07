@@ -117,7 +117,7 @@ class AuthTokenController extends AbstractCrudApiController
     }
 
 
-    public function getAllAction(Request $request)
+    public function getAllAction(Request $request, $response = true)
     {
         return $this->newResponse(null, Response::HTTP_METHOD_NOT_ALLOWED);
     }

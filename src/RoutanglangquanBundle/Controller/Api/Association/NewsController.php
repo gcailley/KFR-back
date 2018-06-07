@@ -53,9 +53,11 @@ class NewsController extends AbstractCrudApiController
      * @Route("")
      * @Method("GET")
      */
-    public function getAllAction(Request $request)
+    public function getAllAction(Request $request, $response = true)
     {
-        if ($request->query->get('latest')  === 'true') {
+        if ($request->query->get('last30days')  === 'true') {
+            $dto_entities = $this->getOnlyLast30Days($request);
+        } elseif ($request->query->get('latest')  === 'true') {
             $dto_entities = $this->getOnlyLastestNews($request);
         } else {
             $dto_entities = parent::getAllAction($request, false);
@@ -82,7 +84,20 @@ class NewsController extends AbstractCrudApiController
 
         $entities = $this->getDoctrine()
             ->getRepository($this->getName())
-            ->loadLastestNews(30);
+            ->loadLastestNews(4);
+
+        if ($entities === null || empty($entities)) {
+            $dto_entities = [];
+        } else {
+            $dto_entities = $this->builder->modelesToDtos($entities, $this);
+        }
+        return $dto_entities;
+    }
+
+    private function getOnlyLast30Days($request) {
+        $entities = $this->getDoctrine()
+            ->getRepository($this->getName())
+            ->loadLastestNewsXDays(30);
 
         if ($entities === null || empty($entities)) {
             $dto_entities = [];

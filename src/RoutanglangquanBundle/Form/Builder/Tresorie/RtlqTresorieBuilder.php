@@ -20,6 +20,7 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder
         $modele->setMontant ( $postModele->getMontant () );
         $modele->setCheque ( $postModele->getCheque () );
         $modele->setNumeroCheque ( $postModele->getNumeroCheque () );
+        $modele->setNumeroRemiseCheque ( $postModele->getNumeroRemiseCheque () );
         
         $modele->setEtat ( $em->getReference ( "RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieEtat", $postModele->getEtatId () ) );
         $modele->setCategorie ( $em->getReference ( "RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie", $postModele->getCategorieId () ) );
@@ -44,6 +45,7 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder
         $dto->setMontant ( $modele->getMontant () );
         $dto->setCheque ( $modele->getCheque () );
         $dto->setNumeroCheque ( $modele->getNumeroCheque () );
+        $dto->setNumeroRemiseCheque ( $modele->getNumeroRemiseCheque () );
         
         $dto->setEtatId ( $modele->getEtatId () );
         $dto->setEtatName ( $modele->getEtatName () );

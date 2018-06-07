@@ -67,4 +67,4 @@ géneration database required.
 [2017/07/08]
 ajout dans netbeans d'être capable de lancer les tests => plus simple pour les rerun
 > now testAddTresorie() ko car la tresorie ne semble pas ajouté à l'id utilisateur
-?? problème de mapping entre adhrent est tresorie
+?? problème de mapping entre adherent et tresorie

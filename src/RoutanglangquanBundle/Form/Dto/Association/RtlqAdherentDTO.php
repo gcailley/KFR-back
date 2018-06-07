@@ -25,8 +25,11 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     protected $ville;
     protected $date_creation;
     protected $date_last_auth;
-    protected $licence_number = "TODO";
-    protected $licence_etat = "TODO";
+    protected $licence_number;
+    protected $licence_etat;
+    protected $forum_uid;
+    protected $forum_username;
+    protected $saisons;
     protected $groupes;
     protected $cotisation_id;
     protected $tresories;
@@ -266,6 +269,31 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
 
     public function addMontantTotalEnRetard($montant_total_en_retard) {
         $this->montant_total_en_retard += $montant_total_en_retard;
+        return $this;
+    }
+
+
+    public function getForumUid() {
+        return $this->forum_uid;
+    }
+    public function setForumUid($value) {
+        $this->forum_uid = $value;
+        return $this;
+    }
+
+    public function getForumUsername() {
+        return $this->forum_username;
+    }
+    public function setForumUsername($value) {
+        $this->forum_username = $value;
+        return $this;
+    }
+
+    public function getSaisons() {
+        return $this->saisons;
+    }
+    public function setSaisons($values) {
+        $this->saisons = $values;
         return $this;
     }
 

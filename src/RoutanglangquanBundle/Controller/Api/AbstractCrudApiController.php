@@ -166,4 +166,13 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $entityname = str_replace(":", "\\Entity\\", $this->getName()) ;
         return new $entityname;
     }
+
+    protected function returnNewResponse($entities, $statusCode) {
+        if ($entities === null || empty($entities)) {
+            $dto_entities = [];
+        } else {
+            $dto_entities = $this->builder->modelesToDtos($entities, $this);
+        }
+        return new Response(json_encode($dto_entities), $statusCode);
+    }
 }

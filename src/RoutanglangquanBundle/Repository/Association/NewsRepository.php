@@ -18,12 +18,25 @@ use RoutanglangquanBundle\Entity\Association\RtlqNews;
  */
 class NewsRepository extends EntityRepository
   {
-      public function loadLastestNews($jours=30)
+      public function loadLastestNews($news=10)
+      {
+          return $this->createQueryBuilder('n')
+              ->where('n.actif = :actif')
+              ->setParameter('actif', true)
+              ->setMaxResults($news)
+              ->orderBy('n.dateCreation', 'DESC')
+              ->getQuery()
+              ->getResult();
+
+      }
+
+      public function loadLastestNewsXDays($jours=30)
       {
           return $this->createQueryBuilder('n')
               ->where('n.actif = :actif AND n.dateCreation >= :dateCreation')
               ->setParameter('actif', true)
               ->setParameter('dateCreation', date('Y-m-d', strtotime("-$jours days")))
+              ->orderBy('n.dateCreation', 'DESC')
               ->getQuery()
               ->getResult();
 

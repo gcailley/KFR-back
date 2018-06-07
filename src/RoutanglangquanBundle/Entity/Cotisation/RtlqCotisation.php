@@ -26,10 +26,23 @@ class RtlqCotisation extends AbstractRtlqEntity {
 
     /**
      *
-     * @var string @ORM\Column(name="description", type="string", length=100, nullable=false)
+     * @var string @ORM\Column(name="description", type="string", length=500, nullable=false)
      */
     private $description;
 
+    /**
+     * 
+     * @var string @ORM\Column(name="type", type="string", length=100, nullable=false)
+     */
+    private $type;
+
+    
+    /**
+     * 
+     * @var string @ORM\Column(name="nb_cheque", type="integer", nullable=false)
+     */
+    private $nbCheque;
+    
     /**
      *
      * @var string @ORM\Column(name="cotisation", type="integer", nullable=false)
@@ -113,6 +126,51 @@ class RtlqCotisation extends AbstractRtlqEntity {
         $this->cotisation = $cotisation;
 
         return $this;
+    }
+    
+    
+    /**
+     * Set type
+     *
+     * @param \int $type
+     *
+     * @return RtlqCotisation
+     */
+    public function setType($type) {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType() {
+        return $this->type;
+    }
+
+    /**
+     * Set nbCheque
+     *
+     * @param \int $nbCheque
+     *
+     * @return RtlqCotisation
+     */
+    public function setNbCheque($nbCheque) {
+        $this->nbCheque = $nbCheque;
+
+        return $this;
+    }
+
+    /**
+     * Get nbCheque
+     *
+     * @return string
+     */
+    public function getNbCheque() {
+        return $this->nbCheque;
     }
 
     /**

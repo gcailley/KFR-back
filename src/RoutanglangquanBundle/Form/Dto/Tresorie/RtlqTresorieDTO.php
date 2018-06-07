@@ -13,6 +13,7 @@ class RtlqTresorieDTO extends AbstractRtlqDTO {
     protected $montant;
     protected $cheque;
     protected $numero_cheque;
+    protected $numero_remise_cheque;
     protected $etat_id;
     protected $etat_name;
     protected $saison_id;
@@ -173,6 +174,14 @@ class RtlqTresorieDTO extends AbstractRtlqDTO {
      */
     public function getNumeroCheque() {
         return $this->numero_cheque;
+    }
+
+    public function setNumeroRemiseCheque($value) {
+        $this->numero_remise_cheque = $value;
+        return $this;
+    }
+    public function getNumeroRemiseCheque() {
+        return $this->numero_remise_cheque;
     }
 
     public function setEtatId($etatId) {

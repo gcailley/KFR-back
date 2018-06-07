@@ -32,6 +32,8 @@ class RtlqAdherentType extends AbstractRtlqType
             ->add('avatar', TextType::class)
             ->add('code_postal', TextType::class)
             ->add('ville', TextType::class)
+            ->add('forum_uid', TextType::class)
+            ->add('forum_username', TextType::class)
             ->add('date_creation', DateType::class, $this->getDateFormat())
             ->add('date_last_auth', DateType::class, $this->getDateFormat())
             ->add('date_creation', DateType::class, $this->getDateFormat())
@@ -39,7 +41,8 @@ class RtlqAdherentType extends AbstractRtlqType
             ->add('licence_etat', TextType::class)
             ->add('groupes', CollectionType::class, array('entry_type' => NumberType::class))
             ->add('cotisation_id', TextType::class )
-            ->add('tresories', CollectionType::class, array('entry_type' => NumberType::class));
+            ->add('tresories', CollectionType::class, array('entry_type' => NumberType::class))
+            ->add('saisons', CollectionType::class, array('entry_type' => NumberType::class));
     }
 
     public function getName()

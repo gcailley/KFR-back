@@ -14,6 +14,8 @@ class RtlqCotisationBuilder extends AbstractRtlqBuilder
         $modele->setCotisation ( $dto->getCotisation() );
         $modele->setRepartitionCheque($dto->getRepartitionCheque() );
         $modele->setActive($dto->getActive() );
+        $modele->setType($dto->getType() );
+        $modele->setNbCheque($dto->getNbCheque() );
 
         $modele->setCategorie ( $em->getReference ( "RoutanglangquanBundle\Entity\Tresorie\RtlqTresorieCategorie", $dto->getCategorieId () ) );
         $modele->setSaison ( $em->getReference ( "RoutanglangquanBundle\Entity\Saison\RtlqSaison", $dto->getSaisonId () ) );
@@ -31,6 +33,8 @@ class RtlqCotisationBuilder extends AbstractRtlqBuilder
         $dto->setCotisation ( $modele->getCotisation () );
         $dto->setRepartitionCheque($modele->getRepartitionCheque() );
         $dto->setActive($modele->getActive() );
+        $dto->setType($modele->getType() );
+        $dto->setNbCheque($modele->getNbCheque() );
         
         $dto->setCategorieName ( $modele->getCategorieNom() );
         $dto->setCategorieId ( $modele->getCategorieId () );

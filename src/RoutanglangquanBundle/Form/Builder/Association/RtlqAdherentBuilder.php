@@ -30,6 +30,8 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         }
         $modele->setLicenceNumber($postModele->getLicenceNumber());
         $modele->setLicenceEtat($postModele->getLicenceEtat());
+        $modele->setForumUid($postModele->getForumUid());
+        $modele->setForumUsername($postModele->getForumUsername());
 
 
         foreach ($postModele->getGroupes() as $groupeId) {
@@ -40,6 +42,9 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         }
         foreach ($postModele->getTresories() as $tresorieId) {
             $modele->addTresorie($em->getReference("RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie", $tresorieId()));
+        }
+        foreach ($postModele->getSaisons() as $saisonId) {
+            $modele->addSaison($em->getReference("RoutanglangquanBundle\Entity\Saison\RtlqSaison", $saisonId()));
         }
 
         if ($postModele->getPwd() != null) {
@@ -80,6 +85,8 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         $dto->setDateLastAuth($this->dateToString($modele->getDateLastAuth()));
         $dto->setLicenceNumber($modele->getLicenceNumber());
         $dto->setLicenceEtat($modele->getLicenceEtat());
+        $dto->setForumUid($modele->getForumUid());
+        $dto->setForumUsername($modele->getForumUsername());
         return $dto;
     }
         
@@ -90,6 +97,12 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         if ($modele->getGroupes() != null) {
             foreach ($modele->getGroupes() as $groupe) {
                 $dto->addGroupe($groupe->getId());
+            }
+        }
+
+        if ($modele->getSaisons() != null) {
+            foreach ($modele->getSaisons() as $saison) {
+                $dto->addSaison($saison->getId());
             }
         }
 

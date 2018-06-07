@@ -1,11 +1,11 @@
 parameters:
-    database_host: -
-    database_name: -
-    database_user: -
-    database_password: -
+    database_host: localhost
+    database_name: routanglangquan
+    database_user: root
+    database_password: null
 
     mailer_user: -
     mailer_password: -
 
-    secret: -
-    user_drive_basedir: -
+    secret: kqsdljosidjaohfubsbdoqoziidjoiqjsuhveviosn
+    user_drive_basedir: C:\\Users\\GREGORY\\Downloads\\tmp

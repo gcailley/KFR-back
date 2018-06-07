@@ -24,9 +24,9 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
+	
     /**
-    * @ORM\Column(type="string", length=25, unique=true, nullable=false)
+    * @ORM\Column(type="string", length=100, unique=true, nullable=false)
     */
     private $username;
 
@@ -35,7 +35,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @var string @ORM\Column(name="email", type="string", length=100, nullable=false)
      */
     private $email;
-
+    
     /**
      *
      * @var string
@@ -54,7 +54,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @var string @ORM\Column(name="nom", type="string", length=100, nullable=false)
      */
     private $nom;
-
+    
     /**
      *
      * @var string @ORM\Column(name="prenom", type="string", length=100, nullable=false)
@@ -72,7 +72,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @var boolean @ORM\Column(name="actif", type="boolean", nullable=false)
      */
     private $actif;
-
+     
     /**
      *
      * @var boolean @ORM\Column(name="public", type="boolean", nullable=false)
@@ -90,7 +90,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @var string @ORM\Column(name="avatar", type="blob", nullable=true)
      */
     private $avatar;
-
+    
     /**
      *
      * @var string @ORM\Column(name="codePostal", type="string", length=5, nullable=false)
@@ -105,10 +105,23 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
 
     /**
      *
+     * @var string @ORM\Column(name="forum_uid", type="string", length=100, nullable=true)
+     */
+    private $forumUid;
+
+    /**
+     *
+     * @var string @ORM\Column(name="forum_username", type="string", length=100, nullable=true)
+     */
+    private $forumUsername;
+
+
+    /**
+     *
      * @var \DateTime @ORM\Column(name="date_creation", type="date", nullable=false)
      */
     private $dateCreation;
-
+    
     /**
      *
      * @var \DateTime @ORM\Column(name="date_last_auth", type="date", nullable=true)
@@ -120,7 +133,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @var string @ORM\Column(name="licence_number", type="string", length=100, nullable=true)
      */
     private $licenceNumber;
-
+    
     /**
      *
      * @var string @ORM\Column(name="licence_etat", type="string", length=100, nullable=true)
@@ -138,16 +151,25 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @ORM\JoinColumn(name="cotisation_id", referencedColumnName="id")
      */
     private $cotisation;
-
+    
     /**
      * @ORM\OneToMany(targetEntity="RoutanglangquanBundle\Entity\Tresorie\RtlqTresorie", mappedBy="adherent")
      */
     private $tresories;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Saison\RtlqSaison", mappedBy="adherents")
+     */
+    private $saisons;
+
+    
+
+
     public function __construct() {
         $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->cotisation = null;
         $this->tresories = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->saisons = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     // TODO licence as object
@@ -494,6 +516,22 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
         $this->cotisation = null;
     }
 
+    public function setForumUid($value) {
+        $this->forumUid = $value;
+        return $this;
+    }
+    public function getForumUid() {
+        return $this->forumUid;
+    }
+
+    public function setForumUsername($value) {
+        $this->forumUsername = $value;
+        return $this;
+    }
+    public function getForumUsername() {
+        return $this->forumUsername;
+    }
+
     public function getDateLastAuth() {
         return $this->dateLastAuth;
     }
@@ -598,6 +636,23 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
              $roles[] = $groupe->getRole();
          };
          return $roles;
+    }
+
+
+    
+    public function addSaison(\RoutanglangquanBundle\Entity\Saison\RtlqSaison $saison) {
+        $saison->addSaison($this);
+        $this->saisons[] = $saison;
+        return $this;
+    }
+    public function removeSaison(\RoutanglangquanBundle\Entity\Saison\RtlqSaison $saison) {
+        $this->saisons->removeElement($saison);
+    }
+    public function removeAllSaisons() {
+        $this->saisons= [];
+    }
+    public function getSaisons() {
+        return $this->saisons;
     }
 
     public function eraseCredentials()

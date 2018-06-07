@@ -14,11 +14,15 @@ class RtlqCotisationType extends AbstractRtlqType
     {
         $builder
             ->add ( 'description', TextType::class )
+            ->add ( 'type', MoneyType::class )
             ->add ( 'cotisation', MoneyType::class )
             ->add ( 'repartition_cheque', TextType::class )
+            ->add ( 'nb_cheque', TextType::class )
             ->add ( 'active', CheckBoxType::class )
             ->add ( 'saison_id', TextType::class )
-            ->add ( 'categorie_id', TextType::class );
+            ->add ( 'saison_name', TextType::class )
+            ->add ( 'categorie_id', TextType::class )
+            ->add ( 'categorie_name', TextType::class );
     }
     public function getName()
     {

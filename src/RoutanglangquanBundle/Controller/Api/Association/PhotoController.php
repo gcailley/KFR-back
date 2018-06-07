@@ -14,6 +14,7 @@ use RoutanglangquanBundle\Form\Dto\Association\RtlqPhotoDTO;
 use RoutanglangquanBundle\Controller\Api\AbstractApiController;
 use RoutanglangquanBundle\Entity\Association\RtlqPhotoDirectory;
 
+
 use Liip\ImagineBundle\Model\FileBinary;
 /**
  * @Route("/association/photos")
@@ -44,7 +45,7 @@ class PhotoController extends AbstractCrudApiController
      * @Route("")
      * @Method("GET")
      */
-    public function getAllAction(Request $request)
+    public function getAllAction(Request $request, $response = true)
     {
         // get parameters
         $directory_id = $request->query->get('directory_id');
@@ -107,12 +108,7 @@ class PhotoController extends AbstractCrudApiController
         ->getRepository($this->getName())
             ->findBy(array("repertoire"=>$directoryEntity));
 
-        if ($entities === null || empty($entities)) {
-            $dto_entities = [];
-        } else {
-            $dto_entities = $this->builder->modelesToDtos($entities, $this);
-        }
-        return new Response(json_encode($dto_entities), Response::HTTP_ACCEPTED);
+        return $this->returnNewResponse($entities, Response::HTTP_ACCEPTED);
     }
 
     protected function innerCreateAction($em, $entityMetier) {

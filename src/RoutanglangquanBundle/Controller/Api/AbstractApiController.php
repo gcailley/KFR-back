@@ -37,7 +37,7 @@ abstract class AbstractApiController extends AbstractController {
      * @Route("")
      * @Method("GET")
      */
-    abstract public function getAllAction(Request $request);
+    abstract public function getAllAction(Request $request, $response);
 
     /**
      * @Route("")

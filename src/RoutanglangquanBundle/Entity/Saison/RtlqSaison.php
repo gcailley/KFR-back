@@ -4,6 +4,7 @@ namespace RoutanglangquanBundle\Entity\Saison;
 
 use Doctrine\ORM\Mapping as ORM;
 use RoutanglangquanBundle\Entity\AbstractRtlqEntity;
+use RoutanglangquanBundle\Entity\Association\RtlqAdherent;
 
 /**
  * RtlqSaison
@@ -11,9 +12,14 @@ use RoutanglangquanBundle\Entity\AbstractRtlqEntity;
  * @ORM\Table(name="rtlq_saison", 
  * uniqueConstraints={@ORM\UniqueConstraint(name="nom", columns={"nom"})}, 
  * indexes={@ORM\Index(name="id", columns={"id"})})
- * @ORM\Entity(repositoryClass="RoutanglangquanBundle\Repository\Saison\SaisonRepository")
+ * @ORM\Entity()
  */
 class RtlqSaison extends AbstractRtlqEntity {
+
+    public function __construct() {
+        $this->adherents = new ArrayCollection();
+    }
+
     /**
      * @var integer
      *
@@ -51,7 +57,17 @@ class RtlqSaison extends AbstractRtlqEntity {
      */
     private $active;
 
-
+    /**
+     * @ORM\ManyToMany(targetEntity="RoutanglangquanBundle\Entity\Association\RtlqAdherent", inversedBy="saisons")
+     * @ORM\JoinTable(name="rtlq_adherents_saisons",
+     *      joinColumns={@ORM\JoinColumn(name="saison_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")}
+     *      )
+     * 
+     */
+    private $adherents;
+    
+    
     /**
      * Get id
      *
@@ -170,4 +186,45 @@ class RtlqSaison extends AbstractRtlqEntity {
     {
         return $this->active;
     }
+
+    /**
+     * Add adherent
+     *
+     * @param RtlqAdherent $adherent
+     *
+     * @return RtlqGroupe
+     */
+    public function addAdherent(RtlqAdherent $adherent) {
+        foreach ($this->adherents as $value) {
+            if ($value->getId() == $adherent->getId()) {
+                return $this;
+            }
+        }
+
+        $this->adherents[] = $adherent;
+        return $this;
+    }
+
+    /**
+     * Remove adherent
+     *
+     * @param RtlqAdherent $adherent
+     */
+    public function removeAdherent(RtlqAdherent $adherent) {
+        $this->adherents->removeElement($adherent);
+    }
+
+    /**
+     * Get adherents
+     *
+     * @return Collection
+     */
+    public function getAdherents() {
+        return $this->adherents;
+    }
+    
+    public function removeAllAdherents() {
+        $this->adherents=[];
+    }
+
 }

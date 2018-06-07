@@ -53,6 +53,14 @@ class RtlqAssociation {
 
     /**
      * @var string
+     * TODO
+     * @ORM\Column(name="numero_siren", type="string", length=100, nullable=false)
+     */
+    private $numeroSiren;
+    
+
+    /**
+     * @var string
      *
      * @ORM\Column(name="email", type="string", length=100, nullable=false)
      */

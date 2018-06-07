@@ -13,6 +13,8 @@ class RtlqCotisationDTO extends AbstractRtlqDTO
     
     protected $description;
     protected $cotisation;
+    protected $type;
+    protected $nb_cheque;
     protected $repartition_cheque;
     protected $active;
     protected $saison_id;
@@ -97,6 +99,29 @@ class RtlqCotisationDTO extends AbstractRtlqDTO
     public function setCategorieName($categorie_name)
     {
         $this->categorie_name = $categorie_name;
+        return $this;
+    }
+
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function getNbCheque()
+    {
+        return $this->nb_cheque;
+    }
+
+    public function setNbCheque($value)
+    {
+        $this->nb_cheque = $value;
         return $this;
     }
 }
