@@ -207,7 +207,7 @@ if __name__ == "__main__":
         try:
             where_origine = Config.get(section, 'select_where_origine')
             select_origine = str.format('{} WHERE {}', select_origine, where_origine);
-            log.error(select_origine);
+            log.info(select_origine);
         except Exception as e:
             log.warning('No WHERE conditions to apply.');
 
