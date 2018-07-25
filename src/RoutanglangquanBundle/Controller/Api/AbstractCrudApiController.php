@@ -85,8 +85,10 @@ abstract class AbstractCrudApiController extends AbstractApiController
      * @Route("")
      * @Method("POST")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, $response = true)
     {
+
+
         $data = json_decode($request->getContent(), true);
 
         $entityDto = $this->newDto();
@@ -123,8 +125,12 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $em->persist($entityMetier);
         $em->flush();
 
-        $dto = $this->builder->modeleToDto($entityMetier, $this);
-        return $this->newResponse(json_encode($dto), Response::HTTP_CREATED);
+        if ($response) {
+            $dto = $this->builder->modeleToDto($entityMetier, $this);
+            return $this->newResponse(json_encode($dto), Response::HTTP_CREATED);
+        } else {
+            return $entityMetier;
+        }
     }
 
     protected function innerCreateAction($em, $entityMetier) {

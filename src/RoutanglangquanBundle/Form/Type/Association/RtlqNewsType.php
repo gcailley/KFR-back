@@ -21,7 +21,7 @@ class RtlqNewsType extends AbstractRtlqType
                 ->add('description', TextType::class)
                 ->add('link', TextType::class)
                 ->add('actif', CheckBoxType::class)
-                ->add('date_creation', DateType::class, $this->getDateFormat());
+                ->add('date_creation', DateType::class, $this->getDateFormatTZ());
     }
 
     public function getName()

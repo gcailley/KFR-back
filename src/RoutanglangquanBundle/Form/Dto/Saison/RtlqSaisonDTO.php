@@ -119,5 +119,19 @@ class RtlqSaisonDTO extends AbstractRtlqDTO {
         $this->nb_adherents = sizeof($this->adherents);
         return $this;
     }
+	public function setAdherents($adherents) {
+		$this->adherents = $adherents;
+		return $this;
+    }
 
+
+	public function setNbAdherents($nbAdherents) {
+		$this->nb_adherents = $nbAdherents;
+		$this->nb_adherents = sizeof($this->adherents);
+		return $this;
+	}
+	
+	public function getNbAdherents() {
+        return $this->nb_adherents;
+    }
 }

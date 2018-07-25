@@ -2,7 +2,6 @@
 
 namespace RoutanglangquanBundle\Form\Validator\Saison;
 
-use RoutanglangquanBundle\Form\Validator\AbstractRtlqValidator;
 use RoutanglangquanBundle\Form\Validator\RtlqValidator;
 
 class RtlqSaisonValidator extends RtlqValidator {

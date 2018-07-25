@@ -10,21 +10,20 @@ use RoutanglangquanBundle\Form\Builder\Association\RtlqAdherentBuilder;
 class RtlqSaisonBuilder extends AbstractRtlqBuilder
 {
 
-    private $rtlqAdherentBuilder;
-    
-    public function __construct()
-    {
-        $this->rtlqAdherentBuilder = new RtlqAdherentBuilder();
-    }
-    
+     private $rtlqAdherentBuilder;
+     public function __construct()
+     {
+         $this->rtlqAdherentBuilder = new RtlqAdherentBuilder();
+     }
         
     public function dtoToModele($em, $postModele, $modele, $controller)
     {
-
         $modele->setNom( $postModele->getNom () );
         $modele->setDateDebut ( $postModele->getDateDebut () );
         $modele->setDateFin ( $postModele->getDateFin () );
         $modele->setActive($postModele->getActive() );
+
+
         $modele->removeAllAdherents();
         foreach ($postModele->getAdherents() as $adherentDto) {
             $modelAdh = $em->getReference ( "RoutanglangquanBundle\Entity\Association\RtlqAdherent", $adherentDto['id'] );
@@ -45,6 +44,7 @@ class RtlqSaisonBuilder extends AbstractRtlqBuilder
         $dto->setDateFin( $this->dateToString ( $modele->getDateFin () ) );
         $dto->setActive( $modele->getActive() );
 
+        
         $adherentController = $controller->getController('routanglangquanbundle.adherent_controller');
         foreach ($modele->getAdherents() as $adherent) {
             $adherentDto = $this->rtlqAdherentBuilder->modeleToDtoLight($adherent, $adherentController);

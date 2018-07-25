@@ -36,7 +36,6 @@ class RtlqAdherentType extends AbstractRtlqType
             ->add('forum_username', TextType::class)
             ->add('date_creation', DateType::class, $this->getDateFormat())
             ->add('date_last_auth', DateType::class, $this->getDateFormat())
-            ->add('date_creation', DateType::class, $this->getDateFormat())
             ->add('licence_number', TextType::class)
             ->add('licence_etat', TextType::class)
             ->add('groupes', CollectionType::class, array('entry_type' => NumberType::class))

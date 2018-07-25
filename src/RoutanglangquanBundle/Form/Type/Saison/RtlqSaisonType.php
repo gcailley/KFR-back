@@ -11,9 +11,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use RoutanglangquanBundle\Form\Type\AbstractRtlqType;
+use RoutanglangquanBundle\Form\Type\Association\RtlqAdherentType;
 
 class RtlqSaisonType extends AbstractRtlqType
 {
@@ -22,8 +25,8 @@ class RtlqSaisonType extends AbstractRtlqType
         $builder
             ->add ( 'nom', TextType::class )
             ->add ( 'active', CheckboxType::class )
-            ->add ( 'date_debut', DateType::class, $this->getDateFormat())
-            ->add ( 'date_fin', DateType::class, $this->getDateFormat())
+            ->add ( 'date_debut', DateType::class, $this->getDateFormatTZ())
+            ->add ( 'date_fin', DateType::class, $this->getDateFormatTZ())
             ->add('nb_adherents', NumberType::class)
             ->add('adherents', CollectionType::class, array(
                 'entry_type'   => RtlqAdherentType::class,

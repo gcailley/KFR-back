@@ -18,6 +18,15 @@ abstract class AbstractRtlqType extends AbstractType
     {
         return array(
             'widget' => 'single_text',
+            //'format' => "yyyy-MM-dd'T'HH:mm:ss.sss'Z'"
+            'format' => "yyyy-MM-dd"
+        );
+    }
+
+    public function getDateFormatTZ()
+    {
+        return array(
+            'widget' => 'single_text',
             'format' => "yyyy-MM-dd'T'HH:mm:ss.sss'Z'"
         );
     }

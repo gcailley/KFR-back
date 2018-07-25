@@ -48,6 +48,7 @@ security:
             provider: auth_token_provider
             anonymous: ~
 
+
     access_control:
         - { path: ^/association/photo_directories, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/photos, roles: IS_AUTHENTICATED_ANONYMOUSLY }

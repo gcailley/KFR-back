@@ -2,8 +2,12 @@
 
 namespace RoutanglangquanBundle\Entity\Saison;
 
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RoutanglangquanBundle\Entity\AbstractRtlqEntity;
+
 use RoutanglangquanBundle\Entity\Association\RtlqAdherent;
 
 /**

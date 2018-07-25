@@ -52,7 +52,7 @@ class DriveController extends AbstractController {
     }
 
 
-    private /**
+    /**
     * 
     * Generate Thumbnail using Imagick class
     *  

@@ -296,5 +296,8 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
         $this->saisons = $values;
         return $this;
     }
-
+    public function addSaison($saison) {
+        $this->saisons[] = $saison;
+        return $this;
+    }
 }

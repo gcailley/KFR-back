@@ -11,6 +11,8 @@ class RtlqCredentialsDTO
 
     public $roles;
 
+    public $username;
+
     public function getLogin()
     {
         return $this->login;
@@ -51,6 +53,17 @@ class RtlqCredentialsDTO
     public function setRoles($value)
     {
         $this->roles = $value;
+        return $this;
+    }
+
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+    public function setUsername($value)
+    {
+        $this->username = $value;
         return $this;
     }
 
