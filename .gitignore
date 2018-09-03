@@ -1,12 +1,12 @@
-/.metadata
-/.settings
-/nbproject
-.project
-*.swp
-/var/cache/*
-/var/sessions/*
-*.cache
-/var/logs/*
-.vscode/
-app/config/parameters_dev.yml
-*.dist
+
+###> symfony/framework-bundle ###
+/.env
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php_cs
+/.php_cs.cache
+###< friendsofphp/php-cs-fixer ###

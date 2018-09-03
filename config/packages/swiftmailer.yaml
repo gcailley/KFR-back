@@ -1,0 +1,9 @@
+swiftmailer:
+    spool: { type: 'memory' }
+    transport: gmail
+    encryption: ssl
+    host: smtp.googlemail.com
+    port: 465
+    auth_mode: login
+    username: username
+    password: password

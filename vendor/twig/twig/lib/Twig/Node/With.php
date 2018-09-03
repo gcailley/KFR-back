@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2016 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -38,7 +38,9 @@ class Twig_Node_With extends Twig_Node
                 ->raw(";\n")
                 ->write(sprintf("if (!is_array(\$%s)) {\n", $varsName))
                 ->indent()
-                ->write("throw new Twig_Error_Runtime('Variables passed to the \"with\" tag must be a hash.');\n")
+                ->write("throw new Twig_Error_Runtime('Variables passed to the \"with\" tag must be a hash.', ")
+                ->repr($this->getTemplateLine())
+                ->raw(", \$this->source);\n")
                 ->outdent()
                 ->write("}\n")
             ;
@@ -60,3 +62,5 @@ class Twig_Node_With extends Twig_Node
         ;
     }
 }
+
+class_alias('Twig_Node_With', 'Twig\Node\WithNode', false);

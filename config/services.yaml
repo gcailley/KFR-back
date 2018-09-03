@@ -1,0 +1,65 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    database_host: '%env(DATABASE_HOST)%'
+    database_name: '%env(DATABASE_NAME)%'
+    database_user: '%env(DATABASE_USER)%'
+    database_password: '%env(DATABASE_PWD)%'
+
+    mailer_user: '%env(MAIL_USER)%'
+    mailer_password: '%env(MAIL_PWD)%'
+
+    user_drive_basedir: '%env(USER_DRIVE_BASEDIR)%'
+    url_reinitialisation: '%env(URL_SITE)%%env(URI_REINITIALISATION)%'
+    email_association: '%env(EMAIL)%'
+    rss:
+        author: '%env(RSS_AUTHOR)%'
+        description: '%env(RSS_DESCRIPTION)%'
+        url: '%env(URL_SITE)%'
+        title: '%env(RSS_TITLE)%'
+        image_url: '%env(RSS_IMAGE_URL)%'
+        email: '%env(EMAIL)%'
+    photos:
+        photos_drive_basedir: '%env(PHOTOS_DRIVE_BASEDIR)%'
+        thumbnails_drive_basedir: '%env(THUMBNAILS_DRIVE_BASEDIR)%'
+    locale: 'en'
+    
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+                            # fetching services directly from the container via $container->get() won't work.
+                            # The best practice is to be explicit about your dependencies anyway.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{Entity,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    routanglangquanbundle.auth_token_provider:
+        class: App\Service\Security\User\AuthTokenUserProvider
+        arguments: 
+            - "@=service('doctrine.orm.entity_manager').getRepository('App:Security\\\\RtlqAuthToken')"
+            - "@=service('doctrine.orm.entity_manager').getRepository('App:Association\\\\RtlqAdherent')"
+
+    routanglangquanbundle.auth_token_authenticator:
+        class: App\Service\Security\User\AuthTokenAuthenticator
+        arguments: ["@security.http_utils"]
+
+    # routanglangquanbundle.adherent_controller:
+    #    class: App\Controller\Api\Association\AdherentController

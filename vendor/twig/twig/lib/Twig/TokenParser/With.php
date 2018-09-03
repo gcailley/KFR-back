@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2016 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,7 +14,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_TokenParser_With extends Twig_TokenParser
+final class Twig_TokenParser_With extends Twig_TokenParser
 {
     public function parse(Twig_Token $token)
     {
@@ -22,16 +22,16 @@ class Twig_TokenParser_With extends Twig_TokenParser
 
         $variables = null;
         $only = false;
-        if (!$stream->test(Twig_Token::BLOCK_END_TYPE)) {
+        if (!$stream->test(/* Twig_Token::BLOCK_END_TYPE */ 3)) {
             $variables = $this->parser->getExpressionParser()->parseExpression();
-            $only = $stream->nextIf(Twig_Token::NAME_TYPE, 'only');
+            $only = $stream->nextIf(/* Twig_Token::NAME_TYPE */ 5, 'only');
         }
 
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
 
         $body = $this->parser->subparse(array($this, 'decideWithEnd'), true);
 
-        $stream->expect(Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(/* Twig_Token::BLOCK_END_TYPE */ 3);
 
         return new Twig_Node_With($body, $variables, $only, $token->getLine(), $this->getTag());
     }
@@ -46,3 +46,5 @@ class Twig_TokenParser_With extends Twig_TokenParser
         return 'with';
     }
 }
+
+class_alias('Twig_TokenParser_With', 'Twig\TokenParser\WithTokenParser', false);

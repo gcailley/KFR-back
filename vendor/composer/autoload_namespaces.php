@@ -7,19 +7,9 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
-    'SensioLabs\\Security' => array($vendorDir . '/sensiolabs/security-checker'),
-    'PhpOption\\' => array($vendorDir . '/phpoption/phpoption/src'),
-    'PhpCollection' => array($vendorDir . '/phpcollection/phpcollection/src'),
-    'Metadata\\' => array($vendorDir . '/jms/metadata/src'),
-    'JsonpCallbackValidator' => array($vendorDir . '/willdurand/jsonp-callback-validator/src'),
-    'JMS\\Serializer' => array($vendorDir . '/jms/serializer/src'),
-    'JMS\\' => array($vendorDir . '/jms/parser-lib/src'),
+    'ProxyManager\\' => array($vendorDir . '/ocramius/proxy-manager/src'),
     'Imagine' => array($vendorDir . '/imagine/imagine/lib'),
-    'Guzzle\\Tests' => array($vendorDir . '/guzzle/guzzle/tests'),
-    'Guzzle' => array($vendorDir . '/guzzle/guzzle/src'),
-    'Doctrine\\ORM\\' => array($vendorDir . '/doctrine/orm/lib'),
     'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/lib'),
     'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
-    'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
     'Doctrine\\Common\\Collections\\' => array($vendorDir . '/doctrine/collections/lib'),
 );
