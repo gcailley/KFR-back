@@ -45,6 +45,15 @@ class NewsController extends AbstractCrudApiController
         return new RtlqNewsDTO();
     }
 
+    /**
+     * Trie utilisé dans la requete getAllAction.
+     * exemple : ['username' => 'ASC'].
+     */
+    public function defaultSort()
+    {
+        return ['dateCreation' => 'DESC'];
+    }
+
     function getRssMsg($value){
         if ($this->_messages_rss === null) {
             $this->_messages_rss = $this->params->get('rss');
@@ -63,6 +72,8 @@ class NewsController extends AbstractCrudApiController
             $dto_entities = $this->getOnlyLast30Days($request);
         } elseif ($request->query->get('latest')  === 'true') {
             $dto_entities = $this->getOnlyLastestNews($request);
+        } elseif ($request->query->get('format')  === 'rss') {
+            $dto_entities = $this->getOnlyLast6Month($request);
         } else {
             $dto_entities = parent::getAllAction($request, false);
         }
@@ -70,7 +81,7 @@ class NewsController extends AbstractCrudApiController
         if ($request->query->get('format')  === 'rss') {
 
             $info=[];
-            $info['description']=$this->getRssMsg('description');
+            $info['description']=($this->getRssMsg('description'));
             $info['author']=$this->getRssMsg('author');
             $info['publication']=date('r');
             $info['title']=$this->getRssMsg('title');
@@ -111,4 +122,16 @@ class NewsController extends AbstractCrudApiController
         return $dto_entities;
     }
 
+    private function getOnlyLast6Month($request) {
+        $entities = $this->getDoctrine()
+            ->getRepository($this->getName())
+            ->loadLastestNewsXDays(180);
+
+        if ($entities === null || empty($entities)) {
+            $dto_entities = [];
+        } else {
+            $dto_entities = $this->builder->modelesToDtos($entities, $this);
+        }
+        return $dto_entities;
+    }
 }

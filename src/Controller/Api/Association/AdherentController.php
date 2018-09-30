@@ -58,6 +58,15 @@ class AdherentController extends AbstractCrudApiController {
     }
 
     /**
+     * Trie utilisé dans la requete getAllAction.
+     * exemple : ['username' => 'ASC'].
+     */
+    public function defaultSort()
+    {
+        return ['prenom' => 'ASC'];
+    }
+
+    /**
      * Validateur par defaut ne faisant aucune validation spécifique sur le bean.
      *
      */
@@ -99,6 +108,8 @@ class AdherentController extends AbstractCrudApiController {
                     ->findOneBy(array("active"=>true), null, 1 , null);
         $adherent->addSaison($saisonModele);
 
+        //responsable
+        $responsable = $this->getUser()->getPrenomNom();
 
         // Creation des tresoiries en fonction de la cotisation
         if ($adherent->getCotisation() != null) {
@@ -108,10 +119,12 @@ class AdherentController extends AbstractCrudApiController {
                     ->getRepository(RtlqCotisation::class)
                     ->findOneBy(array("id"=>$cotisation_id), null, 1 , null);
             //creation d'une tresorie
-            $tresories = $this->rtlqTresorieBuilder->createTresorieByCotisation($adherent, "TODO responsable", $this->getDoctrine());
+            $tresories = $this->rtlqTresorieBuilder->createTresorieByCotisation($adherent, $responsable, $this->getDoctrine());
             foreach ($tresories as $key => $value) {
                 $adherent->addTresorie($value);
             }
+        } else {
+            throw new BadRequestHttpException(sprintf("No Cotisation found."));
         }
 
         //creation de la licence
@@ -120,9 +133,16 @@ class AdherentController extends AbstractCrudApiController {
             ->getDoctrine()
             ->getRepository(RtlqCotisation::class)
             ->findOneBy(array("active"=>true, "saison"=> $saisonModele, "categorie" => $categorieLicence), null, 1 , null);
-        $tresorieLicence = $this->rtlqTresorieBuilder->createTresorieByLicence($adherent, "TODO responsable", $licenceModele, $this->getDoctrine());
+        $tresorieLicence = $this->rtlqTresorieBuilder->createTresorieByLicence($adherent, $responsable, $licenceModele, $this->getDoctrine());
         $adherent->addTresorie($tresorieLicence);
         
+        //creation de la déduction sur la licence si > 0
+        if ($tresorieLicenceDeduction > 0 ) {
+            $tresorieLicenceDeduction = $this->rtlqTresorieBuilder->createTresorieByLicenceDeduction($adherent, $responsable, $licenceModele, $this->getDoctrine());
+            $adherent->addTresorie($tresorieLicenceDeduction);                
+        }
+
+
         $em = $this->getDoctrine()->getManager();
         $em->merge($adherent);
         $em->flush();

@@ -17,7 +17,7 @@ class RtlqTresorieEtat extends AbstractRtlqEntity
     /**
      * Id en base pour etat A_RECLAMER
      */
-    public const A_RECLAMER = 6;
+    public const A_RECLAMER = 2;
     
     /**
      * Id en base pour etat A_REGLER

@@ -66,18 +66,22 @@ class RtlqCotisation extends AbstractRtlqEntity {
      *
      * @var integer 
      * 
-     * @ORM\ManyToOne(targetEntity="App\Entity\Saison\RtlqSaison", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Saison\RtlqSaison", inversedBy="cotisations", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $saison;
 
-    /**
-     * @var RtlqTresorieCategorie
+     /**
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Tresorie\RtlqTresorieCategorie", cascade={"persist"})
+     * @var App\Entity\Tresorie\RtlqTresorieCategorie
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tresorie\RtlqTresorieCategorie", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $categorie;
+
+    public function getName() {
+        return sprintf("%s %s", $this->getSaison()->getNom(), $this->getType());
+    }
 
     /**
      * Get id

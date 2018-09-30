@@ -19,7 +19,7 @@ class RtlqNewsBuilder extends AbstractRtlqBuilder
         $modele->setDescription( $postModele->getDescription () );
         $modele->setLink( $postModele->getLink () );
         $modele->setActif( $postModele->isActif () );
-        $modele->setDateCreation( $postModele->getDateCreation () );
+        $modele->setDateCreation( $postModele->getDateCreation ()->setTime(12,0,0));
                 
         return $modele;
     }

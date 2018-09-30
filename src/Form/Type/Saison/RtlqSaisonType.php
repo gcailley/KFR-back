@@ -27,10 +27,10 @@ class RtlqSaisonType extends AbstractRtlqType
             ->add ( 'active', CheckboxType::class )
             ->add ( 'date_debut', DateType::class, $this->getDateFormatTZ())
             ->add ( 'date_fin', DateType::class, $this->getDateFormatTZ())
-            ->add('nb_adherents', NumberType::class)
-            ->add('adherents', CollectionType::class, array(
+            ->add ('nb_adherents', NumberType::class)
+            ->add ('adherents', CollectionType::class, array(
                 'entry_type'   => RtlqAdherentType::class,
-                'allow_extra_fields' => true,
+                //'allow_extra_fields' => true,
                 'allow_add'     => true,
                 'allow_delete'  => true,
                 'prototype'     => true,

@@ -14,7 +14,7 @@ class RtlqCotisationType extends AbstractRtlqType
     {
         $builder
             ->add ( 'description', TextType::class )
-            ->add ( 'type', MoneyType::class )
+            ->add ( 'type', TextType::class )
             ->add ( 'cotisation', MoneyType::class )
             ->add ( 'repartition_cheque', TextType::class )
             ->add ( 'nb_cheque', TextType::class )

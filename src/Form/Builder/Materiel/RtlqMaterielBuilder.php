@@ -29,7 +29,7 @@ class RtlqMaterielBuilder extends AbstractRtlqBuilder
         $dto->setNom ( $modele->getNom () );
         $dto->setPrixAchat ( $modele->getPrixAchat () );
         $dto->setPrixVente ( $modele->getPrixVente () );
-        $dto->setDateAchat( $modele->getDateAchat () );
+        $dto->setDateAchat( $this->dateToString($modele->getDateAchat ()) );
         $dto->setStock( $modele->getStock() );
         $dto->setAssociation( $modele->getAssociation() );
 

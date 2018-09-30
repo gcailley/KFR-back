@@ -90,6 +90,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         $dto->setDateNaissance($this->dateToString($modele->getDateNaissance()));
         $dto->setActif($modele->getActif());
         $dto->setPublic($modele->getPublic());
+        $dto->setSaisonCourante($modele->isInSaisonCourante());
 
         $dto->setAdresse($modele->getAdresse());
         $dto->setCodePostal($modele->getCodePostal());
@@ -126,6 +127,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
 
         if ($modele->getCotisation() != null) {
             $dto->setCotisationId($modele->getCotisation()->getId());
+            $dto->setCotisationName($modele->getCotisation()->getName());
         }
         
         if ($modele->getTresories() != null) {

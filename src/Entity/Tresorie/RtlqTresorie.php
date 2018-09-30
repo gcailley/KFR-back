@@ -56,7 +56,7 @@ class RtlqTresorie extends AbstractRtlqEntity {
      *
      * @var \DateTime @ORM\Column(name="date_creation", type="date", nullable=false)
      */
-    private $date_creation;
+    private $dateCreation;
 
     /**
      *
@@ -223,7 +223,7 @@ class RtlqTresorie extends AbstractRtlqEntity {
      * @return RtlqTresorie
      */
     public function setDateCreation($dateCreation) {
-        $this->date_creation = $dateCreation;
+        $this->dateCreation = $dateCreation;
 
         return $this;
     }
@@ -234,7 +234,7 @@ class RtlqTresorie extends AbstractRtlqEntity {
      * @return \DateTime
      */
     public function getDateCreation() {
-        return $this->date_creation;
+        return $this->dateCreation;
     }
 
     /**

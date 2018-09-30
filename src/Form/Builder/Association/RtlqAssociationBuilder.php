@@ -10,8 +10,6 @@ class RtlqAssociationBuilder extends AbstractRtlqBuilder
 {
     public function dtoToModele($em, $postModele, $modele, $controller)
     {
-        dump($postModele);
-
         $modele->setNom ( $postModele->getNom () );
         $modele->setEmail( $postModele->getEmail () );
         $modele->setSiegeSocial ( $postModele->getSiegeSocial () );

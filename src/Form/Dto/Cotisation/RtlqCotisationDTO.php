@@ -47,10 +47,20 @@ class RtlqCotisationDTO extends AbstractRtlqDTO
     {
         return $this->saison_id;
     }
+    
+    public function getSaisonName()
+    {
+        return $this->saison_name;
+    }
 
     public function getCategorieId()
     {
         return $this->categorie_id;
+    }
+
+    public function getCategorieName()
+    {
+        return $this->categorie_name;
     }
 
     public function setDescription($description)

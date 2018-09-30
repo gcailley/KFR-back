@@ -2,30 +2,30 @@
 
 namespace App\Entity\Saison;
 
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\AbstractRtlqEntity;
-
 use App\Entity\Association\RtlqAdherent;
 
 /**
- * RtlqSaison
+ * RtlqSaison.
  *
- * @ORM\Table(name="rtlq_saison", 
- * uniqueConstraints={@ORM\UniqueConstraint(name="nom", columns={"nom"})}, 
+ * @ORM\Table(name="rtlq_saison",
+ * uniqueConstraints={@ORM\UniqueConstraint(name="nom", columns={"nom"})},
  * indexes={@ORM\Index(name="id", columns={"id"})})
  * @ORM\Entity()
  */
-class RtlqSaison extends AbstractRtlqEntity {
-
-    public function __construct() {
+class RtlqSaison extends AbstractRtlqEntity
+{
+    public function __construct()
+    {
         $this->adherents = new ArrayCollection();
+        $this->cotisations = new ArrayCollection();
     }
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -55,7 +55,7 @@ class RtlqSaison extends AbstractRtlqEntity {
     private $dateFin;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @ORM\Column(name="active", type="boolean", nullable=false)
      */
@@ -67,15 +67,20 @@ class RtlqSaison extends AbstractRtlqEntity {
      *      joinColumns={@ORM\JoinColumn(name="saison_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")}
      *      )
-     * 
      */
     private $adherents;
-    
-    
+
     /**
-     * Get id
+     * @var int
      *
-     * @return integer
+     * @ORM\OneToMany(targetEntity="App\Entity\Cotisation\RtlqCotisation", mappedBy="saison", cascade={"persist"})
+     */
+    private $cotisations;
+
+    /**
+     * Get id.
+     *
+     * @return int
      */
     public function getId()
     {
@@ -83,20 +88,19 @@ class RtlqSaison extends AbstractRtlqEntity {
     }
 
     /**
-     * Set id
+     * Set id.
      *
-     * @return this
+     * @return $this
      */
-    public function setId($id) {
-    	$this->id = $id;
-    
-    	return $this;
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
-    
-    
-    
+
     /**
-     * Set nom
+     * Set nom.
      *
      * @param string $nom
      *
@@ -110,7 +114,7 @@ class RtlqSaison extends AbstractRtlqEntity {
     }
 
     /**
-     * Get nom
+     * Get nom.
      *
      * @return string
      */
@@ -120,7 +124,7 @@ class RtlqSaison extends AbstractRtlqEntity {
     }
 
     /**
-     * Set dateDebut
+     * Set dateDebut.
      *
      * @param \DateTime $dateDebut
      *
@@ -134,7 +138,7 @@ class RtlqSaison extends AbstractRtlqEntity {
     }
 
     /**
-     * Get dateDebut
+     * Get dateDebut.
      *
      * @return \DateTime
      */
@@ -144,7 +148,7 @@ class RtlqSaison extends AbstractRtlqEntity {
     }
 
     /**
-     * Set dateFin
+     * Set dateFin.
      *
      * @param \DateTime $dateFin
      *
@@ -158,7 +162,7 @@ class RtlqSaison extends AbstractRtlqEntity {
     }
 
     /**
-     * Get dateFin
+     * Get dateFin.
      *
      * @return \DateTime
      */
@@ -168,9 +172,9 @@ class RtlqSaison extends AbstractRtlqEntity {
     }
 
     /**
-     * Set active
+     * Set active.
      *
-     * @param boolean $active
+     * @param bool $active
      *
      * @return RtlqSaison
      */
@@ -182,9 +186,9 @@ class RtlqSaison extends AbstractRtlqEntity {
     }
 
     /**
-     * Get active
+     * Get active.
      *
-     * @return boolean
+     * @return bool
      */
     public function getActive()
     {
@@ -192,13 +196,14 @@ class RtlqSaison extends AbstractRtlqEntity {
     }
 
     /**
-     * Add adherent
+     * Add adherent.
      *
      * @param RtlqAdherent $adherent
      *
      * @return RtlqGroupe
      */
-    public function addAdherent(RtlqAdherent $adherent) {
+    public function addAdherent(RtlqAdherent $adherent)
+    {
         foreach ($this->adherents as $value) {
             if ($value->getId() == $adherent->getId()) {
                 return $this;
@@ -206,29 +211,44 @@ class RtlqSaison extends AbstractRtlqEntity {
         }
 
         $this->adherents[] = $adherent;
+
         return $this;
     }
 
     /**
-     * Remove adherent
+     * Remove adherent.
      *
      * @param RtlqAdherent $adherent
      */
-    public function removeAdherent(RtlqAdherent $adherent) {
+    public function removeAdherent(RtlqAdherent $adherent)
+    {
         $this->adherents->removeElement($adherent);
     }
 
     /**
-     * Get adherents
+     * Get adherents.
      *
      * @return Collection
      */
-    public function getAdherents() {
+    public function getAdherents()
+    {
         return $this->adherents;
     }
-    
-    public function removeAllAdherents() {
-        $this->adherents=[];
+
+    public function removeAllAdherents()
+    {
+        $this->adherents = [];
     }
 
+    public function getCotisations()
+    {
+        return $this->cotisations;
+    }
+
+    public function setCotisations($value)
+    {
+        $this->cotisations = $value;
+
+        return $this;
+    }
 }

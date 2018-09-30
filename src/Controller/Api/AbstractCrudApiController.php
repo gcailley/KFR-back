@@ -29,14 +29,21 @@ abstract class AbstractCrudApiController extends AbstractApiController
         return  $this->newResponse(json_encode($dto_tresorie), Response::HTTP_ACCEPTED);
     }
 
+    /** 
+     * Trie utilisé dans la requete getAllAction.
+     * exemple : ['username' => 'ASC']
+     */
+    public function defaultSort() {
+        return [];
+    }
 
     /**
      * @Route("", methods={"GET"})
      */
     public function getAllAction(Request $request, $response=true)
     {
-        $tresories = $this->getDoctrine()->getRepository($this->getName())->findAll();
-
+        $tresories = $this->getDoctrine()->getRepository($this->getName())->findBy([], $this->defaultSort());
+        
         $dto_tresories = $this->builder->modelesToDtos($tresories, $this);
         if ($response) {
             return $this->newResponse(json_encode($dto_tresories), Response::HTTP_ACCEPTED);

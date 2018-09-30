@@ -21,6 +21,15 @@ class RtlqTresorieCategorie extends AbstractRtlqEntity
     public const COTISATION_ANNUELLE = 2;
     
     /**
+     * id en base pour les ventes armes.
+     */
+    public const VENTE_ARMES = 4;
+    
+    /**
+     * id en base pour les ventes armes.
+     */
+    public const ACHAT_ARMES = 5;
+    /**
      * id en base pour les licences.
      */
     public const LICENCE = 7;

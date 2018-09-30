@@ -92,7 +92,7 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder
             $newTresorie->setDateCreation($date[$iteration]);
             $newTresorie->setDescription( sprintf("%s %d - %s", $description, $iteration+1, $adherent->getPrenomNom()));
             // etat
-            if ($annuel && $now < $dateTrimestre[$iteration]) {
+            if (!$annuel && $now < $dateTrimestre[$iteration]) {
                 $etat = $doctrine->getRepository(RtlqTresorieEtat::class)->findOneBy(array("id"=>RtlqTresorieEtat::ANNULER), null, 1 , null);
             } else {
                 $etat = $doctrine->getRepository(RtlqTresorieEtat::class)->findOneBy(array("id"=>RtlqTresorieEtat::A_RECLAMER), null, 1 , null);
@@ -128,4 +128,28 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder
 
         return $newTresorie;
     }
+
+    public static function createTresorieByLicenceDeduction(RtlqAdherent $adherent, $responsable, $licenceCotisation, $doctrine) {
+        $now = new \DateTime('NOW');
+        $description = 'Reduction sur Licence annuelle';
+
+        //creation d'une tresorie
+        $newTresorie = new RtlqTresorie();
+        $newTresorie->setResponsable($responsable);
+        $newTresorie->setAdherentName($adherent->getPrenomNom());
+        $newTresorie->setAdherent($adherent);
+        $newTresorie->setCategorie($licenceCotisation->getCategorie());
+        $newTresorie->setCheque(true);
+        $newTresorie->setNumeroCheque("TODO");
+        $newTresorie->setDateCreation($now);
+        $newTresorie->setDescription(sprintf("%s - %s", $description, $adherent->getPrenomNom()));
+        $etat = $doctrine->getRepository(RtlqTresorieEtat::class)->findOneBy(array("id"=>RtlqTresorieEtat::A_RECLAMER), null, 1, null);
+        $newTresorie->setEtat($etat);
+        $newTresorie->setSaison($licenceCotisation->getSaison());
+        $newTresorie->setMontant(1 - sizeof($adherent->getSaisons()));
+
+        return $newTresorie;
+    }
+
+    
 }

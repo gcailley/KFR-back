@@ -32,10 +32,12 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     protected $saisons;
     protected $groupes;
     protected $cotisation_id;
+    protected $cotisation_name;
     protected $tresories;
     protected $montant_total_encaisse = 0;
     protected $montant_total_previsionnel = 0;
     protected $montant_total_en_retard = 0;
+    protected $saison_courante = false;
 
     public function __construct() {
         $this->groupes = array();
@@ -122,6 +124,15 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
 
     public function setCotisationId($cotisation_id) {
         $this->cotisation_id = $cotisation_id;
+        return $this;
+    }
+
+    public function getCotisationName() {
+        return $this->cotisation_name;
+    }
+
+    public function setCotisationName($cotisation_name) {
+        $this->cotisation_name = $cotisation_name;
         return $this;
     }
 
@@ -300,4 +311,14 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
         $this->saisons[] = $saison;
         return $this;
     }
+    
+    public function getSaisonCourante(){
+        return $this->saison_courante;
+    }
+    public function setSaisonCourante($value) {
+        $this->saison_courante = $value;
+        return $this;
+    }
+    
 }
+

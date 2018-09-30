@@ -4,7 +4,6 @@
         <link>{{info.url}}</link>
         <description><![CDATA[{{info.description}}]]></description>
         <language>fr</language>
-        <docs>http://www.rssboard.org/rss-specification</docs>
         <pubDate>{{info.publication}}</pubDate>
         <webMaster>{{info.email}}</webMaster>
         <image>
@@ -16,10 +15,8 @@
         <item>
             <link>{{info.url}}</link>
             <author>{{info.author}}</author>
-            <dc:creator>RSS {{info.author}}</dc:creator>
             <guid isPermaLink="false">{{ item.id }}</guid>
             <title><![CDATA[{{ item.title }}]]></title>
-            <title2>{{ item.title }}</title2>
             <description><![CDATA[{{ item.description }}]]></description>
             <pubDate>{{ item.dateCreation|date("r") }}</pubDate>
         </item>

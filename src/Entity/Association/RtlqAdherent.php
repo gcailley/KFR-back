@@ -160,7 +160,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
     private $tresories;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Saison\RtlqSaison", mappedBy="adherents")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Saison\RtlqSaison", mappedBy="adherents", fetch="EXTRA_LAZY")
      */
     private $saisons;
 
@@ -181,6 +181,15 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
 
     // TODO licence as object
     // TODO adherentForum as object
+
+    public function isInSaisonCourante() {
+      foreach ($this->saisons as $key => $value) {
+          if ($value->getActive()) {
+            return true;
+         }
+      }
+        return false;
+    }
 
     /**
      * Get id

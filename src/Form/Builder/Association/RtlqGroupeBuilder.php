@@ -6,6 +6,7 @@ use App\Form\Dto\Association\RtlqGroupeDTO;
 use App\Entity\Association\RtlqGroupe;
 use App\Form\Builder\AbstractRtlqBuilder;
 use App\Form\Builder\Association\RtlqAdherentBuilder;
+use App\Controller\Api\Association\AdherentController;
 
 class RtlqGroupeBuilder extends AbstractRtlqBuilder
 {
@@ -23,6 +24,7 @@ class RtlqGroupeBuilder extends AbstractRtlqBuilder
         $modele->setRole( $postModele->getRole () );
         $modele->removeAllAdherents();
         foreach ($postModele->getAdherents() as $adherentDto) {
+            //TODO ne plus mettre les noms c'est naze
             $modelAdh = $em->getReference ( "App\Entity\Association\RtlqAdherent", $adherentDto['id'] );
             $modele->addAdherent($modelAdh);
         }
@@ -37,7 +39,8 @@ class RtlqGroupeBuilder extends AbstractRtlqBuilder
         $dto->setNom ( $modele->getNom() );
         $dto->setRole ( $modele->getRole() );
 
-        $adherentController = $controller->getController('routanglangquanbundle.adherent_controller');
+        // TODO suppression des controller dans les builder c'est naze
+        $adherentController = new AdherentController(null, null);
         foreach ($modele->getAdherents() as $adherent) {
             $adherentDto = $this->rtlqAdherentBuilder->modeleToDtoLight($adherent, $adherentController);
             $dto->addAdherent( $adherentDto );
