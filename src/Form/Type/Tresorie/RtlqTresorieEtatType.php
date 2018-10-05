@@ -13,6 +13,17 @@ use Doctrine\ORM\EntityRepository;
 use App\Form\Type\AbstractRtlqEnumType;
 
 class RtlqTresorieEtatType extends AbstractRtlqEnumType {
+
+	public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+		parent::buildForm($builder, $options);
+		$builder
+			->add ( 'next_etat_name', TextType::class )
+			->add ( 'next_etat_id', NumberType::class );
+		dump($builder);
+		return $builder;
+    }
+
 	public function getName() {
 		return 'tresorie_etat';
 	}

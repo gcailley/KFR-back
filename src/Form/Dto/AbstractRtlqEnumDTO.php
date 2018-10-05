@@ -6,28 +6,28 @@ use App\Form\Dto\AbstractRtlqDTO;
 
 abstract class AbstractRtlqEnumDTO extends AbstractRtlqDTO {
 	
-	protected $value;
+	protected $nom;
 	
 	/**
-	 * Set value
+	 * Set nom
 	 *
-	 * @param string $value        	
+	 * @param string $nom        	
 	 *
 	 * @return AbstractRtlqEnumDTO
 	 */
-	public function setValue($value) {
-		$this->value = $value;
+	public function setNom($nom) {
+		$this->nom = $nom;
 		
 		return $this;
 	}
 	
 	/**
-	 * Get value
+	 * Get nom
 	 *
 	 * @return string
 	 */
-	public function getValue() {
-		return $this->value;
+	public function getNom() {
+		return $this->nom;
 	}
 	
 }

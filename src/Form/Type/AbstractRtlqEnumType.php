@@ -12,6 +12,6 @@ use App\Form\Type\AbstractRtlqType;
 
 abstract class AbstractRtlqEnumType extends AbstractRtlqType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
-		$builder->add ( 'value', TextType::class );
+		$builder->add ( 'nom', TextType::class );
 	}
 }

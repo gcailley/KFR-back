@@ -43,6 +43,54 @@ class RtlqTresorieEtat extends AbstractRtlqEntity
      */
     private $value;
 
+    /**
+     *
+     * @var App\Entity\Tresorie\RtlqTresorieEtat 
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tresorie\RtlqTresorieEtat", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $nextEtat;
+
+    /**
+     * Set etat
+     *
+     * @param App\Entity\Tresorie\RtlqTresorieEtat $etat        	
+     *
+     * @return RtlqTresorie
+     */
+    public function setNextEtat(RtlqTresorieEtat $etat) {
+        $this->nextEtat = $etat;
+
+        return $this;
+    }
+
+    /**
+     * Get etat
+     *
+     * @return App\Entity\Tresorie\RtlqTresorieEtat
+     */
+    public function getNextEtat() {
+        return $this->nextEtat;
+    }
+
+    /**
+     * Get etat
+     *
+     * @return Interger
+     */
+    public function getNextEtatId() {
+        return $this->nextEtat == null ? null : $this->nextEtat->getId();
+    }
+
+
+    /**
+     * Get etat
+     *
+     * @return Interger
+     */
+    public function getNextEtatName() {
+        return $this->nextEtat == null ? null : $this->nextEtat->getValue();
+    }
 
 
     /**

@@ -13,7 +13,7 @@ abstract class AbstractRtlqEnumBuilder extends AbstractRtlqBuilder
 {
     public function dtoToModele($em, $postModele, $modele, $controller)
     {
-        $modele->setValue($postModele->getValue() );
+        $modele->setValue($postModele->getNom() );
         return $modele;
     }
     
@@ -22,7 +22,7 @@ abstract class AbstractRtlqEnumBuilder extends AbstractRtlqBuilder
     {
         $dto = $controller->newDto();
         $dto->setId ( $modele->getId ());
-        $dto->setValue ( $modele->getValue() );
+        $dto->setNom ( $modele->getValue() );
         
         return $dto;
     }
