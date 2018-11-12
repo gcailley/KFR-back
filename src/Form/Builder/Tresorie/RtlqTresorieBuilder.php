@@ -91,12 +91,7 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder
             $newTresorie->setNumeroCheque("TODO");
             $newTresorie->setDateCreation($date[$iteration]);
             $newTresorie->setDescription( sprintf("%s %d - %s", $description, $iteration+1, $adherent->getPrenomNom()));
-            // etat
-            if (!$annuel && $now < $dateTrimestre[$iteration]) {
-                $etat = $doctrine->getRepository(RtlqTresorieEtat::class)->findOneBy(array("id"=>RtlqTresorieEtat::ANNULER), null, 1 , null);
-            } else {
-                $etat = $doctrine->getRepository(RtlqTresorieEtat::class)->findOneBy(array("id"=>RtlqTresorieEtat::A_RECLAMER), null, 1 , null);
-            }
+            $etat = $doctrine->getRepository(RtlqTresorieEtat::class)->findOneBy(array("id"=>RtlqTresorieEtat::A_RECLAMER), null, 1 , null);
             $newTresorie->setEtat($etat);
             $newTresorie->setSaison($cotisationModele->getSaison());
             $newTresorie->setMontant($value);
