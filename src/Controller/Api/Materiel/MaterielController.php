@@ -13,6 +13,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use GuzzleHttp\json_encode;
 use App\Form\Type\Materiel\RtlqVenteMaterielType;
 use App\Form\Dto\Materiel\RtlqVenteMaterielDTO;
+use App\Form\Type\Materiel\RtlqAchatMaterielType;
+use App\Form\Dto\Materiel\RtlqAchatMaterielDTO;
 use App\Entity\Association\RtlqAdherent;
 use App\Entity\Saison\RtlqSaison;
 use App\Entity\Tresorie\RtlqTresorie;
@@ -79,17 +81,17 @@ class MaterielController extends AbstractCrudApiController
     public function vendreMateriels(Request $request, $response= true)
     {
         $data = json_decode($request->getContent(), true);
-        $venteMatrielsDto = new RtlqVenteMaterielDTO();
-        $form = $this->createForm(RtlqVenteMaterielType::class, $venteMatrielsDto);
+        $venteMaterielsDto = new RtlqVenteMaterielDTO();
+        $form = $this->createForm(RtlqVenteMaterielType::class, $venteMaterielsDto);
         $form->submit($data);
 
         // recupération de l'utilisateur
         $adherentModele = $this 
                     ->getDoctrine()
                     ->getRepository(RtlqAdherent::class)
-                    ->find($venteMatrielsDto->getAdherentId());
+                    ->find($venteMaterielsDto->getAdherentId());
         if ($adherentModele == null) {
-            throw $this->createNotFoundException("Adherent id:" . $venteMatrielsDto->getAdherentId() . " not found");
+            throw $this->createNotFoundException("Adherent id:" . $venteMaterielsDto->getAdherentId() . " not found");
         }
 
         // récupération des informations génériques nécessaire pour la suite
@@ -110,7 +112,7 @@ class MaterielController extends AbstractCrudApiController
         $materiels = array();
         $tresories = array();
         $sommeTotalAPayer = 0;
-        foreach ($venteMatrielsDto->getMateriels() as $key => $value) {
+        foreach ($venteMaterielsDto->getMateriels() as $key => $value) {
             ////////////////////////////////////////////
             // MATERIELS
             ////////////////////////////////////////////
@@ -141,7 +143,7 @@ class MaterielController extends AbstractCrudApiController
             ////////////////////////////////////////////
             //calcul montant à payer
             $sommeAPayer = 0;
-            if ($venteMatrielsDto->getPrixAssociation()) {
+            if ($venteMaterielsDto->getPrixAssociation()) {
                 $sommeAPayer = $value->getNombre() * $materielModele->getPrixAchat(); 
             } else {
                 $sommeAPayer += $value->getNombre() * $materielModele->getPrixVente(); 
@@ -153,13 +155,13 @@ class MaterielController extends AbstractCrudApiController
             $tresorie->setAdherent($adherentModele);   
             $tresorie->setAdherentName($adherentModele->getPrenomNom());
             $tresorie->setCategorie($categorieVenteModele);
-            $tresorie->setCheque($venteMatrielsDto->getCheque());
-            $tresorie->setDateCreation($venteMatrielsDto->getDateVente());
+            $tresorie->setCheque($venteMaterielsDto->getCheque());
+            $tresorie->setDateCreation($venteMaterielsDto->getDateVente());
             $tresorie->setDescription(sprintf("Vente de %s %s - %s",$value->getNombre(), $materielModele->getNom(), $adherentModele->getPrenomNom()));
             $tresorie->setEtat($etatAReclamerModele);
             $tresorie->setMontant($sommeAPayer);
-            $tresorie->setNumeroCheque($venteMatrielsDto->getNumeroCheque());
-            $tresorie->setResponsable("KFR");
+            $tresorie->setNumeroCheque($venteMaterielsDto->getNumeroCheque());
+            $tresorie->setResponsable($this->getUser()->getPrenomNom());
             $tresorie->setSaison($saisonModele);
             
             // save pour enregistrement en base
@@ -169,8 +171,8 @@ class MaterielController extends AbstractCrudApiController
         //////////////////////////////////////
         // VALIDATION 
         //////////////////////////////////////
-        if ($sommeTotalAPayer != $venteMatrielsDto->getMontantTotal()) {
-            throw new BadRequestHttpException(sprintf("Total amount is wrong [total : %s / excepted : %s].", $sommeTotalAPayer, $venteMatrielsDto->getMontantTotal()));
+        if ($sommeTotalAPayer != $venteMaterielsDto->getMontantTotal()) {
+            throw new BadRequestHttpException(sprintf("Total amount is wrong [total : %s / excepted : %s].", $sommeTotalAPayer, $venteMaterielsDto->getMontantTotal()));
         }
 
         //////////////////////////////////////
@@ -188,5 +190,106 @@ class MaterielController extends AbstractCrudApiController
         $em->flush();
         return $this->newResponse(null, Response::HTTP_ACCEPTED);
 
+    }
+
+
+
+     /**
+     * @Route("/achat", methods={"POST"})
+     */
+    public function achatMateriels(Request $request, $response= true)
+    {
+        $data = json_decode($request->getContent(), true);
+        $achatMaterielsDto = new RtlqAchatMaterielDTO();
+        $form = $this->createForm(RtlqAchatMaterielType::class, $achatMaterielsDto);
+        $form->submit($data);
+
+        // récupération des informations génériques nécessaire pour la suite
+        $categorieVenteModele = $this
+            ->getDoctrine()
+            ->getRepository(RtlqTresorieCategorie::class)
+            ->find(RtlqTresorieCategorie::ACHAT_ARMES);
+        $saisonModele = $this 
+            ->getDoctrine()
+            ->getRepository(RtlqSaison::class)
+            ->findOneBy(array("active"=>true), null, 1 , null);
+        $etatAReglerModele = $this 
+            ->getDoctrine()
+            ->getRepository(RtlqTresorieEtat::class)
+            ->find(RtlqTresorieEtat::A_REGLER);
+
+        // récupération de chaque materiels
+        $materiels = array();
+        $tresories = array();
+        $sommeTotalAPayer = 0;
+        foreach ($achatMaterielsDto->getMateriels() as $key => $value) {
+            ////////////////////////////////////////////
+            // MATERIELS
+            ////////////////////////////////////////////
+            $materielModele = $this 
+            ->getDoctrine()
+            ->getRepository($this->getName())
+            ->find($value->getId());
+
+            //validation Materiel si ok update stock
+            if ($materielModele == null) {
+                throw $this->createNotFoundException(sprintf("Materiel [%s/%s] not found.", $value->getNom(), $value->getId()));
+            }
+            if ($materielModele->getPrixAchat() == 0) {
+                throw new BadRequestHttpException(sprintf("[%s] Cannot not be buy !, check the price", $value->getNom()));
+            }
+
+            if ($value->getNombre() < 0) {
+                throw new BadRequestHttpException(sprintf("Number of items for '%s' is too low : %s ].", $value->getNom(), $value->getNombre()));
+            }
+            $materielModele->setStock($materielModele->getStock() + $value->getNombre() );
+
+            // save pour enregistrement en base
+            $materiels[] = $materielModele;
+
+
+            ////////////////////////////////////////////
+            // TRESORIE
+            ////////////////////////////////////////////
+            //calcul montant à payer
+            $sommeAPayer = 0;
+            $sommeAPayer += $value->getNombre() * $materielModele->getPrixAchat(); 
+            $sommeTotalAPayer += $sommeAPayer;
+            
+        }
+
+        //////////////////////////////////////
+        // VALIDATION 
+        //////////////////////////////////////
+        //if ($sommeTotalAPayer != $achatMaterielsDto->getMontantTotal()) {
+        //    throw new BadRequestHttpException(sprintf("Total amount is wrong [total : %s / excepted : %s].", $sommeTotalAPayer, $achatMaterielsDto->getMontantTotal()));
+        //}
+
+        //////////////////////////////////////
+        // CREATE ENTITIES
+        //////////////////////////////////////
+        $tresorie = new RtlqTresorie();
+        $tresorie->setAdherentName($achatMaterielsDto->getMagasin());
+        $tresorie->setCategorie($categorieVenteModele);
+        $tresorie->setCheque($achatMaterielsDto->getCheque());
+        $tresorie->setDateCreation($achatMaterielsDto->getDateAchat());
+        $tresorie->setDescription(sprintf("Achat chez %s",$achatMaterielsDto->getMagasin()));
+        $tresorie->setEtat($etatAReglerModele);
+        $tresorie->setMontant($achatMaterielsDto->getMontantTotal());
+        $tresorie->setNumeroCheque($achatMaterielsDto->getNumeroCheque());
+        $tresorie->setResponsable($this->getUser()->getPrenomNom());
+        $tresorie->setSaison($saisonModele);
+
+        //////////////////////////////////////
+        // SAVE ENTITIES
+        //////////////////////////////////////
+        // // recuperation entityManager
+        $em = $this->getDoctrine()->getManager();
+        $em->merge($tresorie);
+        foreach ($materiels as $key => $value) {
+            $em->merge($value);
+        }
+        $em->flush();
+        return $this->newResponse(null, Response::HTTP_ACCEPTED);
     }
 }
