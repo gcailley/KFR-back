@@ -125,10 +125,7 @@ class MaterielController extends AbstractCrudApiController
             if ($materielModele == null) {
                 throw $this->createNotFoundException(sprintf("Materiel [%s/%s] not found.", $value->getNom(), $value->getId()));
             }
-            if ($value->getNombre() == 0) {
-                throw new BadRequestHttpException(sprintf("There is nothing to sell for [%s] ?", $value->getNom()));
-            }
-
+            
             if ($materielModele->getStock() - $value->getNombre() < 0) {
                 throw new BadRequestHttpException(sprintf("Stock too low for materiel [%s/%s] ] only %s available.", $value->getNom(), $value->getId(), $materielModele->getStock()));
             }
@@ -171,9 +168,9 @@ class MaterielController extends AbstractCrudApiController
         //////////////////////////////////////
         // VALIDATION 
         //////////////////////////////////////
-        if ($sommeTotalAPayer != $venteMaterielsDto->getMontantTotal()) {
-            throw new BadRequestHttpException(sprintf("Total amount is wrong [total : %s / excepted : %s].", $sommeTotalAPayer, $venteMaterielsDto->getMontantTotal()));
-        }
+        //if ($sommeTotalAPayer != $venteMaterielsDto->getMontantTotal()) {
+        //    throw new BadRequestHttpException(sprintf("Total amount is wrong [total : %s / excepted : %s].", $sommeTotalAPayer, $venteMaterielsDto->getMontantTotal()));
+        //}
 
         //////////////////////////////////////
         // SAVE ENTITIES

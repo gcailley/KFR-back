@@ -101,6 +101,9 @@ class AdherentController extends AbstractCrudApiController {
                     ->findOneBy(array("role"=>'ROLE_USER'), null, 1 , null);
         $adherent->addGroupe($groupeModele);
 
+        // get reduction de licence
+        $tresorieLicenceDeduction  = sizeof($adherent->getSaisons());
+
         // ajouter l'adherents dans la saison active
         $saisonModele = $this 
                     ->getDoctrine()

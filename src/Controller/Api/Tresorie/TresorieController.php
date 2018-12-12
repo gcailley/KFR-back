@@ -9,6 +9,7 @@ use App\Form\Builder\Tresorie\RtlqTresorieBuilder;
 use App\Form\Dto\Tresorie\RtlqTresorieDTO;
 use App\Controller\Api\AbstractCrudApiController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Entity\Tresorie\RtlqTresorie;
 
 /**
  * @Route("/tresorie/tresories")
@@ -50,7 +51,7 @@ class TresorieController extends AbstractCrudApiController
     public function getTresoriesByUser($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $tresorieRepo = $em->getRepository("App\Entity\Tresorie\RtlqTresorie");
+        $tresorieRepo = $em->getRepository(RtlqTresorie::class);
         $entity = $tresorieRepo->findAllTresorieFilterByAdherent($id);
 
         if (null == $entity) {

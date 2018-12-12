@@ -15,6 +15,26 @@ use App\Entity\AbstractRtlqEntity;
 class RtlqTresorieEtat extends AbstractRtlqEntity
 {
     /**
+     * Id en base pour etat REGLER
+     */
+    public const REGLER = 5;
+
+    /**
+     * Id en base pour etat ENCAISSE
+     */
+    public const ENCAISSE = 1;
+
+    /**
+     * Id en base pour etat ANNULE
+     */
+    public const ANNULE = 6;
+
+    /**
+     * Id en base pour etat A_ENCAISSER
+     */
+    public const A_ENCAISSER = 0;
+
+    /**
      * Id en base pour etat A_RECLAMER
      */
     public const A_RECLAMER = 2;

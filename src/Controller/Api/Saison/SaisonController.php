@@ -142,8 +142,6 @@ class SaisonController extends AbstractCrudApiController
             $nouvelleCotisation->setActive($value->getActive());
             $nouvelleCotisation->setCategorie($value->getCategorie());
             $nouvelleCotisation->setSaison($nouvelleSaison);
-
-            dump($nouvelleCotisation);
     
             $em->merge($nouvelleCotisation);
         } 

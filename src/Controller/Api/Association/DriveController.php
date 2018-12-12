@@ -13,7 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use App\Service\Security\User\AuthTokenAuthenticator;
-use function GuzzleHttp\json_encode;
+use GuzzleHttp\json_encode;
+use App\Entity\Security\RtlqAuthToken;
 
 /**
  * @Route("/association/drive")
@@ -118,7 +119,7 @@ class DriveController extends AbstractRtlqController {
     public function getUserByToken(Request $request) {
         $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
         $entityAssociate = $this->getDoctrine()
-                ->getRepository("App\Entity\Security\RtlqAuthToken")
+                ->getRepository(RtlqAuthToken::class)
                     ->findOneBy(array("value"=>$authTokenHeader));
         if (!is_object($entityAssociate)) {
             throw new createAccessDeniedException();

@@ -29,7 +29,7 @@ class RtlqTresorieType extends AbstractRtlqType {
 			->add ( 'saison_id', TextType::class )
 			->add ( 'categorie_id', TextType::class )
             ->add ( 'adherent_id', TextType::class )
-			->add ( 'date_creation', DateType::class, $this->getDateFormat());
+			->add ( 'date_creation', DateType::class, $this->getDateFormatTZ());
 	}
 	public function getName() {
 		return 'tresorie';

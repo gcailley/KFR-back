@@ -23,7 +23,7 @@ class RtlqCredentialsBuilder extends AbstractRtlqBuilder
     public function dtoToModele($em, $dto, $modele, $controller)
     {
 
-        $adherentRepo = $em->getRepository('App:Association\RtlqAdherent');
+        $adherentRepo = $em->getRepository(RtlqAdherent::class);
         $adherentPossible = $adherentRepo->loadUserByUsername($dto->getLogin());
 
         if ($adherentPossible == null) { // L'utilisateur n'existe pas
