@@ -7,6 +7,8 @@ use App\Entity\Association\RtlqAdherent;
 use App\Form\Builder\AbstractRtlqBuilder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\Cotisation\RtlqCotisation;
+use App\Entity\Tresorie\RtlqTresorie;
+use App\Entity\Tresorie\RtlqTresorieEtat;
 
 class RtlqAdherentBuilder extends AbstractRtlqBuilder
 {
@@ -130,13 +132,34 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
             $dto->setCotisationName($modele->getCotisation()->getName());
         }
         
+
         if ($modele->getTresories() != null) {
+            $totalEncaisser = 0;
+            $totalPrevisionnel = 0;
+            $totalEnRetard = 0;
+            $now = new \DateTime('NOW');
+
+//            dump("===================");
+//            dump(sizeof($modele->getTresories()));
+
             foreach ($modele->getTresories() as $tresorie) {
                 $dto->addTresorie($tresorie->getId());
-                $dto->addMontantTotalEncaisse($tresorie->getMontant());
-                $dto->addMontantTotalPrevisionnel($tresorie->getMontant());
-                $dto->addMontantTotalEnRetard($tresorie->getMontant());
+                if (RtlqTresorieEtat::ENCAISSE === $tresorie->getEtat()->getId() || RtlqTresorieEtat::REGLER === $tresorie->getEtat()->getId()) {
+                    $totalEncaisser += $tresorie->getMontant();
+                } else if (RtlqTresorieEtat::A_ENCAISSER === $tresorie->getEtat()->getId() || RtlqTresorieEtat::A_RECLAMER === $tresorie->getEtat()->getId()) {
+                    $totalPrevisionnel += $tresorie->getMontant();
+//                    dump($tresorie);
+                    if (RtlqTresorieEtat::A_RECLAMER === $tresorie->getEtat()->getId() && $now > $tresorie->getDateCreation() ) {
+                        $totalEnRetard += $tresorie->getMontant();
+                    }
+                }
+//                dump($totalEncaisser . '/' . $totalPrevisionnel . '/' . $totalEnRetard);
             }
+
+            $dto->addMontantTotalEncaisse($totalEncaisser);
+            $dto->addMontantTotalPrevisionnel($totalPrevisionnel);
+            $dto->addMontantTotalEnRetard($totalEnRetard);
+
         }
 
         return $dto;
