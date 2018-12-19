@@ -5,5 +5,5 @@ swiftmailer:
     host: smtp.googlemail.com
     port: 465
     auth_mode: login
-    username: username
-    password: password
+    username: '%env(MAILER_USER)%'
+    password: '%env(MAILER_PWD)%'
