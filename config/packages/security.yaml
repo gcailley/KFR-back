@@ -74,5 +74,6 @@ security:
     role_hierarchy:
         ROLE_ANONYMOUS:   [ROLE_USER]
         ROLE_USER:        [ROLE_USER]
+        ROLE_COM:         [ROLE_USER,  ROLE_COM]
         ROLE_ADMIN:       [ROLE_ADMIN, ROLE_USER]
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_SUPER_ADMIN]
