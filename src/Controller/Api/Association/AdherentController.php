@@ -199,7 +199,7 @@ class AdherentController extends AbstractCrudApiController {
         );
 
         $this->mailer->send($message);
-        return new Response("Email sent to " + $data['email'], Response::HTTP_ACCEPTED);
+        return new Response("Email sent to " . $data['email'], Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -225,7 +225,7 @@ class AdherentController extends AbstractCrudApiController {
         }
         // suppression du token
         $encodedPassword = $passwordEncoder->encodePassword(
-            $this->encoder,
+//            $this->encoder,
             $this->getNewModeleInstance(),
             $password);
         $entityDB->setPassword($encodedPassword);
