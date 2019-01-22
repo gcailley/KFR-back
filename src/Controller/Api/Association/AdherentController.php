@@ -24,6 +24,7 @@ use App\Entity\Saison\RtlqSaison;
 use App\Entity\Cotisation\RtlqCotisation;
 use App\Form\Builder\Tresorie\RtlqTresorieBuilder;
 use App\Entity\Tresorie\RtlqTresorieCategorie;
+use App\Entity\Security\RtlqAuthToken;
 
 /**
  * @Route("/association/adherents")
@@ -84,6 +85,29 @@ class AdherentController extends AbstractCrudApiController {
     }
 
 
+    /**
+     * @Route("", methods={"GET"})
+     */
+    public function getAllAction(Request $request, $response=true)
+    {
+       $scope = $request->query->get("scope");
+       switch ($scope) {
+           case "trombinoscope":
+                $entities = $this->getDoctrine()
+                                  ->getRepository($this->getName())
+                                  ->findBy(
+                                        array("actif"=>true), 
+                                        $this->defaultSort()
+                                    );
+                $dto_entities = $this->builder->ofuscated($entities, $this);
+                return $this->convertDto2Response($response, $dto_entities, Response::HTTP_ACCEPTED);
+                break;
+           
+           default:
+               return parent::getAllAction($request, $response);
+               break;
+       }
+    }
 
     /**
      * @Route("/{id}/finalise-inscription", methods={"POST"})
@@ -185,7 +209,7 @@ class AdherentController extends AbstractCrudApiController {
 
         // send email avec le lien
         $message = (new \Swift_Message('Reset Password'))
-        ->setFrom($this->getParameter('email_association'))
+        ->setFrom($this->getParameter('association_email'))
         ->setTo($entityDB->getEmail())
         ->addPart(
             $this->renderView(
@@ -193,7 +217,10 @@ class AdherentController extends AbstractCrudApiController {
                 array(
                     'prenom' => $entityDB->getPrenom(), 
                     'urlReset' => $this->getParameter('url_reinitialisation'),
-                    'resetToken'=> $entityDB->getTokenPwd())
+                    'resetToken'=> $entityDB->getTokenPwd(),
+                    'urlSite' => $this->getParameter('url_site'),
+                    'associationNom' => $this->getParameter('association_nom'),
+                    'associationTelephone' => $this->getParameter('association_telephone'))
             ),
             'text/html'
         );
@@ -238,13 +265,16 @@ class AdherentController extends AbstractCrudApiController {
 
         // send email de confirmation
         $message = (new \Swift_Message('Reset Password accepted'))
-        ->setFrom('kungfurennes@gmail.com')
+        ->setFrom($this->getParameter('association_email'))
         ->setTo($entityDB->getEmail())
         ->addPart(
             $this->renderView(
                 'emails/change-password.html.twig',
                 array(
-                    'prenom' => $entityDB->getPrenom()
+                    'prenom' => $entityDB->getPrenom(),
+                    'urlSite' => $this->getParameter('url_site'),
+                    'associationNom' => $this->getParameter('association_nom'),
+                    'associationTelephone' => $this->getParameter('association_telephone')
                 )
             ),
             'text/html'
@@ -458,6 +488,6 @@ class AdherentController extends AbstractCrudApiController {
             throw new createAccessDeniedException();
         }
         //get user information based on the id associate from the token
-        return $this->getByIdAction($entityAssociate->getUser()->getId());
+        return $this->getByIdAction($request, $entityAssociate->getUser()->getId());
     }
 }

@@ -13,15 +13,17 @@ parameters:
     mailer_password: '%env(MAIL_PWD)%'
 
     user_drive_basedir: '%env(USER_DRIVE_BASEDIR)%'
-    url_reinitialisation: '%env(URL_SITE)%%env(URI_REINITIALISATION)%'
-    email_association: '%env(EMAIL)%'
+    url_reinitialisation: '%env(URL_SITE_INTRANET)%%env(URI_REINITIALISATION)%'
+    association_email: '%env(ENTITE_EMAIL)%'
+    association_nom: '%env(ENTITE_NOM)%'
+    association_telephone: '%env(ENTITE_TELEPHONE)%'
     rss:
         author: '%env(RSS_AUTHOR)%'
         description: '%env(RSS_DESCRIPTION)%'
         url: '%env(URL_SITE)%'
         title: '%env(RSS_TITLE)%'
         image_url: '%env(RSS_IMAGE_URL)%'
-        email: '%env(EMAIL)%'
+        email: '%env(ENTITE_EMAIL)%'
     photos:
         photos_drive_basedir: '%env(PHOTOS_DRIVE_BASEDIR)%'
         thumbnails_drive_basedir: '%env(THUMBNAILS_DRIVE_BASEDIR)%'

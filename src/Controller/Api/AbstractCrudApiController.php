@@ -37,6 +37,24 @@ abstract class AbstractCrudApiController extends AbstractApiController
         return [];
     }
 
+
+    public function convertModele2DtoResponse($response, $entityMetier, $status) {
+        if ($response) {
+            $dto = $this->builder->modeleToDto($entityMetier, $this);
+            return $this->newResponse(json_encode($dto), $status);
+        } else {
+            return $entityMetier;
+        }
+    }
+
+    public function convertDto2Response($response, $dtoEntities, $status) {
+        if ($response) {
+            return $this->newResponse(json_encode($dtoEntities), $status);
+        } else {
+            return $dtoEntities;
+        }
+    }
+
     /**
      * @Route("", methods={"GET"})
      */
@@ -45,17 +63,13 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $tresories = $this->getDoctrine()->getRepository($this->getName())->findBy([], $this->defaultSort());
         
         $dto_tresories = $this->builder->modelesToDtos($tresories, $this);
-        if ($response) {
-            return $this->newResponse(json_encode($dto_tresories), Response::HTTP_ACCEPTED);
-        } else {
-            return $dto_tresories;
-        }
+        return $this->convertDto2Response($dto_tresories, $response, Response::HTTP_ACCEPTED);
     }
 
     /**
      * @Route("/{id}", methods={"PUT"})
      */
-    public function updateAction($id, Request $request)
+    public function updateAction($id, Request $request, $response =true)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -85,8 +99,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $em->merge($entityMetier);
         $em->flush();
 
-        $dto = $this->builder->modeleToDto($entityMetier, $this);
-        return $this->newResponse(json_encode($dto), Response::HTTP_ACCEPTED);
+        return $this->convertModele2DtoResponse($response, $entityMetier, Response::HTTP_ACCEPTED);
     }
 
     protected function updateBeforeSaved($em, $entityMetier) {
@@ -134,13 +147,9 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $em->persist($entityMetier);
         $em->flush();
 
-        if ($response) {
-            $dto = $this->builder->modeleToDto($entityMetier, $this);
-            return $this->newResponse(json_encode($dto), Response::HTTP_CREATED);
-        } else {
-            return $entityMetier;
-        }
+        return $this->convertModele2DtoResponse($response, $entityMetier, Response::HTTP_CREATED);
     }
+
 
     protected function innerCreateAction($em, $entityMetier) {
     }

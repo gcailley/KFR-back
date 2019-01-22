@@ -39,7 +39,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         $modele->setPrenom($postModele->getPrenom());
         $modele->setDateNaissance($postModele->getDateNaissance());
         $modele->setActif($postModele->getActif());
-        $modele->setPublic($postModele->getPublic());
+        $modele->setPublic($postModele->getPublique());
         $modele->setAdresse($postModele->getAdresse());
         $modele->setCodePostal($postModele->getCodePostal());
         $modele->setVille($postModele->getVille());
@@ -91,7 +91,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         $dto->setPrenom($modele->getPrenom());
         $dto->setDateNaissance($this->dateToString($modele->getDateNaissance()));
         $dto->setActif($modele->getActif());
-        $dto->setPublic($modele->getPublic());
+        $dto->setPublique($modele->getPublic());
         $dto->setSaisonCourante($modele->isInSaisonCourante());
 
         $dto->setAdresse($modele->getAdresse());
@@ -109,6 +109,24 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         $dto->setForumUid($modele->getForumUid());
         $dto->setForumUsername($modele->getForumUsername());
         return $dto;
+    }
+
+
+    public function ofuscated($modeles, $controller)
+    {
+        $dto_array = array();
+        foreach ($modeles as $modele) {
+            $dto = $this->modeleToDtoLight($modele, $controller);
+            if (! $dto->getPublique()) {
+                $dto->setUsername("#####################");
+                $dto->setEmail("#####################");
+                $dto->setTelephone("#####################");
+                $dto->setAdresse("#####################");
+                $dto->setCodePostal("#####################");
+            }
+            array_push($dto_array, $dto);
+        }
+        return $dto_array;
     }
         
 

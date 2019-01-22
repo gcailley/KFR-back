@@ -18,7 +18,7 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     protected $prenom;
     protected $date_naissance;
     protected $actif;
-    protected $public;
+    protected $publique;
     protected $adresse;
     protected $avatar;
     protected $code_postal;
@@ -86,8 +86,8 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
         return $this->actif;
     }
 
-    public function getPublic() {
-        return $this->public;
+    public function getPublique() {
+        return $this->publique;
     }
 
     public function getAdresse() {
@@ -176,8 +176,8 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
         return $this;
     }
 
-    public function setPublic($public) {
-        $this->public = $public;
+    public function setPublique($publique) {
+        $this->publique = $publique;
         return $this;
     }
 

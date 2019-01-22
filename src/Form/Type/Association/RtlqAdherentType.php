@@ -28,7 +28,7 @@ class RtlqAdherentType extends AbstractRtlqType
             ->add('date_naissance', DateType::class, $this->getDateFormatTZ())
             ->add('actif', CheckBoxType::class)
             ->add('saison_courante', CheckBoxType::class)
-            ->add('public', CheckBoxType::class)
+            ->add('publique', CheckBoxType::class)
             ->add('adresse', TextType::class)
             ->add('avatar', TextType::class)
             ->add('code_postal', TextType::class)
