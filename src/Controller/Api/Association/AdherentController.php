@@ -100,7 +100,7 @@ class AdherentController extends AbstractCrudApiController {
                                         $this->defaultSort()
                                     );
                 $dto_entities = $this->builder->ofuscated($entities, $this);
-                return $this->convertDto2Response($response, $dto_entities, Response::HTTP_ACCEPTED);
+                return $this->convertDto2Response( $dto_entities, $response, Response::HTTP_ACCEPTED);
                 break;
            
            default:
@@ -218,7 +218,7 @@ class AdherentController extends AbstractCrudApiController {
                     'prenom' => $entityDB->getPrenom(), 
                     'urlReset' => $this->getParameter('url_reinitialisation'),
                     'resetToken'=> $entityDB->getTokenPwd(),
-                    'urlSite' => $this->getParameter('url_site'),
+                    'urlSite' => $this->getParameter('url_site' ),
                     'associationNom' => $this->getParameter('association_nom'),
                     'associationTelephone' => $this->getParameter('association_telephone'))
             ),

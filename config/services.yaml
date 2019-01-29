@@ -12,6 +12,9 @@ parameters:
     mailer_user: '%env(MAIL_USER)%'
     mailer_password: '%env(MAIL_PWD)%'
 
+    url_site: '%env(URL_SITE)%'
+    url_site_intranet: '%env(URL_SITE_INTRANET)%'
+
     user_drive_basedir: '%env(USER_DRIVE_BASEDIR)%'
     url_reinitialisation: '%env(URL_SITE_INTRANET)%%env(URI_REINITIALISATION)%'
     association_email: '%env(ENTITE_EMAIL)%'

@@ -38,7 +38,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
     }
 
 
-    public function convertModele2DtoResponse($response, $entityMetier, $status) {
+    public function convertModele2DtoResponse($entityMetier, $response, $status) {
         if ($response) {
             $dto = $this->builder->modeleToDto($entityMetier, $this);
             return $this->newResponse(json_encode($dto), $status);
@@ -47,7 +47,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
         }
     }
 
-    public function convertDto2Response($response, $dtoEntities, $status) {
+    public function convertDto2Response($dtoEntities, $response, $status) {
         if ($response) {
             return $this->newResponse(json_encode($dtoEntities), $status);
         } else {
@@ -99,7 +99,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $em->merge($entityMetier);
         $em->flush();
 
-        return $this->convertModele2DtoResponse($response, $entityMetier, Response::HTTP_ACCEPTED);
+        return $this->convertModele2DtoResponse($entityMetier, $response, Response::HTTP_ACCEPTED);
     }
 
     protected function updateBeforeSaved($em, $entityMetier) {
@@ -147,7 +147,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $em->persist($entityMetier);
         $em->flush();
 
-        return $this->convertModele2DtoResponse($response, $entityMetier, Response::HTTP_CREATED);
+        return $this->convertModele2DtoResponse($entityMetier, $response, Response::HTTP_CREATED);
     }
 
 
