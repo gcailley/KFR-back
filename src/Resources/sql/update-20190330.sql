@@ -1,0 +1,3 @@
+ CREATE TABLE rtlq_event (id INT AUTO_INCREMENT NOT NULL, saison_id INT DEFAULT NULL, description VARCHAR(100) NOT NULL, commentaire VARCHAR(100) DEFAULT NULL, adresse VARCHAR(100) NOT NULL, date_creation DATE NOT NULL, INDEX IDX_717686F9F965414C (saison_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+     ALTER TABLE rtlq_event ADD CONSTRAINT FK_717686F9F965414C FOREIGN KEY (saison_id) REFERENCES rtlq_saison (id);
+     ALTER TABLE rtlq_tresorie_etat CHANGE next_etat_id next_etat_id INT DEFAULT NULL;

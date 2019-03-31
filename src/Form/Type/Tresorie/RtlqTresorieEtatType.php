@@ -20,7 +20,6 @@ class RtlqTresorieEtatType extends AbstractRtlqEnumType {
 		$builder
 			->add ( 'next_etat_name', TextType::class )
 			->add ( 'next_etat_id', NumberType::class );
-		dump($builder);
 		return $builder;
     }
 

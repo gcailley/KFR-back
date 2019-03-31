@@ -66,17 +66,31 @@ class AuthTokenController extends AbstractCrudApiController
         return null;
     }
 
+    public function getRoleHierarchy () {
+        return $this->getParameter('security.role_hierarchy.roles');
+    }
 
     /**
      * @Route("/check-user", methods={"GET"})
      */
     public function checkuserAction(Request $request)
     {
-        $entity = $this->getTokenByValue($request);
+        // requete permettant de ne conserver aucun token sup à 5 pour cet utilisateur
+        $entities = $this->getDoctrine()
+            ->getRepository($this->getName())
+            ->find(array("createdAt" < time() - AuthTokenAuthenticator::TOKEN_VALIDITY_DURATION));
+        
+        $em = $this->getDoctrine()->getManager();
+        foreach ($entities as $entity) {
+            $em->remove($entity);
+        }
+        $em->flush();
 
+        $entity = $this->getTokenByValue($request);
         if (!is_object($entity)) {
             throw $this->createAccessDeniedException();
         }
+
         return $this->newResponse(json_encode($entity), Response::HTTP_ACCEPTED);
     }
 
@@ -107,7 +121,6 @@ class AuthTokenController extends AbstractCrudApiController
         }
 
         $em = $this->getDoctrine()->getManager();
-        $this->internalDeleteByIdAction($em, $entity);
         $em->remove($entity);
         $em->flush();
 

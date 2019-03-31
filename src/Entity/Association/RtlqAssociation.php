@@ -66,6 +66,23 @@ class RtlqAssociation {
      */
     private $email;
 
+
+    /**
+     * @var string
+     * TODO activation en base
+     * ORM\Column(name="url_extranet", type="string", length=100, nullable=false)
+     */
+    private $userExtranet;
+
+
+    /**
+     * @var string
+     *
+     * TODO activation en base
+     * ORM\Column(name="url_intranet", type="string", length=100, nullable=false)
+     */
+    private $userIntranet;
+
     /**
      * Get id
      *
@@ -200,4 +217,21 @@ class RtlqAssociation {
         return $this->numeroSiren;
     }
     
+    
+    public function setUrlExtranet($value) {
+        $this->url_extranet = $value;
+        return $this;
+    }
+    public function getUrlExtranet() {
+        return $this->url_extranet;
+    }
+
+    public function setUrlIntranet($value) {
+        $this->url_intranet = $value;
+        return $this;
+    }
+    public function getUrlIntranet() {
+        return $this->url_intranet;
+    }
+
 }

@@ -36,7 +36,7 @@ class RtlqCredentialsBuilder extends AbstractRtlqBuilder
             throw new UsernameNotFoundException('Invalid username or password');
         }
 
-        $modele->setValue(base64_encode(random_bytes(50)));
+        $modele->setValue(bin2hex(random_bytes(50)));
         $modele->setCreatedAt(new \DateTime('now'));
 
         //get adhernent from database to create the credentials
@@ -48,9 +48,19 @@ class RtlqCredentialsBuilder extends AbstractRtlqBuilder
     
     public function modeleToDto($modele,  $controller)
     {
-		$dto = $controller->newDto();
+        $dto = $controller->newDto();
         $dto->setToken ( $modele->getValue());
-        $dto->setRoles ( $modele->getUser()->getRoles());
+
+        $role_hierarchy = $controller->getRoleHierarchy();
+        $roles = array();
+        foreach ($modele->getUser()->getRoles() as $value) {
+            if (array_key_exists ($value, $role_hierarchy)) {
+                $roles = array_merge($roles, $role_hierarchy [$value]);
+            } else {
+                $roles [] = $value;
+            }
+        }
+        $dto->setRoles ( $roles );
         $dto->setUsername ( $modele->getUser()->getUsername());
 
         return $dto;

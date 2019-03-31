@@ -61,19 +61,40 @@ security:
             anonymous: ~
 
     access_control:
-        - { path: ^/association/photo_directories, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/photos, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/cotisations/active, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/saisons/active, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/news, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/photo_directories, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/photo_directories, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_COM }
+        - { path: ^/association/photos, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/photos, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_COM }
+        - { path: ^/association/events, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_ADMIN, ROLE_BEN] }
+        - { path: ^/association/adherents, roles: ROLE_ADMIN }
+        - { path: ^/association, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_ADMIN }
+        - { path: ^/kpis, roles: ROLE_KPI }
+        - { path: ^/cotisations/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/cotisations, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_TRE] }
+        - { path: ^/saisons/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/saisons, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_ADMIN] }
+        - { path: ^/association/news, methods: [GET] ,roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/news, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_COM] }
         - { path: ^/technique/setup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/security/tokens, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/adherents/password-*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/security/tokens, methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/adherents/password-*,  methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/groupes, roles: ROLE_ADMIN }
+        - { path: ^/association/kungfu, roles: ROLE_ADMIN }
+        - { path: ^/materiels, roles: ROLE_TRE }
+        - { path: ^/saisons, roles: ROLE_ADMIN }
+        - { path: ^/tresorie/categories, roles: ROLE_ADMIN }
+        - { path: ^/tresorie/tresories, roles: ROLE_ADMIN }
+        - { path: ^/tresorie/etats, roles: ROLE_ADMIN }
+        - { path: ^/kungfu/styles, roles: ROLE_ADMIN }
+        - { path: ^/kungfu/niveaux, roles: ROLE_ADMIN }
+        - { path: ^/kungfu/taos, roles: ROLE_PROF }
         - { path: ^/, roles: ROLE_USER }
 
     role_hierarchy:
-        ROLE_ANONYMOUS:   [ROLE_USER]
         ROLE_USER:        [ROLE_USER]
-        ROLE_COM:         [ROLE_USER,  ROLE_COM]
-        ROLE_ADMIN:       [ROLE_ADMIN, ROLE_USER]
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_SUPER_ADMIN]
+        ROLE_COM:         [ROLE_COM]
+        ROLE_PROF:        [ROLE_PROF]
+        ROLE_TRE:         [ROLE_TRE]
+        ROLE_KPI:         [ROLE_KPI]
+        ROLE_ADMIN:       [ROLE_KPI, ROLE_ADMIN]
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_PROF, ROLE_KPI, ROLE_TRE, ROLE_COM, ROLE_ADMIN, ROLE_SUPER_ADMIN]
