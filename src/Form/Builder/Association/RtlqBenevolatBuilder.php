@@ -17,6 +17,7 @@ class RtlqBenevolatBuilder extends AbstractRtlqBuilder
 
         $modele->setSaison ( $em->getReference ( "App\Entity\Saison\RtlqSaison", $dto->getSaisonId () ) );
         $modele->setAdherent ( $em->getReference ( "App\Entity\Association\RtlqAdherent", $dto->getAdherentId () ) );
+        $modele->setCategorie ( $em->getReference ( "App\Entity\Tresorie\RtlqTresorieCategorie", $dto->getCategorieId () ) );
         
         return $modele;
     }
@@ -36,7 +37,10 @@ class RtlqBenevolatBuilder extends AbstractRtlqBuilder
         $dto->setSaisonId ( $modele->getSaisonId () );
         $dto->setAdherentName ( $modele->getAdherentNom () );
         $dto->setAdherentId ( $modele->getAdherentId () );
-                
+        $dto->setCategorieName ( $modele->getCategorieNom () );
+        $dto->setCategorieId ( $modele->getCategorieId () );
+
+
         return $dto;
     }
 }

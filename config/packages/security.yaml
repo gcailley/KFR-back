@@ -47,10 +47,14 @@ security:
             anonymous: ~
 
         public_reset_password_api:
-            pattern: ^/association/adherents/password-*
+            pattern: ^/association/adherents/password-reset
             methods: [POST]
             anonymous: ~
-
+        public_change_password_api:
+            pattern: ^/association/adherents/password-change
+            methods: [POST]
+            anonymous: ~
+        
         internal_api:
             pattern: ^/
             methods: [GET, PUT, DELETE, POST, OPTIONS]
@@ -61,23 +65,26 @@ security:
             anonymous: ~
 
     access_control:
+        - { path: ^/association/adherents/password-change,  methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/adherents/password-reset,  methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/photo_directories, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/photo_directories, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_COM }
+        - { path: ^/cotisations/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/saisons/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/news, methods: [GET] ,roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/technique/setup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/security/tokens, methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/photos, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+
+        - { path: ^/association/photo_directories, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_COM }
         - { path: ^/association/photos, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_COM }
         - { path: ^/association/events, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_ADMIN, ROLE_BEN] }
         - { path: ^/association/adherents, roles: ROLE_ADMIN }
         - { path: ^/association, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_ADMIN }
         - { path: ^/kpis, roles: ROLE_KPI }
-        - { path: ^/cotisations/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/cotisations, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_TRE] }
-        - { path: ^/saisons/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/saisons, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_ADMIN] }
-        - { path: ^/association/news, methods: [GET] ,roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/news, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_COM] }
-        - { path: ^/technique/setup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/security/tokens, methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/adherents/password-*,  methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/groupes, roles: ROLE_ADMIN }
         - { path: ^/association/kungfu, roles: ROLE_ADMIN }
         - { path: ^/materiels, roles: ROLE_TRE }

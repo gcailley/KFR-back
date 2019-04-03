@@ -1,3 +1,7 @@
- CREATE TABLE rtlq_event (id INT AUTO_INCREMENT NOT NULL, saison_id INT DEFAULT NULL, description VARCHAR(100) NOT NULL, commentaire VARCHAR(100) DEFAULT NULL, adresse VARCHAR(100) NOT NULL, date_creation DATE NOT NULL, INDEX IDX_717686F9F965414C (saison_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+  CREATE TABLE rtlq_benevolat (id INT AUTO_INCREMENT NOT NULL, adherent_id INT NOT NULL, saison_id INT NOT NULL, categorie_id INT NOT NULL,
+description VARCHAR(100) NOT NULL, heure INT NOT NULL, minute INT NOT NULL, date_creation DATE NOT NULL, INDEX IDX_ECA6E85325F06C53 (adherent_id), INDEX IDX_ECA6E853F965414C (saison_id), INDEX IDX_ECA6E853BCF5E72D (categorie_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+     CREATE TABLE rtlq_event (id INT AUTO_INCREMENT NOT NULL, saison_id INT NOT NULL, description VARCHAR(100) NOT NULL, commentaire VARCHAR(100) DEFAULT NULL, adresse VARCHAR(100) NOT NULL, date_creation DATE NOT NULL, INDEX IDX_717686F9F965414C (saison_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+     ALTER TABLE rtlq_benevolat ADD CONSTRAINT FK_ECA6E85325F06C53 FOREIGN KEY (adherent_id) REFERENCES rtlq_adherent (id);
+     ALTER TABLE rtlq_benevolat ADD CONSTRAINT FK_ECA6E853F965414C FOREIGN KEY (saison_id) REFERENCES rtlq_saison (id);
+     ALTER TABLE rtlq_benevolat ADD CONSTRAINT FK_ECA6E853BCF5E72D FOREIGN KEY (categorie_id) REFERENCES rtlq_tresorie_categorie (id);
      ALTER TABLE rtlq_event ADD CONSTRAINT FK_717686F9F965414C FOREIGN KEY (saison_id) REFERENCES rtlq_saison (id);
-     ALTER TABLE rtlq_tresorie_etat CHANGE next_etat_id next_etat_id INT DEFAULT NULL;

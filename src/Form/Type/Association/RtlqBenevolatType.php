@@ -19,7 +19,9 @@ class RtlqBenevolatType extends AbstractRtlqType
             ->add ( 'saison_id', TextType::class )
             ->add ( 'saison_name', TextType::class )
             ->add ( 'adherent_id', TextType::class )
-            ->add ( 'adherent_name', TextType::class );
+            ->add ( 'adherent_name', TextType::class )
+            ->add ( 'categorie_id', TextType::class )
+            ->add ( 'categorie_name', TextType::class );
 
     }
     public function getName()

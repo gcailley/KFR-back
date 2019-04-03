@@ -48,7 +48,7 @@ class RtlqEvent extends AbstractRtlqEntity {
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Saison\RtlqSaison")
-     * @ORM\JoinColumn(name="saison_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="saison_id", referencedColumnName="id", nullable=false)
      */
     private $saison;
     

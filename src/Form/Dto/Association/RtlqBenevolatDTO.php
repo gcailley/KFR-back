@@ -19,6 +19,9 @@ class RtlqBenevolatDTO extends AbstractRtlqDTO
     protected $saison_name;
     protected $adherent_id;
     protected $adherent_name;
+    protected $categorie_id;
+    protected $categorie_name;
+
     
     
     public function getDescription()
@@ -58,6 +61,15 @@ class RtlqBenevolatDTO extends AbstractRtlqDTO
     public function getAdherentName()
     {
         return $this->adherent_name;
+    }
+    public function getCategorieId()
+    {
+        return $this->categorie_id;
+    }
+    
+    public function getCategorieName()
+    {
+        return $this->categorie_name;
     }
 
 
@@ -106,6 +118,18 @@ class RtlqBenevolatDTO extends AbstractRtlqDTO
     public function setAdherentName($value)
     {
         $this->adherent_name = $value;
+        return $this;
+    }
+
+    public function setCategorieId($value)
+    {
+        $this->categorie_id = $value;
+        return $this;
+    }
+        
+    public function setCategorieName($value)
+    {
+        $this->categorie_name = $value;
         return $this;
     }
 }

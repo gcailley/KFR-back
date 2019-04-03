@@ -6,8 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\AbstractRtlqEntity;
 
 /**
- * RtlqCategorie
- *
+ * RtlqTresorieCategorie *
  * @ORM\Table(name="rtlq_tresorie_categorie", 
  * uniqueConstraints={@ORM\UniqueConstraint(name="Value", columns={"Value"})}, 
  * indexes={@ORM\Index(name="id", columns={"id"})})

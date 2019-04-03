@@ -5,6 +5,7 @@ namespace App\Entity\Association;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\AbstractRtlqEntity;
 use App\Entity\Saison\RtlqSaison;
+use App\Entity\Tresorie\RtlqTresorieCategorie;
 
 /**
  * RtlqBenevolat.
@@ -43,20 +44,27 @@ class RtlqBenevolat extends AbstractRtlqEntity
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Association\RtlqAdherent")
-     * @ORM\JoinColumn(name="adherent_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="adherent_id", referencedColumnName="id" , nullable=false)
      */
     private $adherent;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Saison\RtlqSaison")
-     * @ORM\JoinColumn(name="saison_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="saison_id", referencedColumnName="id", nullable=false)
      */
     private $saison;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Tresorie\RtlqTresorieCategorie")
+     * @ORM\JoinColumn(name="categorie_id", referencedColumnName="id", nullable=false)
+     */
+    private $categorie;
 
     public function __construct()
     {
         $this->saison = null;
         $this->adherent = null;
+        $this->categorie = null;
     }
 
     /**
@@ -108,6 +116,7 @@ class RtlqBenevolat extends AbstractRtlqEntity
     public function setHeure($value)
     {
         $this->heure = $value;
+
         return $this;
     }
 
@@ -119,6 +128,7 @@ class RtlqBenevolat extends AbstractRtlqEntity
     public function setMinute($value)
     {
         $this->minute = $value;
+
         return $this;
     }
 
@@ -144,9 +154,6 @@ class RtlqBenevolat extends AbstractRtlqEntity
         return $this->saison->getId();
     }
 
-
-
-    
     public function getAdherent()
     {
         return $this->adherent;
@@ -167,5 +174,29 @@ class RtlqBenevolat extends AbstractRtlqEntity
     public function getAdherentId()
     {
         return $this->adherent->getId();
+    }
+
+
+    
+    public function getCategorie()
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(RtlqTresorieCategorie $value)
+    {
+        $this->categorie = $value;
+
+        return $this;
+    }
+
+    public function getCategorieNom()
+    {
+        return $this->categorie->getValue();
+    }
+
+    public function getCategorieId()
+    {
+        return $this->categorie->getId();
     }
 }
