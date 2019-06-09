@@ -42,8 +42,8 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
             return $this->createQueryBuilder('u')
             ->select('SUM(u.montant)')
             ->innerJoin('u.etat', 'etat')
-            ->where('etat IN (:etats)')
-            ->setParameter('etats', [RtlqTresorieEtat::ENCAISSE, RtlqTresorieEtat::REGLER])
+            ->where('etat NOT IN (:etats)')
+            ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
             ->getQuery()
             ->getSingleScalarResult();
         } else if (TresorieRepository::KPI_TRESORERIE_EN_RETARD == $name) {
@@ -59,8 +59,8 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
             ->select('SUM(u.montant)')
             ->innerJoin('u.etat', 'etat')
             ->innerJoin('u.saison', 's')
-            ->where('etat IN (:etats) AND s.active = :sactive')
-            ->setParameter('etats', [RtlqTresorieEtat::ENCAISSE, RtlqTresorieEtat::REGLER])
+            ->where('etat NOT IN (:etats) AND s.active = :sactive')
+            ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
             ->setParameter('sactive', true)
             ->getQuery()
             ->getSingleScalarResult();

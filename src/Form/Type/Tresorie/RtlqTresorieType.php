@@ -25,6 +25,7 @@ class RtlqTresorieType extends AbstractRtlqType {
 			->add ( 'numero_cheque', TextType::class )
 			->add ( 'numero_remise_cheque', TextType::class )
 			->add ( 'cheque', CheckboxType::class )
+			->add ( 'pointe', CheckboxType::class )
 			->add ( 'etat_id', TextType::class )
 			->add ( 'saison_id', TextType::class )
 			->add ( 'categorie_id', TextType::class )

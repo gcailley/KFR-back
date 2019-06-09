@@ -21,6 +21,7 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder
         $modele->setDateCreation ( $postModele->getDateCreation () );
         $modele->setMontant ( $postModele->getMontant () );
         $modele->setCheque ( $postModele->getCheque () );
+        $modele->setPointe ( $postModele->getPointe () );
         $modele->setNumeroCheque ( $postModele->getNumeroCheque () );
         $modele->setNumeroRemiseCheque ( $postModele->getNumeroRemiseCheque () );
         
@@ -46,6 +47,7 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder
         $dto->setDateCreation ( $this->dateToString ( $modele->getDateCreation () ) );
         $dto->setMontant ( $modele->getMontant () );
         $dto->setCheque ( $modele->getCheque () );
+        $dto->setPointe ( $modele->getPointe () );
         $dto->setNumeroCheque ( $modele->getNumeroCheque () );
         $dto->setNumeroRemiseCheque ( $modele->getNumeroRemiseCheque () );
         

@@ -21,6 +21,7 @@ class RtlqTresorieDTO extends AbstractRtlqDTO {
     protected $categorie_id;
     protected $categorie_name;
     protected $adherent_id;
+    protected $pointe;
 
     /**
      * Set description
@@ -188,6 +189,29 @@ class RtlqTresorieDTO extends AbstractRtlqDTO {
         $this->etat_id = $etatId;
 
         return $this;
+    }
+
+
+     /**
+     * Set pointe
+     *
+     * @param string $pointe        	
+     *
+     * @return RtlqTresorie
+     */
+    public function setPointe($pointe) {
+        $this->pointe = $pointe;
+
+        return $this;
+    }
+
+    /**
+     * Get numeroCheque
+     *
+     * @return string
+     */
+    public function getPointe() {
+        return $this->pointe;
     }
 
     /**

@@ -72,6 +72,12 @@ class RtlqTresorie extends AbstractRtlqEntity {
 
     /**
      *
+     * @var boolean @ORM\Column(name="pointe", type="boolean", nullable=false)
+     */
+    private $pointe = false;
+
+    /**
+     *
      * @var string @ORM\Column(name="numero_cheque", type="string", length=20, nullable=true)
      */
     private $numeroCheque;
@@ -433,4 +439,24 @@ class RtlqTresorie extends AbstractRtlqEntity {
         return $this->categorie == null ? null : $this->categorie->getValue();
     }
 
+
+    /**
+     * Get pointe
+     *
+     * @return boolean
+     */
+    public function getPointe() {
+        return $this->pointe;
+    }
+
+    /**
+     * Set id
+     *
+     * @return this
+     */
+    public function setPointe($pointe) {
+        $this->pointe = $pointe;
+
+        return $this;
+    }
 }
