@@ -1,0 +1,1 @@
+ALTER TABLE rtlq_tresorie ADD pointe TINYINT(1) NOT NULL;
