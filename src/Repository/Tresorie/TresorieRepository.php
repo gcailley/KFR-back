@@ -23,7 +23,9 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
     const KPI_TRESORERIE_TOTALE = 'KPI_TRESORERIE_TOTALE';
     const KPI_TRESORERIE_EN_RETARD = 'KPI_TRESORERIE_EN_RETARD';
     const KPI_TRESORERIE_TOTALE_SAISON_COURANTE = 'KPI_TRESORERIE_TOTALE_SAISON_COURANTE';
-
+    const KPI_TRESORERIE_TOTALE_POINTEE = 'KPI_TRESORERIE_TOTALE_POINTEE';
+    const KPI_TRESORERIE_TOTALE_NON_POINTEE = 'KPI_TRESORERIE_TOTALE_NON_POINTEE';
+    
     public function findAllTresorieFilterByAdherent($adherent_id)
     {
         $query = $this->createQueryBuilder('t')
@@ -62,6 +64,24 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
             ->where('etat NOT IN (:etats) AND s.active = :sactive')
             ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
             ->setParameter('sactive', true)
+            ->getQuery()
+            ->getSingleScalarResult();
+        } else if (TresorieRepository::KPI_TRESORERIE_TOTALE_POINTEE == $name) {
+            return $this->createQueryBuilder('u')
+            ->select('SUM(u.montant)')
+            ->innerJoin('u.etat', 'etat')
+            ->where('etat NOT IN (:etats) AND u.pointe = :spointe')
+            ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
+            ->setParameter('spointe', true)
+            ->getQuery()
+            ->getSingleScalarResult();
+        } else if (TresorieRepository::KPI_TRESORERIE_TOTALE_NON_POINTEE == $name) {
+            return $this->createQueryBuilder('u')
+            ->select('SUM(u.montant)')
+            ->innerJoin('u.etat', 'etat')
+            ->where('etat NOT IN (:etats) AND u.pointe != :spointe')
+            ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
+            ->setParameter('spointe', true)
             ->getQuery()
             ->getSingleScalarResult();
         } 
