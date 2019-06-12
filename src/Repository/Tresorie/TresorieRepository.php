@@ -88,4 +88,15 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
         
         return -1;
     }
+
+
+    function extractAllKpis() {
+        return $this->createQueryBuilder('u')
+            ->select('saison.nom as saison_name, etat.value as etat_name, u.pointe as pointe, SUM(u.montant) as montant')
+            ->innerJoin('u.etat', 'etat')
+            ->innerJoin('u.saison', 'saison')
+            ->groupby('saison.id,etat.id,u.pointe')
+            ->getQuery()
+            ->getResult();
+    }
 }

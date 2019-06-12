@@ -9,6 +9,7 @@ use App\Entity\Association\RtlqAdherent as RtlqAdherent;
  * @ORM\Table(name="rtlq_auth_tokens",
  *      uniqueConstraints={@ORM\UniqueConstraint(name="auth_tokens_value_unique", columns={"value"})}
  * )
+ * * @ORM\Entity(repositoryClass="App\Repository\Security\SecurityRepository")
  */
 class RtlqAuthToken
 {

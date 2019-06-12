@@ -17,6 +17,7 @@ use App\Form\Validator\Security\RtlqCredentialsValidator;
 use App\Entity\Association\RtlqAdherent;
 use App\Service\Security\User\AuthTokenAuthenticator;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use App\Entity\Security\RtlqAuthToken;
 
 /**
  * @Route("/security/tokens")
@@ -75,37 +76,43 @@ class AuthTokenController extends AbstractCrudApiController
      */
     public function checkuserAction(Request $request)
     {
-        // requete permettant de ne conserver aucun token sup à 5 pour cet utilisateur
-        $entities = $this->getDoctrine()
-            ->getRepository($this->getName())
-            ->find(array("createdAt" < time() - AuthTokenAuthenticator::TOKEN_VALIDITY_DURATION));
-        
+        $entity = $this->getTokenByValue($request);
+
+        // delete all keys
         $em = $this->getDoctrine()->getManager();
+        $authTokenRepo = $em->getRepository(RtlqAuthToken::class);
+        $entities = $authTokenRepo->findOldToken($entity->getUser(), AuthTokenAuthenticator::TOKEN_VALIDITY_DURATION);
+        
         foreach ($entities as $entity) {
             $em->remove($entity);
         }
         $em->flush();
 
-        $entity = $this->getTokenByValue($request);
-        if (!is_object($entity)) {
-            throw $this->createAccessDeniedException();
-        }
-
-        return $this->newResponse(json_encode($entity), Response::HTTP_ACCEPTED);
+        $dto_entity = $this->builder->modeleToDto($entity, $this);
+        return $this->newResponse(json_encode($dto_entity), Response::HTTP_ACCEPTED);
     }
 
-    private function getTokenByValue(Request $request) 
-    {
+    private function getTokenHeader(Request $request) {
         $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
         if (!$authTokenHeader) {
             throw new BadCredentialsException(AuthTokenAuthenticator::X_AUTH_TOKEN . ' header is required');
         }
+        return $authTokenHeader;
+    }
 
-        $entity = $this->getDoctrine()
-                            ->getRepository($this->getName())
-                                ->findOneBy(array("value"=>$authTokenHeader));
+    private function getTokenByValue(Request $request)
+    {
+        
+        $authTokenHeader = $this->getTokenHeader($request);
+        $em = $this->getDoctrine()->getManager();
+        $authTokenRepo = $em->getRepository(RtlqAuthToken::class);
+        $entity = $authTokenRepo->findValideToken($authTokenHeader, AuthTokenAuthenticator::TOKEN_VALIDITY_DURATION);
 
-        return $entity;
+        if ($entity === null || empty($entity)) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $entity[0];
     }
 
 
@@ -115,10 +122,6 @@ class AuthTokenController extends AbstractCrudApiController
     public function logoutAction(Request $request)
     {
         $entity = $this->getTokenByValue($request);
-
-        if (!is_object($entity)) {
-            throw $this->createNotFoundException();
-        }
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($entity);
@@ -133,10 +136,12 @@ class AuthTokenController extends AbstractCrudApiController
         return $this->newResponse(null, Response::HTTP_METHOD_NOT_ALLOWED);
     }
 
+    /*
     public function getAllAction(Request $request, $response = true)
     {
         return $this->newResponse(null, Response::HTTP_METHOD_NOT_ALLOWED);
     }
+    */
 
     public function updateAction($id, Request $request,  $response = true)
     {
