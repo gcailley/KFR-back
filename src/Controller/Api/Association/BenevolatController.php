@@ -11,8 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Association\RtlqBenevolat;
 
-
-
 /**
  * @Route("/association/benevolats")
  */
@@ -38,4 +36,14 @@ class BenevolatController extends AbstractCrudApiController
     {
         return new RtlqBenevolatDTO();
     }
+
+    /**
+     * Trie utilisé dans la requete getAllAction.
+     * exemple : ['username' => 'ASC'].
+     */
+    public function defaultSort()
+    {
+        return ['dateCreation' => 'ASC'];
+    }
 }
+

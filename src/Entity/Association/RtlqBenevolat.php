@@ -166,9 +166,9 @@ class RtlqBenevolat extends AbstractRtlqEntity
         return $this;
     }
 
-    public function getAdherentNom()
+    public function getAdherentPrenomNom()
     {
-        return $this->adherent->getNom();
+        return $this->adherent->getPrenomNom();
     }
 
     public function getAdherentId()

@@ -14,10 +14,12 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         $modele->setNom ( $postModele->getNom () );
         $modele->setNomChinois ( $postModele->getNomChinois () );
         $modele->setDescription( $postModele->getDescription () );
+        $modele->setOrigine( $postModele->getOrigine () );
         $modele->setArme( $postModele->getArme() );
         $modele->setArmeUrl( $postModele->getArmeUrl() );
         $modele->setVideoUrl( $postModele->getVideoUrl() );
         $modele->setActif( $postModele->getActif() );
+        $modele->setCombine( $postModele->getCombine() );
 
         $modele->setStyle($em->getReference ( "App\Entity\Kungfu\RtlqKungfuStyle", $postModele->getStyleId ())) ;
         $modele->setNiveau($em->getReference ( "App\Entity\Kungfu\RtlqKungfuNiveau", $postModele->getNiveauId ())) ;
@@ -33,6 +35,7 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         $dto->setNom ( $modele->getNom () );
         $dto->setNomChinois ( $modele->getNomChinois () );
         $dto->setDescription( $modele->getDescription () );
+        $dto->setOrigine( $modele->getOrigine () );
         $dto->setArme( $modele->getArme() );
         $dto->setArmeUrl( $modele->getArmeUrl() );
         $dto->setVideoUrl( $modele->getVideoUrl() );
@@ -41,6 +44,7 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         $dto->setNiveauId( $modele->getNiveauId() );
         $dto->setNiveauName( $modele->getNiveauName() );
         $dto->setActif( $modele->getActif() );
+        $dto->setCombine( $modele->getCombine() );
 
         return $dto;
     }

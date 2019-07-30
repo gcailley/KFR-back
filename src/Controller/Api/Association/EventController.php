@@ -38,4 +38,13 @@ class EventController extends AbstractCrudApiController
     {
         return new RtlqEventDTO();
     }
+
+    /**
+     * Trie utilisé dans la requete getAllAction.
+     * exemple : ['username' => 'ASC'].
+     */
+    public function defaultSort()
+    {
+        return ['dateCreation' => 'ASC'];
+    }
 }

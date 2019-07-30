@@ -84,6 +84,22 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
 
 
     /**
+     *
+     * @var string @ORM\Column(name="origine", type="string", length=100, nullable=false)
+     */
+    private $origine;
+    public function setOrigine($value)
+    {
+        $this->origine = $value;
+        return $this;
+    }
+
+    public  function getOrigine() {
+        return $this->origine;
+    }
+
+
+    /**
      * @var App\Entity\Kungfu\RtlqKungfuStyle
      * @ORM\ManyToOne(targetEntity="App\Entity\Kungfu\RtlqKungfuStyle", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
@@ -144,7 +160,7 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
 
     /**
      *
-     * @var string @ORM\Column(name="arme_url", type="string", length=100, nullable=false)
+     * @var string @ORM\Column(name="arme_url", type="string", length=100, nullable=true)
      */
     private $armeUrl;
     public function setArmeUrl($value)
@@ -159,7 +175,7 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
 
     /**
      *
-     * @var string @ORM\Column(name="video_url", type="string", length=100, nullable=false)
+     * @var string @ORM\Column(name="video_url", type="string", length=100, nullable=true)
      */
     private $videoUrl;
 
@@ -175,14 +191,27 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
 
     /**
      *
-     * @var string @ORM\Column(name="actif", type="string", length=100, nullable=false)
+     * @var string @ORM\Column(name="actif", type="boolean", nullable=false)
      */
-    protected $actif;
+    protected $actif = false;
     public function getActif() {
         return $this->actif;
     }
     public function setActif($value) {
         $this->actif = $value;
+        return $this;
+    }
+
+     /**
+     *
+     * @var string @ORM\Column(name="combine", type="boolean", nullable=false)
+     */
+    protected $combine = false;
+    public function getCombine() {
+        return $this->combine;
+    }
+    public function setCombine($value) {
+        $this->combine = $value;
         return $this;
     }
 }

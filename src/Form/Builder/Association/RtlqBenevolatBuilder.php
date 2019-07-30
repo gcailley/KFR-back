@@ -35,7 +35,7 @@ class RtlqBenevolatBuilder extends AbstractRtlqBuilder
 
         $dto->setSaisonName ( $modele->getSaisonNom () );
         $dto->setSaisonId ( $modele->getSaisonId () );
-        $dto->setAdherentName ( $modele->getAdherentNom () );
+        $dto->setAdherentName ( $modele->getAdherentPrenomNom () );
         $dto->setAdherentId ( $modele->getAdherentId () );
         $dto->setCategorieName ( $modele->getCategorieNom () );
         $dto->setCategorieId ( $modele->getCategorieId () );

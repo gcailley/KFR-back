@@ -99,7 +99,7 @@ class NewsController extends AbstractCrudApiController
 
         $entities = $this->getDoctrine()
             ->getRepository($this->getName())
-            ->loadLastestNews(4);
+            ->loadLastestNews(5);
 
         if ($entities === null || empty($entities)) {
             $dto_entities = [];

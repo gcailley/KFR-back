@@ -41,6 +41,28 @@ class RtlqKungfuTaoDTO extends AbstractRtlqDTO {
     }
 
 
+    protected $origine;
+    public function setOrigine($value)
+    {
+        $this->origine = $value;
+        return $this;
+    }
+
+    public  function getOrigine() {
+        return $this->origine;
+    }
+
+    protected $combine;
+    public function setCombine($value)
+    {
+        $this->combine = $value;
+        return $this;
+    }
+
+    public  function getCombine() {
+        return $this->combine;
+    }
+
     protected $style_id;
     public function setStyleId($value)
     {

@@ -23,6 +23,7 @@ class RtlqKungfuTaoType extends AbstractRtlqType
         ->add ( 'nom', TextType::class )
         ->add ( 'nom_chinois', TextType::class )
         ->add ( 'description', TextType::class )
+        ->add ( 'origine', TextType::class )
         ->add ( 'arme', TextType::class )
         ->add ( 'arme_url', TextType::class )
         ->add ( 'video_url', TextType::class )
@@ -30,6 +31,7 @@ class RtlqKungfuTaoType extends AbstractRtlqType
         ->add ( 'style_name', TextType::class )
         ->add ( 'niveau_id', NumberType::class )
         ->add ( 'niveau_name', TextType::class )
+        ->add ( 'combine', CheckBoxType::class )
         ->add ( 'actif', CheckBoxType::class );
     }
     
