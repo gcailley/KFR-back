@@ -346,6 +346,73 @@ class AdherentController extends AbstractCrudApiController {
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
+
+
+    // ********************************* TOAS **********************************************//
+
+    /**
+     * @Route("/{id}/taos", methods={"GET"})
+     */
+    public function getUserTaos($id) {
+        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        if (!is_object($entity)) {
+            throw new NotFoundHttpException("Adherent $id not found");
+        }
+
+        $dto = $this->builder->modeleToDto($entity, $this);
+        return new Response(json_encode($dto->getTaos()), Response::HTTP_ACCEPTED);
+    }
+
+    /**
+     * @Route("/{id}/taos/{idTao}", methods={"POST"})
+     */
+    public function addTaoToUser($id, $idTao) {
+        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        if (!is_object($entity)) {
+            throw new NotFoundHttpException("Adherent $id not found");
+        }
+        $tao = $this->getDoctrine()->getRepository("App\Entity\Kungfu\RtlqKungfuTao")->find($idTao);
+        if (!is_object($tao)) {
+            throw new NotFoundHttpException("Tao $idTao not found");
+        }
+
+        if (!$this->getValidator()->hasTao($entity, $tao)) {
+            //add Tao to adherent
+            $entity->addTao($tao);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->merge($entity);
+            $em->flush();
+        }
+        return new Response(null, Response::HTTP_CREATED);
+    }
+
+    /**
+     * @Route("/{id}/taos/{idTao}", methods={"DELETE"})
+     */
+    public function removeTaoToUser($id, $idTao) {
+        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        if (!is_object($entity)) {
+            throw new NotFoundHttpException("Adherent $id not found");
+        }
+        $entityAssociate = $this->getDoctrine()->getRepository("App\Entity\Kungfu\RtlqKungfuTao")->find($idTao);
+        if (!is_object($entityAssociate)) {
+            throw new NotFoundHttpException("Tao $idTao not found");
+        }
+        if ($this->getValidator()->hasTao($entity, $entityAssociate)) {
+            //add tao to adherent
+            $entity->removeTao($entityAssociate);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->merge($entity);
+            $em->flush();
+        }
+
+        return new Response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    
+
     // ********************************* GROUPE **********************************************//
 
     /**

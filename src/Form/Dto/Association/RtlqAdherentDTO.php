@@ -31,6 +31,7 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     protected $forum_username;
     protected $saisons;
     protected $groupes;
+    protected $taos;
     protected $cotisation_id;
     protected $cotisation_name;
     protected $tresories;
@@ -41,7 +42,13 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
 
     public function __construct() {
         $this->groupes = array();
+        $this->taos = array();
         $this->tresories = array();
+    }
+
+    public function addTao($tao) {
+        $this->taos[] = $tao;
+        return $this;
     }
 
     public function addGroupe($groupe) {
@@ -116,6 +123,10 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
 
     public function getGroupes() {
         return $this->groupes;
+    }
+    
+    public function getTaos() {
+        return $this->taos;
     }
 
     public function getCotisationId() {
@@ -208,6 +219,11 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
 
     public function setDateLastAuth($date_last_auth) {
         $this->date_last_auth = $date_last_auth;
+        return $this;
+    }
+
+    public function setTaos($taos) {
+        $this->taos = $taos;
         return $this;
     }
 

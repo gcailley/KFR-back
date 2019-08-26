@@ -57,6 +57,9 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         foreach ($postModele->getGroupes() as $groupeId) {
             $modele->addGroupe($em->getReference("App\Entity\Association\RtlqGroupe", $groupeId()));
         }
+        foreach ($postModele->getTaos() as $taoId) {
+            $modele->addTao($em->getReference("App\Entity\Kungfu\RtlqKungfuTao", $taoId()));
+        }
 
         if ($postModele->getCotisationId() != null) {
             $modele->setCotisation($em->getReference(RtlqCotisation::class, $postModele->getCotisationId() ));
@@ -136,6 +139,12 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         if ($modele->getGroupes() != null) {
             foreach ($modele->getGroupes() as $groupe) {
                 $dto->addGroupe($groupe->getId());
+            }
+        }
+
+        if ($modele->getTaos() != null) {
+            foreach ($modele->getTaos() as $tao) {
+                $dto->addTao($tao->getId());
             }
         }
 

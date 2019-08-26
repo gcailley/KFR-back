@@ -19,6 +19,7 @@ use App\Entity\Association\RtlqGroupe;
 use App\Entity\Cotisation\RtlqCotisation;
 use App\Entity\Tresorie\RtlqTresorie;
 use App\Form\Validator\RtlqValidator;
+use App\Entity\Kungfu\RtlqKungfuTao;
 
 class RtlqAdherentValidator extends RtlqValidator {
 
@@ -28,6 +29,10 @@ class RtlqAdherentValidator extends RtlqValidator {
 
     public function hasGroupe(RtlqAdherent $adherent, RtlqGroupe $groupe) {
         return $groupe->isInto($adherent->getGroupes());
+    }
+
+    public function hasTao(RtlqAdherent $adherent, RtlqKungfuTao $tao) {
+        return $tao->isInto($adherent->getTaos());
     }
 
     public function hasTresorie(RtlqAdherent $adherent, RtlqTresorie $tresorie) {

@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\AbstractRtlqEntity;
 use App\Entity\Kungfu\RtlqKungfuStyle;
 use App\Entity\Kungfu\RtlqKungfuNiveau;
+use App\Entity\Association\RtlqAdherent;
 
 /**
  * RtlqCotisation
@@ -17,6 +18,9 @@ use App\Entity\Kungfu\RtlqKungfuNiveau;
  */
 class RtlqKungfuTao extends AbstractRtlqEntity{
 
+    public function __construct() {
+        $this->adherents = new ArrayCollection();
+    }
 
     /**
      *
@@ -213,5 +217,55 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
     public function setCombine($value) {
         $this->combine = $value;
         return $this;
+    }
+
+     /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Association\RtlqAdherent", inversedBy="taos")
+     * @ORM\JoinTable(name="rtlq_adherents_taos",
+     *      joinColumns={@ORM\JoinColumn(name="tao_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")}
+     *      )
+     * 
+     */
+    private $adherents;
+
+    /**
+     * Add adherent
+     *
+     * @param RtlqAdherent $adherent
+     *
+     * @return RtlqGroupe
+     */
+    public function addAdherent(RtlqAdherent $adherent) {
+        foreach ($this->adherents as $value) {
+            if ($value->getId() == $adherent->getId()) {
+                return $this;
+            }
+        }
+
+        $this->adherents[] = $adherent;
+        return $this;
+    }
+
+    /**
+     * Remove adherent
+     *
+     * @param RtlqAdherent $adherent
+     */
+    public function removeAdherent(RtlqAdherent $adherent) {
+        $this->adherents->removeElement($adherent);
+    }
+
+    /**
+     * Get adherents
+     *
+     * @return Collection
+     */
+    public function getAdherents() {
+        return $this->adherents;
+    }
+    
+    public function removeAllAdherents() {
+        $this->adherents=[];
     }
 }

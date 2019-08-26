@@ -170,13 +170,18 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      */
     private $tokenPwd;
     
-
+    /**
+     * 
+     * @ORM\ManyToMany(targetEntity="App\Entity\Kungfu\RtlqKungfuTao", mappedBy="adherents")
+     */
+    private $taos;
 
     public function __construct() {
         $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->cotisation = null;
         $this->tresories = new \Doctrine\Common\Collections\ArrayCollection();
         $this->saisons = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->taos = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     // TODO licence as object
@@ -486,6 +491,46 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
     public function getDateCreation() {
         return $this->dateCreation;
     }
+
+/**
+     * Add groupe
+     *
+     * @param \App\Entity\Kungfu\RtlqKungfuTao $tao
+     *
+     * @return RtlqKungfuTao
+     */
+    public function addTao(\App\Entity\Kungfu\RtlqKungfuTao $tao) {
+        $tao->addAdherent($this);
+        $this->taos[] = $tao;
+
+        return $this;
+    }
+
+    /**
+     * Remove groupe
+     *
+     * @param \App\Entity\KungFu\RtlqKungfuTao $tao
+     */
+    public function removeTao(\App\Entity\Kungfu\RtlqKungfuTao $tao) {
+        $this->taos->removeElement($tao);
+    }
+    /**
+     * Remove All taos
+     *
+     */
+    public function removeAllTaos() {
+        $this->taos= [];
+    }
+    /**
+     * Get taos
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTaos() {
+        return $this->taos;
+    }
+
+
 
     /**
      * Add groupe
