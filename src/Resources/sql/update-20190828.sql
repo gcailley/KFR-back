@@ -1,0 +1,3 @@
+CREATE TABLE rtlq_cours (id INT AUTO_INCREMENT NOT NULL, saison_id INT NOT NULL, description VARCHAR(1000) NOT NULL, thematique_tao TINYINT(1) NOT NULL, thematique_application TINYINT(1) NOT NULL, thematique_combat TINYINT(1) NOT NULL, date DATE NOT NULL, INDEX IDX_B71200C2F965414C (saison_id), INDEX id (id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+     ALTER TABLE rtlq_cours ADD CONSTRAINT FK_B71200C2F965414C FOREIGN KEY (saison_id) REFERENCES rtlq_saison (id);
+     ALTER TABLE rtlq_cours CHANGE description description VARCHAR(1000) DEFAULT NULL;
