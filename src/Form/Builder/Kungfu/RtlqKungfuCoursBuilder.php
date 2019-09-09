@@ -16,6 +16,8 @@ class RtlqKungfuCoursBuilder extends AbstractRtlqBuilder
         $modele->setThematiqueApplication( $postModele->getThematiqueApplication() );
         $modele->setThematiqueCombat( $postModele->getThematiqueCombat() );
         $modele->setDate( $postModele->getDate() );
+        $modele->setNbCoursEssais( $postModele->getNbCoursEssais() );
+        
 
         $modele->setSaison($em->getReference ( "App\Entity\Saison\RtlqSaison", $postModele->getSaisonId ())) ;
 
@@ -36,7 +38,9 @@ class RtlqKungfuCoursBuilder extends AbstractRtlqBuilder
         $dto->setThematiqueCombat( $modele->getThematiqueCombat() );
 
         $dto->setDate($this->dateToString($modele->getDate()));
+        $dto->setNbCoursEssais($modele->getNbCoursEssais());
 
+        
 
         return $dto;
     }

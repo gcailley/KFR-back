@@ -17,6 +17,8 @@ parameters:
 
     user_drive_basedir: '%env(USER_DRIVE_BASEDIR)%'
     url_reinitialisation: '%env(URL_SITE_INTRANET)%%env(URI_REINITIALISATION)%'
+    url_invitation_discord: '%env(URL_INVITATION_DISCORD)%'
+
     association_email: '%env(ENTITE_EMAIL)%'
     association_nom: '%env(ENTITE_NOM)%'
     association_telephone: '%env(ENTITE_TELEPHONE)%'

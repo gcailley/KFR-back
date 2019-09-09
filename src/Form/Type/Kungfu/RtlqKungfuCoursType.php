@@ -25,7 +25,9 @@ class RtlqKungfuCoursType extends AbstractRtlqType
         ->add ( 'thematique_application', CheckBoxType::class )
         ->add ( 'thematique_combat', CheckBoxType::class )
         ->add ( 'saison_id', NumberType::class )
-        ->add ( 'saison_name', TextType::class );
+        ->add ( 'saison_name', TextType::class )
+        ->add ( 'nb_cours_essais', NumberType::class );
+        
     }
     
     public function getName()

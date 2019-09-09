@@ -18,6 +18,17 @@ class RtlqKungfuCoursDTO extends AbstractRtlqDTO {
         return $this->description;
     }
 
+    
+    protected $nb_cours_essais;
+    public function setNbCoursEssais($value)
+    {
+        $this->nb_cours_essais = $value;
+        return $this;
+    }
+
+    public  function getNbCoursEssais() {
+        return $this->nb_cours_essais;
+    }
 
     protected $thematique_tao;
     public function setthematiqueTao($value)

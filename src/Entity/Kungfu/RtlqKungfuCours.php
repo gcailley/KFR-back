@@ -54,7 +54,22 @@ class RtlqKungfuCours extends AbstractRtlqEntity{
     }
 
 
+        /**
+     *
+     * @var string @ORM\Column(name="nb_cours_essais", type="integer", nullable=true)
+     */
+    private $nbCoursEssais = 0;
+    public function setNbCoursEssais($value)
+    {
+        $this->nbCoursEssais = $value;
+        return $this;
+    }
 
+    public  function getNbCoursEssais() {
+        return $this->nbCoursEssais;
+    }
+
+    
 
     /**
      * @var App\Entity\Saison\RtlqSaison

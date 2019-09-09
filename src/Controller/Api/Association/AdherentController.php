@@ -109,6 +109,53 @@ class AdherentController extends AbstractCrudApiController {
        }
     }
 
+     /**
+     * @Route("/{id}/send-email/{type}", methods={"POST"})
+     */
+    public function sendEmail($id, $type) {
+        $adherent = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        if (!is_object($adherent)) {
+            throw new NotFoundHttpException("Adherent '$id' not found");
+        }
+
+       
+        $mail_info = array('message' =>'', 'twig' =>'', 'data' => array());
+        switch ($type) {
+            case 'welcome':
+                //reset password
+                $this->_changePaswordAdherent($adherent);
+
+                $mail_info['message'] = '[' . $this->getParameter('association_nom') . '] Bienvenue !';
+                $mail_info['twig'] = 'emails/creation-compte.html.twig';
+                $mail_info['data'] =  array(
+                    'prenom' => $adherent->getPrenom(), 
+                    'login' => $adherent->getUsername(), 
+                    'urlReset' => $this->getParameter('url_reinitialisation'),
+                    'resetToken'=> $adherent->getTokenPwd(),
+                    'urlDiscord' => $this->getParameter('url_invitation_discord'),
+                    'urlSite' => $this->getParameter('url_site' ),
+                    'urlSiteIntranet' => $this->getParameter('url_site_intranet' ),
+                    'associationNom' => $this->getParameter('association_nom'),
+                    'associationTelephone' => $this->getParameter('association_telephone'));
+            break;
+            default:
+                throw new NotFoundHttpException("Email type '$type' not found");
+        }
+        
+
+        // send email avec le lien
+        $message = (new \Swift_Message($mail_info['message']))
+        ->setFrom($this->getParameter('association_email'))
+        ->setTo($adherent->getEmail())
+        ->addPart(
+            $this->renderView( $mail_info['twig'], $mail_info['data']), 'text/html' );
+
+        $this->mailer->send($message);
+        
+        $dto = $this->builder->modeleToDto($adherent, $this);
+        return $this->newResponse(json_encode($dto), Response::HTTP_ACCEPTED);
+    }
+
     /**
      * @Route("/{id}/finalise-inscription", methods={"POST"})
      */
@@ -134,6 +181,11 @@ class AdherentController extends AbstractCrudApiController {
                     ->getRepository(RtlqSaison::class)
                     ->findOneBy(array("active"=>true), null, 1 , null);
         $adherent->addSaison($saisonModele);
+
+        // rendre l'adherent actif et public
+        $adherent->setPublic(true);
+        $adherent->setActif(true);
+        $adherent->setLicenceEtat("TODO");
 
         //responsable
         $responsable = $this->getUser()->getPrenomNom();
@@ -182,7 +234,14 @@ class AdherentController extends AbstractCrudApiController {
 
     
     // ********************************* USER RESET PASSWORD **********************************************//
-
+    private function _changePaswordAdherent($adherent) {
+         // generation token unique
+         $adherent->setTokenPwd(bin2hex(random_bytes(20)));
+         // sauvegarde du token unique dans l'utilisateur
+        $em = $this->getDoctrine()->getManager();
+        $em->merge($adherent);
+        $em->flush();
+    }
     /**
      * @Route("/password-reset", methods={"POST"})
      */
@@ -199,13 +258,8 @@ class AdherentController extends AbstractCrudApiController {
         if (!is_object($entityDB)) {
             throw new NotFoundHttpException("Adherent not found");
         }
-        // generation token unique
-        $entityDB->setTokenPwd(bin2hex(random_bytes(20)));
-
-        // sauvegarde du token unique dans l'utilisateur
-        $em = $this->getDoctrine()->getManager();
-        $em->merge($entityDB);
-        $em->flush();
+        
+        $this->_changePaswordAdherent($entityDB);
 
         // send email avec le lien
         $message = (new \Swift_Message('Reset Password'))
