@@ -32,4 +32,14 @@ class KungfuCoursController extends AbstractCrudApiController
     {
         return new RtlqKungfuCoursDTO();
     }
+
+        /**
+     * Trie utilisé dans la requete getAllAction.
+     * exemple : ['username' => 'ASC'].
+     */
+    public function defaultSort()
+    {
+        return ['date' => 'DESC'];
+    }
+
 }

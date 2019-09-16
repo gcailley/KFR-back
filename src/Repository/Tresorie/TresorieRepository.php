@@ -99,4 +99,19 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
             ->getQuery()
             ->getResult();
     }
+
+    function extractMontantsDepenseParCategories($idSaison) {
+        return 
+            $this->createQueryBuilder('u')
+            ->select('c.id as categorie_id, SUM(u.montant) as montant')
+            ->innerJoin('u.etat', 'etat')
+            ->innerJoin('u.saison', 's')
+            ->innerJoin('u.categorie', 'c')
+            ->where('etat NOT IN (:etats) AND s.id = :idSaison')
+            ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
+            ->setParameter('idSaison', $idSaison)
+            ->groupby('u.categorie')
+            ->getQuery()
+            ->getResult();
+    }
 }

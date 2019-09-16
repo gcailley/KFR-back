@@ -64,7 +64,7 @@ class AdherentController extends AbstractCrudApiController {
      */
     public function defaultSort()
     {
-        return ['prenom' => 'ASC'];
+        return ['actif' => 'DESC', 'prenom' => 'ASC'];
     }
 
     /**

@@ -8,4 +8,5 @@ clean le cache de symfony
 Generer le SQL de mise à jour de la base
 
     php bin/console doctrine:schema:update --dump-sql
+    php bin/console doctrine:schema:update --force
     
