@@ -2,15 +2,13 @@ Bonjour {{ prenom }}! <br>
  <br>
 Bienvenue dans l'<b>{{associationNom}}</b>.
 <br>
-Suite à ton inscription, ton compte a été créé ou réinitialisé dans l'intranet de l'association.
+Suite à ton inscription, ton compte (login : <b>{{login}}</b>) a été créé ou réinitialisé dans l'intranet.
 <br>
-Via ton login <b>{{login}}</b>, te peux te connecter à notre <a href='{{urlSiteIntranet}}'>intranet</a>
-<br>
-Mais avant il te faudra saisir ton mot de passe : <a href='{{urlReset}}?token={{resetToken}}'> lien de changement de ton mot de passe.</a>
-<br>
-<br>
-Afin de discuter avec les membres de l'association, un channel de discussion est ouvert.<br>
-Voici une invitation te permettant de nous rejoindre (il te faudra faire une création d'un compte) : <a href='{{urlDiscord}}'> Je crée/connecte au discord de  l'<b>{{associationNom}}</a>
+Afin de finaliser ton inscription, il te reste deux étapes : 
+<ol>
+<li>Faire la création de ton compte (si cela est nécessaire) et rejoindre notre channel de discussion sur discord : <a href='{{urlDiscord}}'> Je crée/connecte au discord de  l'<b>{{associationNom}}.</a>
+<li>Changer ton mot de passe : <a href='{{urlReset}}?token={{resetToken}}'> lien de changement de ton mot de passe.</a>
+<ol>
 <br>
 A très bientôt,
 <br>
