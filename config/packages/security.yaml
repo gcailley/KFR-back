@@ -75,16 +75,24 @@ security:
         - { path: ^/security/tokens, methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/photos, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
+        - { path: ^/security/tokens/check-user, methods: [GET, OPTIONS], roles: ROLE_USER }
+        - { path: ^/association/adherents/trombinoscope, methods: [GET, OPTIONS], roles: ROLE_USER }
+        - { path: ^/association/adherents/by-token, methods: [GET, OPTIONS, PUT], roles: ROLE_USER }
+        - { path: ^/association/drive/by-token, methods: [GET, OPTIONS], roles: ROLE_USER }
+        
+        - { path: ^/kpis, roles: ROLE_KPI }
 
         - { path: ^/association/photo_directories, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_COM }
         - { path: ^/association/photos, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_COM }
-        - { path: ^/association/events, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_ADMIN, ROLE_BEN] }
-        - { path: ^/association/adherents, roles: ROLE_ADMIN }
-        - { path: ^/association, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_ADMIN }
-        - { path: ^/kpis, roles: ROLE_KPI }
-        - { path: ^/cotisations, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_TRE] }
-        - { path: ^/saisons, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_ADMIN] }
         - { path: ^/association/news, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_COM] }
+
+        - { path: ^/association/events, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_BEN] }
+
+        - { path: ^/cotisations, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_TRE] }
+
+        - { path: ^/association/adherents, roles: ROLE_ADMIN }
+        - { path: ^/saisons, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_ADMIN] }
+        - { path: ^/association, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_ADMIN }
         - { path: ^/association/groupes, roles: ROLE_ADMIN }
         - { path: ^/association/kungfu, roles: ROLE_ADMIN }
         - { path: ^/materiels, roles: ROLE_TRE }
@@ -95,7 +103,7 @@ security:
         - { path: ^/kungfu/styles, roles: ROLE_ADMIN }
         - { path: ^/kungfu/niveaux, roles: ROLE_ADMIN }
         - { path: ^/kungfu/taos, roles: ROLE_PROF }
-        - { path: ^/, roles: ROLE_USER }
+        - { path: ^/, roles: ROLE_ADMIN }
 
     role_hierarchy:
         ROLE_USER:        [ROLE_USER]

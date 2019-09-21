@@ -86,27 +86,26 @@ class AdherentController extends AbstractCrudApiController {
 
 
     /**
+     * @Route("/trombinoscope", methods={"GET"})
+     */
+    public function getTrombinoscopeAction(Request $request, $response=true)
+    {
+        $entities = $this->getDoctrine()
+                            ->getRepository($this->getName())
+                            ->findBy(
+                                array("actif"=>true), 
+                                $this->defaultSort()
+                            );
+        $dto_entities = $this->builder->ofuscated($entities, $this);
+        return $this->convertDto2Response( $dto_entities, $response, Response::HTTP_ACCEPTED);
+    }
+
+    /**
      * @Route("", methods={"GET"})
      */
     public function getAllAction(Request $request, $response=true)
     {
-       $scope = $request->query->get("scope");
-       switch ($scope) {
-           case "trombinoscope":
-                $entities = $this->getDoctrine()
-                                  ->getRepository($this->getName())
-                                  ->findBy(
-                                        array("actif"=>true), 
-                                        $this->defaultSort()
-                                    );
-                $dto_entities = $this->builder->ofuscated($entities, $this);
-                return $this->convertDto2Response( $dto_entities, $response, Response::HTTP_ACCEPTED);
-                break;
-           
-           default:
-               return parent::getAllAction($request, $response);
-               break;
-       }
+        return parent::getAllAction($request, $response);
     }
 
      /**
@@ -262,7 +261,7 @@ class AdherentController extends AbstractCrudApiController {
         $this->_changePaswordAdherent($entityDB);
 
         // send email avec le lien
-        $message = (new \Swift_Message('Reset Password'))
+        $message = (new \Swift_Message('[' . $this->getParameter('association_nom') . '] Change ton mot de passe !'))
         ->setFrom($this->getParameter('association_email'))
         ->setTo($entityDB->getEmail())
         ->addPart(
@@ -273,6 +272,7 @@ class AdherentController extends AbstractCrudApiController {
                     'urlReset' => $this->getParameter('url_reinitialisation'),
                     'resetToken'=> $entityDB->getTokenPwd(),
                     'urlSite' => $this->getParameter('url_site' ),
+                    'urlSiteIntranet' => $this->getParameter('url_site_intranet'),
                     'associationNom' => $this->getParameter('association_nom'),
                     'associationTelephone' => $this->getParameter('association_telephone'))
             ),
@@ -280,7 +280,7 @@ class AdherentController extends AbstractCrudApiController {
         );
 
         $this->mailer->send($message);
-        return new Response("Email sent to " . $data['email'], Response::HTTP_ACCEPTED);
+        return $this->newResponse(json_encode(array( 'message' => "Email sent to " . $data['email'] )), Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -318,7 +318,7 @@ class AdherentController extends AbstractCrudApiController {
         $em->flush();
 
         // send email de confirmation
-        $message = (new \Swift_Message('Reset Password accepted'))
+        $message = (new \Swift_Message('[' . $this->getParameter('association_nom') . '] Confirmation de changement de mot de passe'))
         ->setFrom($this->getParameter('association_email'))
         ->setTo($entityDB->getEmail())
         ->addPart(
@@ -327,6 +327,7 @@ class AdherentController extends AbstractCrudApiController {
                 array(
                     'prenom' => $entityDB->getPrenom(),
                     'urlSite' => $this->getParameter('url_site'),
+                    'urlSiteIntranet' => $this->getParameter('url_site_intranet'),
                     'associationNom' => $this->getParameter('association_nom'),
                     'associationTelephone' => $this->getParameter('association_telephone')
                 )
@@ -336,7 +337,7 @@ class AdherentController extends AbstractCrudApiController {
 
         $this->mailer->send($message);
 
-        return new Response("Password changed", Response::HTTP_ACCEPTED);
+        return $this->newResponse(json_encode(array( 'message' => "Mot de passe changé." )), Response::HTTP_ACCEPTED);
     }
 
     // ********************************* COTISATION **********************************************//
@@ -610,5 +611,20 @@ class AdherentController extends AbstractCrudApiController {
         }
         //get user information based on the id associate from the token
         return $this->getByIdAction($request, $entityAssociate->getUser()->getId());
+    }
+
+    /**
+     * @Route("/by-token", methods={"PUT"})
+     */
+    public function putUserByToken(Request $request) {
+        $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
+        $entityAssociate = $this->getDoctrine()
+                ->getRepository(RtlqAuthToken::class)
+                    ->findOneBy(array("value"=>$authTokenHeader));
+        if (!is_object($entityAssociate)) {
+            throw new createAccessDeniedException();
+        }
+
+        return $this->updateAction($entityAssociate->getUser()->getId(), $request);
     }
 }
