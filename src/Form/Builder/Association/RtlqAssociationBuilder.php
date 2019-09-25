@@ -8,7 +8,7 @@ use App\Form\Builder\AbstractRtlqBuilder;
 
 class RtlqAssociationBuilder extends AbstractRtlqBuilder
 {
-    public function dtoToModele($em, $postModele, $modele, $controller)
+    public function dtoToModele($em, $postModele, $modele)
     {
         $modele->setNom ( $postModele->getNom () );
         $modele->setEmail( $postModele->getEmail () );
@@ -21,9 +21,10 @@ class RtlqAssociationBuilder extends AbstractRtlqBuilder
     }
     
     
-    public function modeleToDto($modele, $controller)
+    public function modeleToDto($modele, $dtoClass)
     {
-        $dto = $controller->newDto();
+        $dto = $this->getNewDto($dtoClass);
+        
         $dto->setId ( $modele->getId () );
         $dto->setNom ( $modele->getNom() );
         $dto->setEmail($modele->getEmail ( ) );

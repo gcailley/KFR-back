@@ -13,30 +13,17 @@ use App\Controller\Api\AbstractApiController;
 use App\Form\Builder\Tresorie\RtlqTresorieCategorieBuilder;
 use App\Form\Dto\Tresorie\RtlqTresorieCategorieDTO;
 use App\Controller\Api\AbstractCrudApiController;
+use App\Form\Type\Tresorie\RtlqTresorieCategorieType;
+use Proxies\__CG__\App\Entity\Tresorie\RtlqTresorieCategorie;
 
 /**
  * @Route("/tresorie/categories")
  */
 class TresorieCategorieController extends AbstractCrudApiController
 {
-    
-    function getName()
-    {
-        return 'App:Tresorie\RtlqTresorieCategorie';
-    }
+    function newTypeClass(): string {return RtlqTresorieCategorieType::class;}
+    function newDtoClass(): string {return RtlqTresorieCategorieDTO::class;}
+    function newBuilderClass(): string {return RtlqTresorieCategorieBuilder::class;}
+    function newModeleClass(): string {return RtlqTresorieCategorie::class;}
 
-    function getNameType()
-    {
-        return "App\Form\Type\Tresorie\RtlqTresorieCategorieType";
-    }
-
-    protected function getBuilder()
-    {
-        return new RtlqTresorieCategorieBuilder();
-    }
-    
-    function newDto()
-    {
-        return new RtlqTresorieCategorieDTO();
-    }
 }

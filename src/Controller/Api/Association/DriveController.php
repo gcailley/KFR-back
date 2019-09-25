@@ -102,7 +102,7 @@ class DriveController extends AbstractRtlqController {
             $json[] = array( 'name' => $value, 'type' => $ext , 'size' => $size, 'thumbnail'=>$thumbnail );
         }
         
-        return $this->newResponse(json_encode($json), Response::HTTP_ACCEPTED);
+        return $this->newResponse(($json), Response::HTTP_ACCEPTED);
     }
 
 

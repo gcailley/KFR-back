@@ -4,11 +4,12 @@ namespace App\Form\Builder\Kungfu;
 
 use App\Form\Dto\Kungfu\RtlqKungfuCoursDTO;
 use App\Entity\Kungfu\RtlqKungfuCours;
+use App\Entity\Saison\RtlqSaison;
 use App\Form\Builder\AbstractRtlqBuilder;
 
 class RtlqKungfuCoursBuilder extends AbstractRtlqBuilder
 {
-    public function dtoToModele($em, $postModele, $modele, $controller)
+    public function dtoToModele($em, $postModele, $modele)
     {
 
         $modele->setDescription( $postModele->getDescription () );
@@ -19,15 +20,16 @@ class RtlqKungfuCoursBuilder extends AbstractRtlqBuilder
         $modele->setNbCoursEssais( $postModele->getNbCoursEssais() );
         
 
-        $modele->setSaison($em->getReference ( "App\Entity\Saison\RtlqSaison", $postModele->getSaisonId ())) ;
+        $modele->setSaison($em->getReference ( RtlqSaison::class, $postModele->getSaisonId ())) ;
 
         return $modele;
     }
     
     
-    public function modeleToDto($modele, $controller)
+    public function modeleToDto($modele, $dtoClass)
     {
-		$dto = $controller->newDto();
+        $dto = $this->getNewDto($dtoClass);
+        
         $dto->setId ( $modele->getId () );
         $dto->setDescription( $modele->getDescription () );
         $dto->setSaisonId( $modele->getSaisonId() );

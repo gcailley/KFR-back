@@ -11,9 +11,9 @@ use App\Controller\Api\AbstractCrudApiController;
 use App\Form\Builder\Association\RtlqPhotoBuilder;
 use App\Form\Dto\Association\RtlqPhotoDTO;
 use App\Controller\Api\AbstractApiController;
+use App\Entity\Association\RtlqPhoto;
 use App\Entity\Association\RtlqPhotoDirectory;
-
-
+use App\Form\Type\Association\RtlqPhotoType;
 use Liip\ImagineBundle\Model\FileBinary;
 use Liip\ImagineBundle\Imagine\Filter\FilterManager;
 use Liip\ImagineBundle\Service\FilterService;
@@ -36,25 +36,10 @@ class PhotoController extends AbstractCrudApiController
     }
 
     
-    function getName()
-    {
-        return 'App:Association\RtlqPhoto';
-    }
-
-    function getNameType()
-    {
-        return "App\Form\Type\Association\RtlqPhotoType";
-    }
-
-    protected function getBuilder()
-    {
-        return new RtlqPhotoBuilder();
-    }
-
-    function newDto()
-    {
-        return new RtlqPhotoDTO();
-    }
+    function newTypeClass(): string {return RtlqPhotoType::class;}
+    function newDtoClass(): string {return RtlqPhotoDTO::class;}
+    function newBuilderClass(): string {return RtlqPhotoBuilder::class;}
+    function newModeleClass(): string {return RtlqPhoto::class;}
 
     /**
      * @Route("", methods={"GET"})
@@ -76,7 +61,7 @@ class PhotoController extends AbstractCrudApiController
      */
     public function getByIdAction(Request $request, $id)
     {
-        $modele = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $modele = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($modele)) {
             throw $this->createNotFoundException();
         }
@@ -115,7 +100,7 @@ class PhotoController extends AbstractCrudApiController
         $directoryEntity->setId($directory_id);
 
         $entities = $this->getDoctrine()
-        ->getRepository($this->getName())
+        ->getRepository($this->newModeleClass())
             ->findBy(array("repertoire"=>$directoryEntity));
 
         return $this->returnNewResponse($entities, Response::HTTP_ACCEPTED);

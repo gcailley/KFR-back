@@ -68,7 +68,7 @@ class DashboardController extends AbstractRtlqController {
         $dto_tresorie['data_expected'] = $dataExpected;
         $dto_tresorie['data_real'] = $dataReal;
 
-        return  $this->newResponse(json_encode($dto_tresorie), Response::HTTP_ACCEPTED);
+        return  $this->newResponse(($dto_tresorie), Response::HTTP_ACCEPTED);
     }
 
     
@@ -96,7 +96,7 @@ class DashboardController extends AbstractRtlqController {
         $dto_tresorie['labels'] = $dataLabels;
         $dto_tresorie['data_real'] = $dataReal;
 
-        return  $this->newResponse(json_encode($dto_tresorie), Response::HTTP_ACCEPTED);
+        return  $this->newResponse(($dto_tresorie), Response::HTTP_ACCEPTED);
     }
 
      /**
@@ -123,7 +123,7 @@ class DashboardController extends AbstractRtlqController {
         $dto_tresorie['labels'] = $dataLabels;
         $dto_tresorie['data_real'] = $dataReal;
 
-        return  $this->newResponse(json_encode($dto_tresorie), Response::HTTP_ACCEPTED);
+        return  $this->newResponse(($dto_tresorie), Response::HTTP_ACCEPTED);
     }
 
     protected function  dateToString($date) {

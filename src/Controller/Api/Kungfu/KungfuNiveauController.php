@@ -12,6 +12,8 @@ use GuzzleHttp\json_encode;
 use App\Form\Builder\Kungfu\RtlqKungfuNiveauBuilder;
 use App\Form\Dto\Kungfu\RtlqKungfuNiveauDTO;
 use App\Controller\Api\AbstractCrudApiController;
+use App\Entity\Kungfu\RtlqKungfuNiveau;
+use App\Form\Type\Kungfu\RtlqKungfuNiveauType;
 
 /**
  * @Route("/kungfu/niveaux")
@@ -19,23 +21,9 @@ use App\Controller\Api\AbstractCrudApiController;
 class KungfuNiveauController extends AbstractCrudApiController
 {
     
-    function getName()
-    {
-        return 'App:Kungfu\RtlqKungfuNiveau';
-    }
+    function newTypeClass(): string {return RtlqKungfuNiveauType::class;}
+    function newDtoClass(): string {return RtlqKungfuNiveauDTO::class;}
+    function newBuilderClass(): string {return RtlqKungfuNiveauBuilder::class;}
+    function newModeleClass(): string {return RtlqKungfuNiveau::class;}
 
-    function getNameType()
-    {
-        return "App\Form\Type\Kungfu\RtlqKungfuNiveauType";
-    }
-
-    protected function getBuilder()
-    {
-        return new RtlqKungfuNiveauBuilder();
-    }
-    
-    function newDto()
-    {
-        return new RtlqKungfuNiveauDTO();
-    }
 }

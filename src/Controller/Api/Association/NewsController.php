@@ -3,8 +3,10 @@
 namespace App\Controller\Api\Association;
 
 use App\Controller\Api\AbstractCrudApiController;
+use App\Entity\Association\RtlqNews;
 use App\Form\Builder\Association\RtlqNewsBuilder;
 use App\Form\Dto\Association\RtlqNewsDTO;
+use App\Form\Type\Association\RtlqNewsType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,25 +27,11 @@ class NewsController extends AbstractCrudApiController
         $this->params = $params;
     }
 
-    function getName()
-    {
-        return 'App:Association\RtlqNews';
-    }
+    function newTypeClass(): string {return RtlqNewsType::class;}
+    function newDtoClass(): string {return RtlqNewsDTO::class;}
+    function newBuilderClass(): string {return RtlqNewsBuilder::class;}
+    function newModeleClass(): string {return RtlqNews::class;}
 
-    function getNameType()
-    {
-        return "App\Form\Type\Association\RtlqNewsType";
-    }
-
-    protected function getBuilder()
-    {
-        return new RtlqNewsBuilder();
-    }
-
-    function newDto()
-    {
-        return new RtlqNewsDTO();
-    }
 
     /**
      * Trie utilisé dans la requete getAllAction.
@@ -98,39 +86,39 @@ class NewsController extends AbstractCrudApiController
     private function getOnlyLastestNews($request) {
 
         $entities = $this->getDoctrine()
-            ->getRepository($this->getName())
+            ->getRepository($this->newModeleClass())
             ->loadLastestNews(5);
 
         if ($entities === null || empty($entities)) {
             $dto_entities = [];
         } else {
-            $dto_entities = $this->builder->modelesToDtos($entities, $this);
+            $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass());
         }
         return $dto_entities;
     }
 
     private function getOnlyLast30Days($request) {
         $entities = $this->getDoctrine()
-            ->getRepository($this->getName())
+            ->getRepository($this->newModeleClass())
             ->loadLastestNewsXDays(30);
 
         if ($entities === null || empty($entities)) {
             $dto_entities = [];
         } else {
-            $dto_entities = $this->builder->modelesToDtos($entities, $this);
+            $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass());
         }
         return $dto_entities;
     }
 
     private function getOnlyLast6Month($request) {
         $entities = $this->getDoctrine()
-            ->getRepository($this->getName())
+            ->getRepository($this->newModeleClass())
             ->loadLastestNewsXDays(180);
 
         if ($entities === null || empty($entities)) {
             $dto_entities = [];
         } else {
-            $dto_entities = $this->builder->modelesToDtos($entities, $this);
+            $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass());
         }
         return $dto_entities;
     }

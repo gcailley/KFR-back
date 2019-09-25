@@ -3,12 +3,14 @@
 namespace App\Form\Builder\Cotisation;
 
 use App\Entity\Cotisation\RtlqCotisation;
+use App\Entity\Saison\RtlqSaison;
+use App\Entity\Tresorie\RtlqTresorieCategorie;
 use App\Form\Builder\AbstractRtlqBuilder;
 use App\Form\Dto\Cotisation\RtlqCotisationDTO;
 
 class RtlqCotisationBuilder extends AbstractRtlqBuilder
 {
-    public function dtoToModele($em, $dto, $modele, $controller)
+    public function dtoToModele($em, $dto, $modele)
     {
         $modele->setDescription ( $dto->getDescription () );
         $modele->setCotisation ( $dto->getCotisation() );
@@ -17,16 +19,16 @@ class RtlqCotisationBuilder extends AbstractRtlqBuilder
         $modele->setType($dto->getType() );
         $modele->setNbCheque($dto->getNbCheque() );
 
-        $modele->setCategorie ( $em->getReference ( "App\Entity\Tresorie\RtlqTresorieCategorie", $dto->getCategorieId () ) );
-        $modele->setSaison ( $em->getReference ( "App\Entity\Saison\RtlqSaison", $dto->getSaisonId () ) );
+        $modele->setCategorie ( $em->getReference (RtlqTresorieCategoriee::class, $dto->getCategorieId () ) );
+        $modele->setSaison ( $em->getReference ( RtlqSaison::class, $dto->getSaisonId () ) );
         
         return $modele;
     }
     
     
-    public function modeleToDto($modele, $controller)
+    public function modeleToDto($modele, $dtoClass)
     {
-        $dto = $controller->newDto();
+        $dto = $this->getNewDto($dtoClass);
         
         $dto->setId ( $modele->getId () );
         $dto->setDescription ( $modele->getDescription () );

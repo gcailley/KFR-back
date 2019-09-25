@@ -4,6 +4,7 @@ namespace App\Form\Builder\Association;
 
 use App\Form\Dto\Association\RtlqPhotoDTO;
 use App\Entity\Association\RtlqPhoto;
+use App\Entity\Association\RtlqPhotoDirectory;
 use App\Form\Builder\AbstractRtlqBuilder;
 use App\Form\Builder\Association\RtlqAdherentBuilder;
 
@@ -12,21 +13,21 @@ class RtlqPhotoBuilder extends AbstractRtlqBuilder
 
  
 
-    public function dtoToModele($em, $dto, $modele, $controller)
+    public function dtoToModele($em, $dto, $modele)
     {
 
         $modele->setTitle( $dto->getTitle () );
         $modele->setDescription( $dto->getDescription () );
         $modele->setSourceBase64( $dto->getSource() );
-        $modele->setRepertoire( $em->getReference ( "App\Entity\Association\RtlqPhotoDirectory", $dto->getRepertoireId () ) );
+        $modele->setRepertoire( $em->getReference ( RtlqPhotoDirectory::class, $dto->getRepertoireId () ) );
 
         return $modele;
     }
 
         
-    public function modeleToDto($modele, $controller)
+    public function modeleToDto($modele, $dtoClass)
     {
-		$dto = $controller->newDto();
+		$dto = $this->getNewDto($dtoClass);
         
         $dto->setId ( $modele->getId () );
         $dto->setTitle ( $modele->getTitle() );

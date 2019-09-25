@@ -11,8 +11,10 @@ use GuzzleHttp\json_encode;
 
 
 use App\Controller\Api\AbstractCrudApiController;
+use App\Entity\Saison\RtlqCategorieVotee;
 use App\Form\Builder\Saison\RtlqCategorieVoteeBuilder;
 use App\Form\Dto\Saison\RtlqCategorieVoteeDTO;
+use App\Form\Type\Saison\RtlqCategorieVoteeType;
 use Proxies\__CG__\App\Entity\Tresorie\RtlqTresorieCategorie;
 
 /**
@@ -20,26 +22,11 @@ use Proxies\__CG__\App\Entity\Tresorie\RtlqTresorieCategorie;
  */
 class CategorieVoteeController extends AbstractCrudApiController
 {
-    
-    function getName()
-    {
-        return 'App:Saison\RtlqCategorieVotee';
-    }
+    function newTypeClass(): string {return RtlqCategorieVoteeType::class;}
+    function newDtoClass(): string {return RtlqCategorieVoteeDTO::class;}
+    function newBuilderClass(): string {return RtlqCategorieVoteeBuilder::class;}
+    function newModeleClass(): string {return RtlqCategorieVotee::class;}
 
-    function getNameType()
-    {
-        return "App\Form\Type\Saison\RtlqCategorieVoteeType";
-    }
-
-    protected function getBuilder()
-    {
-        return new RtlqCategorieVoteeBuilder();
-    }
-    
-    function newDto()
-    {
-        return new RtlqCategorieVoteeDTO();
-    }
 
  /**
      * @Route("/saisons/{idSaison}", methods={"POST"})
@@ -47,7 +34,7 @@ class CategorieVoteeController extends AbstractCrudApiController
     public function generateCategorieVoteeBySaison(Request $request, $idSaison)
     {
         // récupération des categories votee de la saison
-        $listOfCategorieVotee = $this->getDoctrine()->getRepository($this->getName())->findBy(
+        $listOfCategorieVotee = $this->getDoctrine()->getRepository($this->newModeleClass())->findBy(
             array("saison"=>$idSaison), null);
 
         // extract ids categorie
@@ -74,7 +61,7 @@ class CategorieVoteeController extends AbstractCrudApiController
             $dto->setSaisonId($idSaison);
 
             $entityMetier = $this->getNewModeleInstance();
-            $this->builder->dtoToModele($em, $dto, $entityMetier, $this);
+            $this->getBuilder()->dtoToModele($em, $dto, $entityMetier, $this->newDtoClass());
             $entityMetier->setId(null);
             $em->persist($entityMetier);
             $listOfEntity[] = $entityMetier;

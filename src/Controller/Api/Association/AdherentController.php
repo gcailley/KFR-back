@@ -22,9 +22,13 @@ use App\Controller\Api\Tresorie\TresorieController;
 use App\Entity\Association\RtlqGroupe;
 use App\Entity\Saison\RtlqSaison;
 use App\Entity\Cotisation\RtlqCotisation;
+use App\Entity\Kungfu\RtlqKungfuTao;
 use App\Form\Builder\Tresorie\RtlqTresorieBuilder;
 use App\Entity\Tresorie\RtlqTresorieCategorie;
 use App\Entity\Security\RtlqAuthToken;
+use App\Entity\Tresorie\RtlqTresorie;
+use App\Form\Dto\Association\RtlqAdherentLightDTO;
+use App\Form\Type\Association\RtlqAdherentType;
 
 /**
  * @Route("/association/adherents")
@@ -42,21 +46,15 @@ class AdherentController extends AbstractCrudApiController {
         $this->init();
     }
 
-    function getName() {
-        return 'App:Association\RtlqAdherent';
-    }
-
-    function getNameType() {
-        return "App\Form\Type\Association\RtlqAdherentType";
-    }
-
-    protected function getBuilder() {
+    public function initBuilder() {
         return new RtlqAdherentBuilder($this->encoder);
     }
 
-    function newDto() {
-        return new RtlqAdherentDTO();
-    }
+    function newTypeClass(): string {return RtlqAdherentType::class;}
+    function newDtoClass(): string {return RtlqAdherentDTO::class;}
+    function newBuilderClass(): string {return RtlqAdherentBuilder::class;}
+    function newModeleClass(): string {return RtlqAdherent::class;}
+
 
     /**
      * Trie utilisé dans la requete getAllAction.
@@ -88,16 +86,16 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/trombinoscope", methods={"GET"})
      */
-    public function getTrombinoscopeAction(Request $request, $response=true)
+    public function getTrombinoscopeAction(Request $request)
     {
         $entities = $this->getDoctrine()
-                            ->getRepository($this->getName())
+                            ->getRepository($this->newModeleClass())
                             ->findBy(
                                 array("actif"=>true), 
                                 $this->defaultSort()
                             );
-        $dto_entities = $this->builder->ofuscated($entities, $this);
-        return $this->convertDto2Response( $dto_entities, $response, Response::HTTP_ACCEPTED);
+        $dto_entities = $this->getBuilder()->ofuscated($entities, RtlqAdherentLightDTO::class);
+        return $this->newResponse($dto_entities, Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -112,7 +110,7 @@ class AdherentController extends AbstractCrudApiController {
      * @Route("/{id}/send-email/{type}", methods={"POST"})
      */
     public function sendEmail($id, $type) {
-        $adherent = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $adherent = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($adherent)) {
             throw new NotFoundHttpException("Adherent '$id' not found");
         }
@@ -151,15 +149,15 @@ class AdherentController extends AbstractCrudApiController {
 
         $this->mailer->send($message);
         
-        $dto = $this->builder->modeleToDto($adherent, $this);
-        return $this->newResponse(json_encode($dto), Response::HTTP_ACCEPTED);
+        $dto = $this->getBuilder()->modeleToDto($adherent, $this->newDtoClass());
+        return $this->newResponse($dto, Response::HTTP_ACCEPTED);
     }
 
     /**
      * @Route("/{id}/finalise-inscription", methods={"POST"})
      */
     public function finalizeInscription($id) {
-        $adherent = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $adherent = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($adherent )) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
@@ -225,8 +223,8 @@ class AdherentController extends AbstractCrudApiController {
         $em->merge($adherent);
         $em->flush();
 
-        $dto = $this->builder->modeleToDto($adherent, $this);
-        return $this->newResponse(json_encode($dto), Response::HTTP_ACCEPTED);
+        $dto = $this->getBuilder()->modeleToDto($adherent, $this->newDtoClass());
+        return $this->newResponse(($dto), Response::HTTP_ACCEPTED);
     }
 
 
@@ -252,7 +250,7 @@ class AdherentController extends AbstractCrudApiController {
 
         // looking for object into the database.
         $entityDB = $this->getDoctrine()
-            ->getRepository($this->getName())
+            ->getRepository($this->newModeleClass())
             ->findOneBy(array("email"=>$data['email']));
         if (!is_object($entityDB)) {
             throw new NotFoundHttpException("Adherent not found");
@@ -280,7 +278,7 @@ class AdherentController extends AbstractCrudApiController {
         );
 
         $this->mailer->send($message);
-        return $this->newResponse(json_encode(array( 'message' => "Email sent to " . $data['email'] )), Response::HTTP_ACCEPTED);
+        return $this->newResponse((array( 'message' => "Email sent to " . $data['email'] )), Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -299,7 +297,7 @@ class AdherentController extends AbstractCrudApiController {
 
         // recuperation de l'utilsiateur via le token
         $entityDB = $this->getDoctrine()
-        ->getRepository($this->getName())
+        ->getRepository($this->newModeleClass())
         ->findOneBy(array("tokenPwd"=>$token));
         if (!is_object($entityDB)) {
             throw new NotFoundHttpException("Adherent not found");
@@ -337,7 +335,7 @@ class AdherentController extends AbstractCrudApiController {
 
         $this->mailer->send($message);
 
-        return $this->newResponse(json_encode(array( 'message' => "Mot de passe changé." )), Response::HTTP_ACCEPTED);
+        return $this->newResponse((array( 'message' => "Mot de passe changé." )), Response::HTTP_ACCEPTED);
     }
 
     // ********************************* COTISATION **********************************************//
@@ -346,12 +344,12 @@ class AdherentController extends AbstractCrudApiController {
      * @Route("/{id}/cotisation", methods={"GET"})
      */
     public function getUserCotisation($id) {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $dto = $this->builder->modeleToDto($entity, $this);
+        $dto = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass());
         return new Response(json_encode($dto->getCotisationId()), Response::HTTP_ACCEPTED);
     }
 
@@ -359,7 +357,7 @@ class AdherentController extends AbstractCrudApiController {
      * @Route("/{id}/cotisation/{idCotisation}", methods={"POST"})
      */
     public function addCotisationToUser($id, $idCotisation) {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
@@ -381,7 +379,7 @@ class AdherentController extends AbstractCrudApiController {
      * @Route("/{id}/cotisation/{idCotisation}", methods={"DELETE"})
      */
     public function removeCotisationToUser($id, $idCotisation) {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
@@ -409,12 +407,12 @@ class AdherentController extends AbstractCrudApiController {
      * @Route("/{id}/taos", methods={"GET"})
      */
     public function getUserTaos($id) {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $dto = $this->builder->modeleToDto($entity, $this);
+        $dto = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass());
         return new Response(json_encode($dto->getTaos()), Response::HTTP_ACCEPTED);
     }
 
@@ -422,7 +420,7 @@ class AdherentController extends AbstractCrudApiController {
      * @Route("/{id}/taos/{idTao}", methods={"POST"})
      */
     public function addTaoToUser($id, $idTao) {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
@@ -446,11 +444,11 @@ class AdherentController extends AbstractCrudApiController {
      * @Route("/{id}/taos/{idTao}", methods={"DELETE"})
      */
     public function removeTaoToUser($id, $idTao) {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
-        $entityAssociate = $this->getDoctrine()->getRepository("App\Entity\Kungfu\RtlqKungfuTao")->find($idTao);
+        $entityAssociate = $this->getDoctrine()->getRepository(RtlqKungfuTao::class)->find($idTao);
         if (!is_object($entityAssociate)) {
             throw new NotFoundHttpException("Tao $idTao not found");
         }
@@ -474,12 +472,12 @@ class AdherentController extends AbstractCrudApiController {
      * @Route("/{id}/groupes", methods={"GET"})
      */
     public function getUserGroupes($id) {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $dto = $this->builder->modeleToDto($entity, $this);
+        $dto = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass());
         return new Response(json_encode($dto->getGroupes()), Response::HTTP_ACCEPTED);
     }
 
@@ -487,11 +485,11 @@ class AdherentController extends AbstractCrudApiController {
      * @Route("/{id}/groupes/{idGroupe}", methods={"POST"})
      */
     public function addGroupeToUser($id, $idGroupe) {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
-        $groupe = $this->getDoctrine()->getRepository("App\Entity\Association\RtlqGroupe")->find($idGroupe);
+        $groupe = $this->getDoctrine()->getRepository(RtlqGroupe::class)->find($idGroupe);
         if (!is_object($groupe)) {
             throw new NotFoundHttpException("Groupe $idGroupe not found");
         }
@@ -511,11 +509,11 @@ class AdherentController extends AbstractCrudApiController {
      * @Route("/{id}/groupes/{idGroupe}", methods={"DELETE"})
      */
     public function removeGroupeToUser($id, $idGroupe) {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
-        $entityAssociate = $this->getDoctrine()->getRepository("App\Entity\Association\RtlqGroupe")->find($idGroupe);
+        $entityAssociate = $this->getDoctrine()->getRepository(RtlqGroupe::class)->find($idGroupe);
         if (!is_object($entityAssociate)) {
             throw new NotFoundHttpException("Groupe $idGroupe not found");
         }
@@ -536,12 +534,12 @@ class AdherentController extends AbstractCrudApiController {
      * @Route("/{id}/tresories", methods={"GET"})
      */
     public function getUserTresories($id) {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $dto = $this->builder->modeleToDto($entity, $this);
+        $dto = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass());
         return new Response(json_encode($dto->getTresories()), Response::HTTP_ACCEPTED);
     }
 
@@ -549,11 +547,11 @@ class AdherentController extends AbstractCrudApiController {
      * @Route("/{id}/tresories/{idEntityAssociate}", methods={"POST"})
      */
     public function addTresorieToUser($id, $idEntityAssociate) {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
-        $entityAssociate = $this->getDoctrine()->getRepository("App\Entity\Tresorie\RtlqTresorie")->find($idEntityAssociate);
+        $entityAssociate = $this->getDoctrine()->getRepository(RtlqTresorie::class)->find($idEntityAssociate);
         if (!is_object($entityAssociate)) {
             throw new NotFoundHttpException("Tresorie $idEntityAssociate not found");
         }
@@ -570,18 +568,18 @@ class AdherentController extends AbstractCrudApiController {
 
         }
 
-        return $this->newResponse(json_encode($entity), Response::HTTP_CREATED);
+        return $this->newResponse(($entity), Response::HTTP_CREATED);
     }
 
     /**
      * @Route("/{id}/tresories/{idEntityAssociate}", methods={"DELETE"})
      */
     public function removeTresorieToUser($id, $idEntityAssociate) {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
-        $entityAssociate = $this->getDoctrine()->getRepository("App\Entity\Tresorie\RtlqTresorie")->find($idEntityAssociate);
+        $entityAssociate = $this->getDoctrine()->getRepository(RtlqTresorie::class)->find($idEntityAssociate);
         if (!is_object($entityAssociate)) {
             throw new NotFoundHttpException("Tresorie $idEntityAssociate not found");
         }

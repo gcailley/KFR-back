@@ -12,6 +12,8 @@ use App\Controller\Api\AbstractCrudApiController;
 use App\Form\Builder\Association\RtlqPhotoDirectoryBuilder;
 use App\Form\Dto\Association\RtlqPhotoDirectoryDTO;
 use App\Controller\Api\AbstractApiController;
+use App\Entity\Association\RtlqPhotoDirectory;
+use App\Form\Type\Association\RtlqPhotoDirectoryType;
 
 /**
  * @Route("/association/photo_directories")
@@ -19,23 +21,9 @@ use App\Controller\Api\AbstractApiController;
 class PhotoDirectoryController extends AbstractCrudApiController
 {
 
-    function getName()
-    {
-        return 'App:Association\RtlqPhotoDirectory';
-    }
+    function newTypeClass(): string {return RtlqPhotoDirectoryType::class;}
+    function newDtoClass(): string {return RtlqPhotoDirectoryDTO::class;}
+    function newBuilderClass(): string {return RtlqPhotoDirectoryBuilder::class;}
+    function newModeleClass(): string {return RtlqPhotoDirectory::class;}
 
-    function getNameType()
-    {
-        return "App\Form\Type\Association\RtlqPhotoDirectoryType";
-    }
-
-    protected function getBuilder()
-    {
-        return new RtlqPhotoDirectoryBuilder();
-    }
-
-    function newDto()
-    {
-        return new RtlqPhotoDirectoryDTO();
-    }
 }

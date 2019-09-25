@@ -9,24 +9,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-abstract class AbstractApiController extends AbstractRtlqController {
+abstract class AbstractApiController  extends AbstractRtlqController  implements IApiController 
+{
+    private $builder;
 
-    protected $builder;
-
-    abstract protected function getName();
-
-    abstract protected function getNameType();
-
-    abstract protected function getBuilder();
-
-    abstract public function newDto();
 
     public function __construct() {
         $this->init();
     }
 
     public function init() {
-        $this->builder = $this->getBuilder();
     }
    
     /**
@@ -55,6 +47,25 @@ abstract class AbstractApiController extends AbstractRtlqController {
      */
     public function getValidator() {
         return new RtlqValidator();
+    }
+
+    public function getBuilder()
+    {
+        if (null == $this->builder) {
+            $this->builder = $this->initBuilder();
+        } 
+        return $this->builder;
+        
+    }
+
+    public function initBuilder() {
+        $class = $this->newBuilderClass();
+        return new $class;
+    }
+
+    function newDto() {
+        $class = $this->newDtoClass();
+        return new $class;
     }
 
 }

@@ -16,37 +16,23 @@ use App\Form\Dto\Materiel\RtlqVenteMaterielDTO;
 use App\Form\Type\Materiel\RtlqAchatMaterielType;
 use App\Form\Dto\Materiel\RtlqAchatMaterielDTO;
 use App\Entity\Association\RtlqAdherent;
+use App\Entity\Materiel\RtlqMateriel;
 use App\Entity\Saison\RtlqSaison;
 use App\Entity\Tresorie\RtlqTresorie;
 use App\Entity\Tresorie\RtlqTresorieCategorie;
 use App\Entity\Tresorie\RtlqTresorieEtat;
-
+use App\Form\Type\Materiel\RtlqMaterielType;
 
 /**
  * @Route("/materiels")
  */
 class MaterielController extends AbstractCrudApiController
 {
+    function newTypeClass(): string {return RtlqMaterielType::class;}
+    function newDtoClass(): string {return RtlqMaterielDTO::class;}
+    function newBuilderClass(): string {return RtlqMaterielBuilder::class;}
+    function newModeleClass(): string {return RtlqMateriel::class;}
 
-    function getName()
-    {
-        return 'App:Materiel\RtlqMateriel';
-    }
-
-    function getNameType()
-    {
-        return "App\Form\Type\Materiel\RtlqMaterielType";
-    }
-
-    protected function getBuilder()
-    {
-        return new RtlqMaterielBuilder();
-    }
-
-    function newDto()
-    {
-        return new RtlqMaterielDTO();
-    }
 
     /**
      * Trie utilisé dans la requete getAllAction.
@@ -68,7 +54,7 @@ class MaterielController extends AbstractCrudApiController
             $association = $request->query->get('association')=="true";
 
             $entities = $this->getDoctrine()
-                    ->getRepository($this->getName())
+                    ->getRepository($this->newModeleClass())
                     ->findBy(array("association"=>$association));
 
             $this->returnNewResponse($entities, Response::HTTP_ACCEPTED);
@@ -118,7 +104,7 @@ class MaterielController extends AbstractCrudApiController
             ////////////////////////////////////////////
             $materielModele = $this 
             ->getDoctrine()
-            ->getRepository($this->getName())
+            ->getRepository($this->newModeleClass())
             ->find($value->getId());
 
             //validation Materiel si ok update stock
@@ -225,7 +211,7 @@ class MaterielController extends AbstractCrudApiController
             ////////////////////////////////////////////
             $materielModele = $this 
             ->getDoctrine()
-            ->getRepository($this->getName())
+            ->getRepository($this->newModeleClass())
             ->find($value->getId());
 
             //validation Materiel si ok update stock

@@ -10,31 +10,17 @@ use App\Form\Dto\Tresorie\RtlqTresorieDTO;
 use App\Controller\Api\AbstractCrudApiController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Entity\Tresorie\RtlqTresorie;
+use App\Form\Type\Tresorie\RtlqTresorieType;
 
 /**
  * @Route("/tresorie/tresories")
  */
 class TresorieController extends AbstractCrudApiController
 {
-    public function getName()
-    {
-        return 'App:Tresorie\RtlqTresorie';
-    }
-
-    public function getNameType()
-    {
-        return "App\Form\Type\Tresorie\RtlqTresorieType";
-    }
-
-    protected function getBuilder()
-    {
-        return new RtlqTresorieBuilder();
-    }
-
-    public function newDto()
-    {
-        return new RtlqTresorieDTO();
-    }
+    function newTypeClass(): string {return RtlqTresorieType::class;}
+    function newDtoClass(): string {return RtlqTresorieDTO::class;}
+    function newBuilderClass(): string {return RtlqTresorieBuilder::class;}
+    function newModeleClass(): string {return RtlqTresorie::class;}
 
     /**
      * Trie utilisé dans la requete getAllAction.
@@ -58,7 +44,7 @@ class TresorieController extends AbstractCrudApiController
             throw new NotFoundHttpException("No tresorie Found for $id");
         }
 
-        $dtos = $this->builder->modelesToDtos($entity);
+        $dtos = $this->getBuilder()->modelesToDtos($entity);
 
         return new Response(json_encode($dtos), 201);
     }

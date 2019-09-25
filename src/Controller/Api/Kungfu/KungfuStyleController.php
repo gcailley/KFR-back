@@ -12,30 +12,18 @@ use GuzzleHttp\json_encode;
 use App\Form\Builder\Kungfu\RtlqKungfuStyleBuilder;
 use App\Form\Dto\Kungfu\RtlqKungfuStyleDTO;
 use App\Controller\Api\AbstractCrudApiController;
+use App\Entity\Kungfu\RtlqKungfuStyle;
+use App\Form\Type\Kungfu\RtlqKungfuStyleType;
 
 /**
  * @Route("/kungfu/styles")
  */
 class KungfuStyleController extends AbstractCrudApiController
 {
-    
-    public function getName()
-    {
-        return 'App:Kungfu\RtlqKungfuStyle';
-    }
 
-    public function getNameType()
-    {
-        return "App\Form\Type\Kungfu\RtlqKungfuStyleType";
-    }
+    function newTypeClass(): string {return RtlqKungfuStyleType::class;}
+    function newDtoClass(): string {return RtlqKungfuStyleDTO::class;}
+    function newBuilderClass(): string {return RtlqKungfuStyleBuilder::class;}
+    function newModeleClass(): string {return RtlqKungfuStyle::class;}
 
-    protected function getBuilder()
-    {
-        return new RtlqKungfuStyleBuilder();
-    }
-    
-    public function newDto()
-    {
-        return new RtlqKungfuStyleDTO();
-    }
 }

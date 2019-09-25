@@ -8,9 +8,9 @@ use App\Entity\Tresorie\RtlqTresorieEtat;
 
 class RtlqTresorieEtatBuilder extends AbstractRtlqEnumBuilder {
     
-    public function dtoToModele($em, $postModele, $modele, $controller)
+    public function dtoToModele($em, $postModele, $modele)
     {
-        $modele = parent::dtoToModele($em, $postModele, $modele, $controller);
+        $modele = parent::dtoToModele($em, $postModele, $modele);
         if ( $postModele->getNextEtatId () != null) {
             $modele->setNextEtat ( $em->getReference(RtlqTresorieEtat::class, $postModele->getNextEtatId ()));
         }
@@ -18,9 +18,9 @@ class RtlqTresorieEtatBuilder extends AbstractRtlqEnumBuilder {
     }
     
     
-    public function modeleToDto($modele, $controller)
+    public function modeleToDto($modele, $dtoClass)
     {
-        $dto = parent::modeleToDto($modele, $controller);
+        $dto = parent::modeleToDto($modele, $dtoClass);
         $dto->setNextEtatId ( $modele->getNextEtatId () );
         $dto->setNextEtatName ( $modele->getNextEtatName () );
 

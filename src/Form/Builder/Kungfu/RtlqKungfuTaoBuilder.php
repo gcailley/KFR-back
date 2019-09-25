@@ -2,13 +2,15 @@
 
 namespace App\Form\Builder\Kungfu;
 
+use App\Entity\Kungfu\RtlqKungfuNiveau;
+use App\Entity\Kungfu\RtlqKungfuStyle;
 use App\Form\Dto\Kungfu\RtlqKungfuTaoDTO;
 use App\Entity\Kungfu\RtlqKungfuTao;
 use App\Form\Builder\AbstractRtlqBuilder;
 
 class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
 {
-    public function dtoToModele($em, $postModele, $modele, $controller)
+    public function dtoToModele($em, $postModele, $modele)
     {
 
         $modele->setNom ( $postModele->getNom () );
@@ -21,16 +23,17 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         $modele->setActif( $postModele->getActif() );
         $modele->setCombine( $postModele->getCombine() );
 
-        $modele->setStyle($em->getReference ( "App\Entity\Kungfu\RtlqKungfuStyle", $postModele->getStyleId ())) ;
-        $modele->setNiveau($em->getReference ( "App\Entity\Kungfu\RtlqKungfuNiveau", $postModele->getNiveauId ())) ;
+        $modele->setStyle($em->getReference ( RtlqKungfuStyle::class, $postModele->getStyleId ())) ;
+        $modele->setNiveau($em->getReference ( RtlqKungfuNiveau::class, $postModele->getNiveauId ())) ;
 
         return $modele;
     }
     
     
-    public function modeleToDto($modele, $controller)
+    public function modeleToDto($modele, $dtoClass)
     {
-		$dto = $controller->newDto();
+        $dto = $this->getNewDto($dtoClass);
+        
         $dto->setId ( $modele->getId () );
         $dto->setNom ( $modele->getNom () );
         $dto->setNomChinois ( $modele->getNomChinois () );

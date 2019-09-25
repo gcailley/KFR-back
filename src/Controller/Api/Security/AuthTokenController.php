@@ -18,6 +18,7 @@ use App\Entity\Association\RtlqAdherent;
 use App\Service\Security\User\AuthTokenAuthenticator;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\Security\RtlqAuthToken;
+use App\Form\Type\Security\RtlqCredentialsType;
 
 /**
  * @Route("/security/tokens")
@@ -28,30 +29,21 @@ class AuthTokenController extends AbstractCrudApiController
 
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
+        parent::__construct();
         $this->encoder = $encoder;
-        $this->init();
     }
 
-    
-    function getName()
+    public function initBuilder()
     {
-        return 'App:Security\RtlqAuthToken';
+        $class = $this->newBuilderClass();
+        return new $class($this->encoder, $this->getRoleHierarchy());
     }
 
-    function getNameType()
-    {
-        return "App\Form\Type\Security\RtlqCredentialsType";
-    }
+    function newTypeClass(): string {return RtlqCredentialsType::class;}
+    function newDtoClass(): string {return RtlqCredentialsDTO::class;}
+    function newBuilderClass(): string {return RtlqCredentialsBuilder::class;}
+    function newModeleClass(): string {return RtlqAuthToken::class;}
 
-    protected function getBuilder()
-    {
-        return new RtlqCredentialsBuilder($this->encoder);
-    }
-
-    function newDto()
-    {
-        return new RtlqCredentialsDTO();
-    }
 
     /**
      * Validateur par defaut ne faisant aucune validation spécifique sur le bean.
@@ -88,8 +80,8 @@ class AuthTokenController extends AbstractCrudApiController
         }
         $em->flush();
 
-        $dto_entity = $this->builder->modeleToDto($entity, $this);
-        return $this->newResponse(json_encode($dto_entity), Response::HTTP_ACCEPTED);
+        $dto_entity = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass());
+        return $this->newResponse(($dto_entity), Response::HTTP_ACCEPTED);
     }
 
     private function getTokenHeader(Request $request) {

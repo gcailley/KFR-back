@@ -10,34 +10,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Association\RtlqEvent;
-
-
+use App\Form\Type\Association\RtlqEventType;
 
 /**
  * @Route("/association/events")
  */
 class EventController extends AbstractCrudApiController
 {
-   
-    function getName()
-    {
-        return RtlqEvent::class;
-    }
+    function newTypeClass(): string {return RtlqEventType::class;}
+    function newDtoClass(): string {return RtlqEventDTO::class;}
+    function newBuilderClass(): string {return RtlqEventBuilder::class;}
+    function newModeleClass(): string {return RtlqEvent::class;}
 
-    function getNameType()
-    {
-        return "App\Form\Type\Association\RtlqEventType";
-    }
-
-    protected function getBuilder()
-    {
-        return new RtlqEventBuilder();
-    }
-    
-    function newDto()
-    {
-        return new RtlqEventDTO();
-    }
 
     /**
      * Trie utilisé dans la requete getAllAction.

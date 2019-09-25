@@ -12,30 +12,16 @@ use GuzzleHttp\json_encode;
 use App\Controller\Api\AbstractCrudApiController;
 use App\Form\Builder\Tresorie\RtlqTresorieEtatBuilder;
 use App\Form\Dto\Tresorie\RtlqTresorieEtatDTO;
+use App\Form\Type\Tresorie\RtlqTresorieEtatType;
+use Proxies\__CG__\App\Entity\Tresorie\RtlqTresorieEtat;
 
 /**
  * @Route("/tresorie/etats")
  */
 class TresorieEtatController extends AbstractCrudApiController
 {
-    
-    function getName()
-    {
-        return 'App:Tresorie\RtlqTresorieEtat';
-    }
-
-    function getNameType()
-    {
-        return "App\Form\Type\Tresorie\RtlqTresorieEtatType";
-    }
-
-    protected function getBuilder()
-    {
-        return new RtlqTresorieEtatBuilder();
-    }
-    
-    function newDto()
-    {
-        return new RtlqTresorieEtatDTO();
-    }
+    function newTypeClass(): string {return RtlqTresorieEtatType::class;}
+    function newDtoClass(): string {return RtlqTresorieEtatDTO::class;}
+    function newBuilderClass(): string {return RtlqTresorieEtatBuilder::class;}
+    function newModeleClass(): string {return RtlqTresorieEtat::class;}
 }

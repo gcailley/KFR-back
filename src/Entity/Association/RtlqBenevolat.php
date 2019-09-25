@@ -62,6 +62,7 @@ class RtlqBenevolat extends AbstractRtlqEntity
 
     public function __construct()
     {
+        parent::__construct();
         $this->saison = null;
         $this->adherent = null;
         $this->categorie = null;

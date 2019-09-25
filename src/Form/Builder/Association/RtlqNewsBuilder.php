@@ -12,7 +12,7 @@ class RtlqNewsBuilder extends AbstractRtlqBuilder
 
  
 
-    public function dtoToModele($em, $postModele, $modele, $controller)
+    public function dtoToModele($em, $postModele, $modele)
     {
 
         $modele->setTitle( $postModele->getTitle () );
@@ -25,9 +25,9 @@ class RtlqNewsBuilder extends AbstractRtlqBuilder
     }
     
     
-    public function modeleToDto($modele, $controller)
+    public function modeleToDto($modele, $dtoClass)
     {
-		$dto = $controller->newDto();
+		$dto = $this->getNewDto($dtoClass);
         
         $dto->setId ( $modele->getId () );
         $dto->setTitle ( $modele->getTitle() );

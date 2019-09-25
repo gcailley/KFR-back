@@ -14,13 +14,14 @@ class RtlqCredentialsBuilder extends AbstractRtlqBuilder
 {
     private $encoder;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordEncoderInterface $encoder, $role_hierarchy)
     {
         $this->encoder = $encoder;
+        $this->role_hierarchy = $role_hierarchy;
     }
 
 
-    public function dtoToModele($em, $dto, $modele, $controller)
+    public function dtoToModele($em, $dto, $modele)
     {
 
         $adherentRepo = $em->getRepository(RtlqAdherent::class);
@@ -46,16 +47,15 @@ class RtlqCredentialsBuilder extends AbstractRtlqBuilder
         return $modele;
     }
     
-    public function modeleToDto($modele,  $controller)
+    public function modeleToDto($modele,  $dtoClass)
     {
-        $dto = $controller->newDto();
+        $dto = $this->getNewDto($dtoClass);
         $dto->setToken ( $modele->getValue());
 
-        $role_hierarchy = $controller->getRoleHierarchy();
         $roles = array();
         foreach ($modele->getUser()->getRoles() as $value) {
-            if (array_key_exists ($value, $role_hierarchy)) {
-                $roles = array_merge($roles, $role_hierarchy [$value]);
+            if (array_key_exists ($value, $this->role_hierarchy)) {
+                $roles = array_merge($roles, $this->role_hierarchy [$value]);
             } else {
                 $roles [] = $value;
             }
@@ -65,4 +65,5 @@ class RtlqCredentialsBuilder extends AbstractRtlqBuilder
 
         return $dto;
     }
+
 }

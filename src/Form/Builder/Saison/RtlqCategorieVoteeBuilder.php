@@ -16,7 +16,7 @@ class RtlqCategorieVoteeBuilder extends AbstractRtlqBuilder
     {
     }
 
-    public function dtoToModele($em, $dto, $modele, $controller)
+    public function dtoToModele($em, $dto, $modele)
     {
         $modele->setMontant($dto->getMontant());
         if ($dto->getSaisonId() != null) {
@@ -28,9 +28,9 @@ class RtlqCategorieVoteeBuilder extends AbstractRtlqBuilder
         return $modele;
     }
 
-    public function modeleToDto($modele, $controller)
+    public function modeleToDto($modele, $dtoClass)
     {
-        $dto = $controller->newDto();
+        $dto = $this->getNewDto($dtoClass);
 
         $dto->setId($modele->getId());
         $dto->setMontant($modele->getMontant());

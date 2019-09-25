@@ -3,8 +3,10 @@
 namespace App\Controller\Api\Kungfu;
 
 use App\Controller\Api\AbstractCrudApiController;
+use App\Entity\Kungfu\RtlqKungfuCours;
 use App\Form\Builder\Kungfu\RtlqKungfuCoursBuilder;
 use App\Form\Dto\Kungfu\RtlqKungfuCoursDTO;
+use App\Form\Type\Kungfu\RtlqKungfuCoursType;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -12,28 +14,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class KungfuCoursController extends AbstractCrudApiController
 {
+        
+    function newTypeClass(): string {return RtlqKungfuCoursType::class;}
+    function newDtoClass(): string {return RtlqKungfuCoursDTO::class;}
+    function newBuilderClass(): string {return RtlqKungfuCoursBuilder::class;}
+    function newModeleClass(): string {return RtlqKungfuCours::class;}
 
-    function getName()
-    {
-        return 'App:Kungfu\RtlqKungfuCours';
-    }
-
-    function getNameType()
-    {
-        return "App\Form\Type\Kungfu\RtlqKungfuCoursType";
-    }
-
-    protected function getBuilder()
-    {
-        return new RtlqKungfuCoursBuilder();
-    }
-
-    function newDto()
-    {
-        return new RtlqKungfuCoursDTO();
-    }
-
-        /**
+    /**
      * Trie utilisé dans la requete getAllAction.
      * exemple : ['username' => 'ASC'].
      */

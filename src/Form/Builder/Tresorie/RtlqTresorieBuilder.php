@@ -13,7 +13,7 @@ use App\Entity\Cotisation\RtlqCotisation;
 
 class RtlqTresorieBuilder extends AbstractRtlqBuilder
 {
-    public function dtoToModele($em, $postModele, $modele, $controller)
+    public function dtoToModele($em, $postModele, $modele)
     {
         $modele->setDescription ( $postModele->getDescription () );
         $modele->setResponsable ( $postModele->getResponsable () );
@@ -36,9 +36,9 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder
     }
     
     
-    public function modeleToDto($modele,  $controller)
+    public function modeleToDto($modele,  $dtoClass)
     {
-		$dto = $controller->newDto();
+		$dto = $this->getNewDto($dtoClass);
         
         $dto->setId ( $modele->getId () );
         $dto->setDescription ( $modele->getDescription () );
@@ -90,6 +90,7 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder
             $newTresorie->setAdherent($adherent);
             $newTresorie->setCategorie($cotisationModele->getCategorie());
             $newTresorie->setCheque(true);
+            //TODO mettre le TODO automatique en fonction du mois
             $newTresorie->setNumeroCheque("TODO");
             $newTresorie->setDateCreation($date[$iteration]);
             $newTresorie->setDescription( sprintf("%s %d - %s", $description, $iteration+1, $adherent->getPrenomNom()));
@@ -115,6 +116,7 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder
         $newTresorie->setAdherent($adherent);
         $newTresorie->setCategorie($licenceCotisation->getCategorie());
         $newTresorie->setCheque(true);
+        //TODO mettre le TODO automatique en fonction du mois
         $newTresorie->setNumeroCheque("TODO");
         $newTresorie->setDateCreation($now);
         $newTresorie->setDescription(sprintf("%s - %s", $description, $adherent->getPrenomNom()));
@@ -137,6 +139,7 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder
         $newTresorie->setAdherent($adherent);
         $newTresorie->setCategorie($licenceCotisation->getCategorie());
         $newTresorie->setCheque(true);
+        //TODO mettre le TODO automatique en fonction du mois
         $newTresorie->setNumeroCheque("TODO");
         $newTresorie->setDateCreation($now);
         $newTresorie->setDescription(sprintf("%s - %s", $description, $adherent->getPrenomNom()));

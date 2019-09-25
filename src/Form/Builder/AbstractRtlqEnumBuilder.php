@@ -11,16 +11,16 @@ use App\Form\Builder\AbstractRtlqBuilder;
 
 abstract class AbstractRtlqEnumBuilder extends AbstractRtlqBuilder
 {
-    public function dtoToModele($em, $postModele, $modele, $controller)
+    public function dtoToModele($em, $postModele, $modele)
     {
         $modele->setValue($postModele->getNom() );
         return $modele;
     }
     
     
-    public function modeleToDto($modele, $controller)
+    public function modeleToDto($modele, $dtoClass)
     {
-        $dto = $controller->newDto();
+        $dto = $this->getNewDto($dtoClass);
         $dto->setId ( $modele->getId ());
         $dto->setNom ( $modele->getValue() );
         

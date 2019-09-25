@@ -19,32 +19,19 @@ use App\Entity\Cotisation\RtlqCotisation;
 class CotisationController extends AbstractCrudApiController
 {
    
-    function getName()
-    {
-        return RtlqCotisation::class;
-    }
+    function newTypeClass(): string {return RtlqCotisationType::class;}
+    function newDtoClass(): string {return RtlqCotisationDTO::class;}
+    function newBuilderClass(): string {return RtlqCotisationBuilder::class;}
+    function newModeleClass(): string {return RtlqCotisation::class;}
 
-    function getNameType()
-    {
-        return "App\Form\Type\Cotisation\RtlqCotisationType";
-    }
 
-    protected function getBuilder()
-    {
-        return new RtlqCotisationBuilder();
-    }
-    
-    function newDto()
-    {
-        return new RtlqCotisationDTO();
-    }
     /**
      * @Route("/active", methods={"GET"})
      */
     public function getActiveAction(Request $request)
     {
         $entities = $this->getDoctrine()
-            ->getRepository($this->getName())
+            ->getRepository($this->newModeleClass())
             ->createQueryBuilder('a')
             ->join('a.saison', 's')
             ->where('a.active = :active')

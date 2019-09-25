@@ -3,8 +3,10 @@
 namespace App\Controller\Api\Association;
 
 use App\Controller\Api\AbstractCrudApiController;
+use App\Entity\Association\RtlqAssociation;
 use App\Form\Builder\Association\RtlqAssociationBuilder;
 use App\Form\Dto\Association\RtlqAssociationDTO;
+use App\Form\Type\Association\RtlqAssociationType;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -12,24 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AssociationController extends AbstractCrudApiController
 {
-    
-    function getName()
-    {
-        return 'App:Association\RtlqAssociation';
-    }
+    function newTypeClass(): string {return RtlqAssociationType::class;}
+    function newDtoClass(): string {return RtlqAssociationDTO::class;}
+    function newBuilderClass(): string {return RtlqAssociationBuilder::class;}
+    function newModeleClass(): string {return RtlqAssociation::class;}
 
-    function getNameType()
-    {
-        return "App\Form\Type\Association\RtlqAssociationType";
-    }
-
-    protected function getBuilder()
-    {
-        return new RtlqAssociationBuilder();
-    }
-    
-    function newDto()
-    {
-        return new RtlqAssociationDTO();
-    }
 }

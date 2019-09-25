@@ -4,9 +4,12 @@ namespace App\Form\Builder\Association;
 
 use App\Form\Dto\Association\RtlqAdherentDTO;
 use App\Entity\Association\RtlqAdherent;
+use App\Entity\Association\RtlqGroupe;
 use App\Form\Builder\AbstractRtlqBuilder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\Cotisation\RtlqCotisation;
+use App\Entity\Kungfu\RtlqKungfuTao;
+use App\Entity\Saison\RtlqSaison;
 use App\Entity\Tresorie\RtlqTresorie;
 use App\Entity\Tresorie\RtlqTresorieEtat;
 
@@ -29,7 +32,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         }
     }
 
-    public function dtoToModele($em, $postModele, $modele, $controller)
+    public function dtoToModele($em, $postModele, $modele)
     {
 
         $modele->setUsername($postModele->getUsername());
@@ -55,10 +58,10 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
 
 
         foreach ($postModele->getGroupes() as $groupeId) {
-            $modele->addGroupe($em->getReference("App\Entity\Association\RtlqGroupe", $groupeId()));
+            $modele->addGroupe($em->getReference(RtlqGroupe::class, $groupeId()));
         }
         foreach ($postModele->getTaos() as $taoId) {
-            $modele->addTao($em->getReference("App\Entity\Kungfu\RtlqKungfuTao", $taoId()));
+            $modele->addTao($em->getReference(RtlqKungfuTao::class, $taoId()));
         }
 
         if ($postModele->getCotisationId() != null) {
@@ -66,10 +69,10 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         }
         
         foreach ($postModele->getTresories() as $tresorieId) {
-            $modele->addTresorie($em->getReference("App\Entity\Tresorie\RtlqTresorie", $tresorieId()));
+            $modele->addTresorie($em->getReference(RtlqTresorie::class, $tresorieId()));
         }
         foreach ($postModele->getSaisons() as $saisonId) {
-            $modele->addSaison($em->getReference("App\Entity\Saison\RtlqSaison", $saisonId()));
+            $modele->addSaison($em->getReference(RtlqSaison::class, $saisonId()));
         }
 
         if ($postModele->getPwd() != null) {
@@ -81,9 +84,10 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         return $modele;
     }
 
-    public function modeleToDtoLight($modele, $controller)
+    public function modeleToDtoLight($modele, $dtoClass)
     {
-        $dto = $controller->newDto();      
+        $dto = new $dtoClass;
+
         $dto->setId($modele->getId());
         $dto->setEmail($modele->getEmail());
         $dto->setUsername($modele->getUsername());
@@ -115,14 +119,28 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
     }
 
 
-    public function ofuscated($modeles, $controller)
+    public function ofuscated($modeles, $dtoClass)
     {
         $dto_array = array();
         foreach ($modeles as $modele) {
-            $dto = $this->modeleToDtoLight($modele, $controller);
+            $dto = new $dtoClass;
+            
+            $dto->setTelephone($modele->getTelephone());
+            $dto->setNom($modele->getNom());
+            $dto->setPrenom($modele->getPrenom());
+            $dto->setDateNaissance($this->dateToString($modele->getDateNaissance()));
+            $dto->setActif($modele->getActif());
+            $dto->setPublique($modele->getPublic());    
+            $dto->setAdresse($modele->getAdresse());
+            $dto->setCodePostal($modele->getCodePostal());
+            $dto->setVille($modele->getVille());
+            if ("resource" === gettype($modele->getAvatar())) {
+                $dto->setAvatar(stream_get_contents($modele->getAvatar()));
+            } else {
+                $dto->setAvatar($modele->getAvatar());
+            }
+
             if (! $dto->getPublique()) {
-                $dto->setUsername("#####################");
-                $dto->setEmail("#####################");
                 $dto->setTelephone("#####################");
                 $dto->setAdresse("#####################");
                 $dto->setCodePostal("#####################");
@@ -133,9 +151,9 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
     }
         
 
-    public function modeleToDto($modele, $controller)
+    public function modeleToDto($modele, $dtoClass)
     {
-        $dto = $this->modeleToDtoLight($modele, $controller);
+        $dto = $this->modeleToDtoLight($modele, $dtoClass);
         if ($modele->getGroupes() != null) {
             foreach ($modele->getGroupes() as $groupe) {
                 $dto->addGroupe($groupe->getId());

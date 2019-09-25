@@ -19,14 +19,14 @@ abstract class AbstractCrudApiController extends AbstractApiController
      */
     public function getByIdAction(Request $request, $id)
     {
-        $tresorie = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $tresorie = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
 
         if (!is_object($tresorie)) {
             throw $this->createNotFoundException();
         }
-        $dto_tresorie = $this->builder->modeleToDto($tresorie, $this);
+        $dto_tresorie = $this->getBuilder()->modeleToDto($tresorie, $this->newDtoClass());
 
-        return  $this->newResponse(json_encode($dto_tresorie), Response::HTTP_ACCEPTED);
+        return  $this->newResponse($dto_tresorie, Response::HTTP_ACCEPTED);
     }
 
     /** 
@@ -40,8 +40,8 @@ abstract class AbstractCrudApiController extends AbstractApiController
 
     public function convertModele2DtoResponse($entityMetier, $response, $status) {
         if ($response) {
-            $dto = $this->builder->modeleToDto($entityMetier, $this);
-            return $this->newResponse(json_encode($dto), $status);
+            $dto = $this->getBuilder()->modeleToDto($entityMetier,  $this->newDtoClass());
+            return $this->newResponse($dto, $status);
         } else {
             return $entityMetier;
         }
@@ -49,7 +49,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
 
     public function convertDto2Response($dtoEntities, $response, $status) {
         if ($response) {
-            return $this->newResponse(json_encode($dtoEntities), $status);
+            return $this->newResponse($dtoEntities, $status);
         } else {
             return $dtoEntities;
         }
@@ -60,9 +60,9 @@ abstract class AbstractCrudApiController extends AbstractApiController
      */
     public function getAllAction(Request $request, $response=true)
     {
-        $tresories = $this->getDoctrine()->getRepository($this->getName())->findBy([], $this->defaultSort());
+        $tresories = $this->getDoctrine()->getRepository($this->newModeleClass())->findBy([], $this->defaultSort());
         
-        $dto_tresories = $this->builder->modelesToDtos($tresories, $this);
+        $dto_tresories = $this->getBuilder()->modelesToDtos($tresories,  $this->newDtoClass());
         return $this->convertDto2Response($dto_tresories, $response, Response::HTTP_ACCEPTED);
     }
 
@@ -74,14 +74,14 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $data = json_decode($request->getContent(), true);
 
         //looking for object into the database.
-        $entityDB = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entityDB = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entityDB)) {
             throw $this->createNotFoundException();
         }
 
         $em = $this->getDoctrine()->getManager();
         $entityDto = $this->newDto();
-        $form = $this->createForm($this->getNameType(), $entityDto);
+        $form = $this->createForm($this->newTypeClass(), $entityDto);
         $form->submit($data);
 
         //validation de l'object DTO
@@ -91,7 +91,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
         }
 
         // convertion to Modele
-        $entityMetier = $this->builder->dtoToModele($em, $entityDto, $entityDB, $this);
+        $entityMetier = $this->getBuilder()->dtoToModele($em, $entityDto, $entityDB);
 
         //action à faire dans le controller
         $this->updateBeforeSaved($em, $entityMetier);
@@ -114,7 +114,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $data = json_decode($request->getContent(), true);
 
         $entityDto = $this->newDto();
-        $form = $this->createForm($this->getNameType(), $entityDto);
+        $form = $this->createForm( $this->newTypeClass(), $entityDto);
         $form->submit($data);
 
         // recuperation entityManager
@@ -129,7 +129,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
 
         //convertir en objet metier
         $modele = $this->getNewModeleInstance();
-        $entityMetier = $this->builder->dtoToModele($em, $entityDto, $modele, $this);
+        $entityMetier = $this->getBuilder()->dtoToModele($em, $entityDto, $modele);
 
         //action à faire dans le controller
         $this->innerCreateAction($em, $entityMetier);
@@ -164,7 +164,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
      */
     public function deleteByIdAction($id)
     {
-        $entity = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
 
         if (!is_object($entity)) {
             throw $this->createNotFoundException();
@@ -184,17 +184,24 @@ abstract class AbstractCrudApiController extends AbstractApiController
 
 
     protected function getNewModeleInstance() {
-        
-        $entityname = str_replace(":", "\\Entity\\", $this->getName()) ;
-        return new $entityname;
+        $modeleClass = $this->newModeleClass();
+        return new $modeleClass;
     }
 
     protected function returnNewResponse($entities, $statusCode) {
         if ($entities === null || empty($entities)) {
             $dto_entities = [];
         } else {
-            $dto_entities = $this->builder->modelesToDtos($entities, $this);
+            $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass());
         }
         return new Response(json_encode($dto_entities), $statusCode);
+    }
+
+    protected function returnNotFoundResponse() {
+        return $this->returnNewResponse(null, Response::HTTP_NOT_FOUND);
+    }
+
+    protected function returnUnAuthorizedResponse() {
+        return $this->returnNewResponse(null, Response::HTTP_UNAUTHORIZED);
     }
 }

@@ -15,32 +15,19 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Entity\Cotisation\RtlqCotisation;
 use App\Entity\Saison\RtlqSaison;
-
+use App\Form\Type\Saison\RtlqSaisonType;
 
 /**
  * @Route("/saisons")
  */
 class SaisonController extends AbstractCrudApiController
 {
-    function getName()
-    {
-        return 'App:Saison\RtlqSaison';
-    }
 
-    function getNameType()
-    {
-        return "App\Form\Type\Saison\RtlqSaisonType";
-    }
+    function newTypeClass(): string {return RtlqSaisonType::class;}
+    function newDtoClass(): string {return RtlqSaisonDTO::class;}
+    function newBuilderClass(): string {return RtlqSaisonBuilder::class;}
+    function newModeleClass(): string {return RtlqSaison::class;}
 
-    protected function getBuilder()
-    {
-        return new RtlqSaisonBuilder();
-    }
-
-    function newDto()
-    {
-        return new RtlqSaisonDTO();
-    }
 
 
     /**
@@ -68,7 +55,7 @@ class SaisonController extends AbstractCrudApiController
         if ($entityMetier->getActive()) {
             //1) desactive toutes les autres saisons
             $saisonsActives = $this->getDoctrine()
-                ->getRepository($this->getName())
+                ->getRepository($this->newModeleClass())
                 ->findBy(array("active"=>true));
 
             foreach ($saisonsActives as $saisonActive) {
@@ -92,7 +79,7 @@ class SaisonController extends AbstractCrudApiController
     {
        
         $entities = $this->getDoctrine()
-            ->getRepository($this->getName())
+            ->getRepository($this->newModeleClass())
             ->findBy(array("active"=>true), null, 1 , null);
         //clean user information
         foreach($entities as $entitie) {
@@ -110,7 +97,7 @@ class SaisonController extends AbstractCrudApiController
         $data = json_decode($request->getContent(), true);
 
         //looking for object into the database.
-        $entityDB = $this->getDoctrine()->getRepository($this->getName())->find($id);
+        $entityDB = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entityDB)) {
             throw $this->createNotFoundException();
         }
@@ -151,6 +138,6 @@ class SaisonController extends AbstractCrudApiController
         //////////////////////////////////////
         // SAVE ENTITIES
         //////////////////////////////////////
-        return $this->newResponse(json_encode($entityDB), Response::HTTP_CREATED);
+        return $this->newResponse(($entityDB), Response::HTTP_CREATED);
     }
 }
