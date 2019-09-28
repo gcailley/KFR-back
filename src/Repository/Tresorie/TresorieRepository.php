@@ -32,6 +32,8 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
                         ->innerJoin('t.adherent', 'a')
                         ->where('a.id = :adherent_id')
                         ->setParameter('adherent_id', $adherent_id)
+                        ->addOrderBy('t.etat', 'DESC')
+                        ->addOrderBy('t.dateCreation', 'DESC')  
                         ->getQuery()
                         ->getResult();
 

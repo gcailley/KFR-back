@@ -184,9 +184,6 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
             $totalEnRetard = 0;
             $now = new \DateTime('NOW');
 
-//            dump("===================");
-//            dump(sizeof($modele->getTresories()));
-
             foreach ($modele->getTresories() as $tresorie) {
                 $dto->addTresorie($tresorie->getId());
                 if (RtlqTresorieEtat::ENCAISSE === $tresorie->getEtat()->getId() || RtlqTresorieEtat::REGLER === $tresorie->getEtat()->getId()) {

@@ -17,12 +17,12 @@ use Doctrine\ORM\EntityRepository;
  */
 class TaoRepository extends EntityRepository {
    
-    public function findAllTaoFilterByAdherent($adherent_id)
+    public function findAllTaoFilterByAdherent($adherentId)
     {
         $query = $this->createQueryBuilder('t')
-                        ->innerJoin('t.adherent', 'a')
-                        ->where('a.id = :adherent_id')
-                        ->setParameter('adherent_id', $adherent_id)
+                        ->innerJoin('t.adherents', 'a')
+                        ->where('a.id = :adherentId')
+                        ->setParameter('adherentId', $adherentId)
                         ->getQuery()
                         ->getResult();
 

@@ -188,11 +188,15 @@ abstract class AbstractCrudApiController extends AbstractApiController
         return new $modeleClass;
     }
 
-    protected function returnNewResponse($entities, $statusCode) {
+    protected function returnNewResponse($entities, $statusCode = Response::HTTP_ACCEPTED, $convert = true ) {
         if ($entities === null || empty($entities)) {
             $dto_entities = [];
         } else {
-            $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass());
+            if ($convert) {
+                $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass());
+            } else {
+                $dto_entities = $entities;
+            }
         }
         return new Response(json_encode($dto_entities), $statusCode);
     }

@@ -27,7 +27,12 @@ use App\Form\Builder\Tresorie\RtlqTresorieBuilder;
 use App\Entity\Tresorie\RtlqTresorieCategorie;
 use App\Entity\Security\RtlqAuthToken;
 use App\Entity\Tresorie\RtlqTresorie;
+use App\Form\Builder\Association\RtlqAdherentLightBuilder;
+use App\Form\Builder\Kungfu\RtlqKungfuTaoBuilder;
 use App\Form\Dto\Association\RtlqAdherentLightDTO;
+use App\Form\Dto\Association\RtlqAdherentTrombinoscopeDTO;
+use App\Form\Dto\Kungfu\RtlqKungfuTaoDTO;
+use App\Form\Dto\Tresorie\RtlqTresorieDTO;
 use App\Form\Type\Association\RtlqAdherentType;
 
 /**
@@ -43,6 +48,8 @@ class AdherentController extends AbstractCrudApiController {
         $this->mailer = $mailer;
         $this->encoder = $encoder;
         $this->rtlqTresorieBuilder=new RtlqTresorieBuilder();
+        $this->rtlqTaoBuilder=new RtlqKungfuTaoBuilder();
+        $this->rtlqAdherentLightBuilder=new RtlqAdherentLightBuilder();
         $this->init();
     }
 
@@ -94,7 +101,22 @@ class AdherentController extends AbstractCrudApiController {
                                 array("actif"=>true), 
                                 $this->defaultSort()
                             );
-        $dto_entities = $this->getBuilder()->ofuscated($entities, RtlqAdherentLightDTO::class);
+        $dto_entities = $this->getBuilder()->ofuscated($entities, RtlqAdherentTrombinoscopeDTO::class);
+        return $this->newResponse($dto_entities, Response::HTTP_ACCEPTED);
+    }
+
+
+    /**
+     * @Route("/liste", methods={"GET"})
+     */
+    public function getListeAction(Request $request)
+    {
+        $entities = $this->getDoctrine()
+                            ->getRepository($this->newModeleClass())
+                            ->findBy([],
+                                $this->defaultSort()
+                            );
+        $dto_entities = $this->rtlqAdherentLightBuilder->modelesToDtos($entities, RtlqAdherentLightDTO::class);
         return $this->newResponse($dto_entities, Response::HTTP_ACCEPTED);
     }
 
@@ -424,7 +446,7 @@ class AdherentController extends AbstractCrudApiController {
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
-        $tao = $this->getDoctrine()->getRepository("App\Entity\Kungfu\RtlqKungfuTao")->find($idTao);
+        $tao = $this->getDoctrine()->getRepository(RtlqKungfuTao::class)->find($idTao);
         if (!is_object($tao)) {
             throw new NotFoundHttpException("Tao $idTao not found");
         }
@@ -624,5 +646,53 @@ class AdherentController extends AbstractCrudApiController {
         }
 
         return $this->updateAction($entityAssociate->getUser()->getId(), $request);
+    }
+
+    /**
+     * @Route("/by-token/mytresoreries", methods={"GET"})
+     */
+    public function getUserTresoreriesByToken(Request $request) {
+        $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
+        $tokenAuth = $this->getDoctrine()
+                ->getRepository(RtlqAuthToken::class)
+                ->findOneBy(array("value"=>$authTokenHeader));
+        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+
+        // recuperation des lignes de tresoreries de l'utilisateur
+        $entitiesAssociate = $this->getDoctrine()
+            ->getRepository(RtlqTresorie::class)
+            ->findAllTresorieFilterByAdherent($tokenAuth->getUser()->getId());
+        if (sizeof($entitiesAssociate) == 0) { return $this->returnNotFoundResponse(); }
+        
+        // conversion modele en DTO
+        $dtos = $this->rtlqTresorieBuilder->modelesToDtos($entitiesAssociate, RtlqTresorieDTO::class);
+
+        //get user information based on the id associate from the token
+        return $this->returnNewResponse($dtos, Response::HTTP_ACCEPTED, false);
+    }
+
+
+    /**
+     * @Route("/by-token/mytaos", methods={"GET"})
+     */
+    public function getUserTaosByToken(Request $request) {
+        $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
+        $tokenAuth = $this->getDoctrine()
+                ->getRepository(RtlqAuthToken::class)
+                ->findOneBy(array("value"=>$authTokenHeader));
+        dump($tokenAuth);
+        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+
+        // recuperation des lignes de taos de l'utilisateur
+        $entitiesAssociate = $this->getDoctrine()
+            ->getRepository(RtlqKungfuTao::class)
+            ->findAllTaoFilterByAdherent($tokenAuth->getUser()->getId());
+        if (sizeof($entitiesAssociate) == 0) { return $this->returnNotFoundResponse(); }
+        
+        // conversion modele en DTO
+        $dtos = $this->rtlqTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuTaoDTO::class);
+
+        //get user information based on the id associate from the token
+        return $this->returnNewResponse($dtos, Response::HTTP_ACCEPTED, false);
     }
 }
