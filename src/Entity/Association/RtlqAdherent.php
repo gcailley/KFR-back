@@ -170,11 +170,6 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      */
     private $tokenPwd;
     
-    /**
-     * 
-     * @ORM\ManyToMany(targetEntity="App\Entity\Kungfu\RtlqKungfuTao", mappedBy="adherents")
-     */
-    private $taos;
 
     public function __construct() {
         parent::__construct();
@@ -493,7 +488,14 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
         return $this->dateCreation;
     }
 
-/**
+
+    /**
+     * 
+     * @ORM\ManyToMany(targetEntity="App\Entity\Kungfu\RtlqKungfuTao", mappedBy="adherents", cascade={"persist"})
+     */
+    private $taos;
+
+    /**
      * Add groupe
      *
      * @param \App\Entity\Kungfu\RtlqKungfuTao $tao
@@ -513,8 +515,10 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @param \App\Entity\KungFu\RtlqKungfuTao $tao
      */
     public function removeTao(\App\Entity\Kungfu\RtlqKungfuTao $tao) {
+        $tao->removeAdherent($this);
         $this->taos->removeElement($tao);
     }
+
     /**
      * Remove All taos
      *

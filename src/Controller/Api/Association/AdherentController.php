@@ -430,12 +430,19 @@ class AdherentController extends AbstractCrudApiController {
      */
     public function getUserTaos($id) {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
-        if (!is_object($entity)) {
-            throw new NotFoundHttpException("Adherent $id not found");
-        }
+        if (!is_object($entity)) { return $this->returnNotFoundResponse(); }
 
-        $dto = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass());
-        return new Response(json_encode($dto->getTaos()), Response::HTTP_ACCEPTED);
+        // recuperation des lignes de taos de l'utilisateur
+        $entitiesAssociate = $this->getDoctrine()
+            ->getRepository(RtlqKungfuTao::class)
+            ->findAllTaoFilterByAdherent($entity->getId());
+        if (sizeof($entitiesAssociate) == 0) { return $this->returnNotFoundResponse(); }
+        
+        // conversion modele en DTO
+        $dtos = $this->rtlqTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuTaoDTO::class);
+
+        //get user information based on the id associate from the token
+        return $this->returnNewResponse($dtos, Response::HTTP_ACCEPTED, false);
     }
 
     /**
@@ -450,7 +457,7 @@ class AdherentController extends AbstractCrudApiController {
         if (!is_object($tao)) {
             throw new NotFoundHttpException("Tao $idTao not found");
         }
-
+dump($this->getValidator()->hasTao($entity, $tao));
         if (!$this->getValidator()->hasTao($entity, $tao)) {
             //add Tao to adherent
             $entity->addTao($tao);
@@ -470,18 +477,21 @@ class AdherentController extends AbstractCrudApiController {
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
-        $entityAssociate = $this->getDoctrine()->getRepository(RtlqKungfuTao::class)->find($idTao);
-        if (!is_object($entityAssociate)) {
+        $tao = $this->getDoctrine()->getRepository(RtlqKungfuTao::class)->find($idTao);
+        if (!is_object($tao)) {
             throw new NotFoundHttpException("Tao $idTao not found");
         }
-        if ($this->getValidator()->hasTao($entity, $entityAssociate)) {
+
+        if ($this->getValidator()->hasTao($entity, $tao)) {
+dump($entity->getTaos());
             //add tao to adherent
-            $entity->removeTao($entityAssociate);
+            $entity->removeTao($tao);
 
             $em = $this->getDoctrine()->getManager();
             $em->merge($entity);
             $em->flush();
         }
+dump($entity->getTaos());
 
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
@@ -680,7 +690,6 @@ class AdherentController extends AbstractCrudApiController {
         $tokenAuth = $this->getDoctrine()
                 ->getRepository(RtlqAuthToken::class)
                 ->findOneBy(array("value"=>$authTokenHeader));
-        dump($tokenAuth);
         if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
 
         // recuperation des lignes de taos de l'utilisateur
