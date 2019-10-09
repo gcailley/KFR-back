@@ -30,6 +30,7 @@ use App\Entity\Tresorie\RtlqTresorie;
 use App\Form\Builder\Association\RtlqAdherentLightBuilder;
 use App\Form\Builder\Kungfu\RtlqKungfuTaoBuilder;
 use App\Form\Dto\Association\RtlqAdherentLightDTO;
+use App\Form\Dto\Association\RtlqAdherentStatsDTO;
 use App\Form\Dto\Association\RtlqAdherentTrombinoscopeDTO;
 use App\Form\Dto\Kungfu\RtlqKungfuTaoDTO;
 use App\Form\Dto\Tresorie\RtlqTresorieDTO;
@@ -302,6 +303,8 @@ class AdherentController extends AbstractCrudApiController {
         $this->mailer->send($message);
         return $this->newResponse((array( 'message' => "Email sent to " . $data['email'] )), Response::HTTP_ACCEPTED);
     }
+
+
 
     /**
      * @Route("/password-change", methods={"POST"})
@@ -627,45 +630,40 @@ dump($entity->getTaos());
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
+    private function _getUserByToken(Request $request) {
+        $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
+        $tokenAuth = $this->getDoctrine()
+                ->getRepository(RtlqAuthToken::class)
+                ->findOneBy(array("value"=>$authTokenHeader));
+        return $tokenAuth;
+    }
 
     /**
      * @Route("/by-token", methods={"GET"})
      */
     public function getUserByToken(Request $request) {
-        $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
-        $entityAssociate = $this->getDoctrine()
-                ->getRepository(RtlqAuthToken::class)
-                    ->findOneBy(array("value"=>$authTokenHeader));
-        if (!is_object($entityAssociate)) {
-            throw new createAccessDeniedException();
-        }
+        $tokenAuth = $this->_getUserByToken($request);
+        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+
         //get user information based on the id associate from the token
-        return $this->getByIdAction($request, $entityAssociate->getUser()->getId());
+        return $this->getByIdAction($request, $tokenAuth->getUser()->getId());
     }
 
     /**
      * @Route("/by-token", methods={"PUT"})
      */
     public function putUserByToken(Request $request) {
-        $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
-        $entityAssociate = $this->getDoctrine()
-                ->getRepository(RtlqAuthToken::class)
-                    ->findOneBy(array("value"=>$authTokenHeader));
-        if (!is_object($entityAssociate)) {
-            throw new createAccessDeniedException();
-        }
+        $tokenAuth = $this->_getUserByToken($request);
+        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
 
-        return $this->updateAction($entityAssociate->getUser()->getId(), $request);
+        return $this->updateAction($tokenAuth->getUser()->getId(), $request);
     }
 
     /**
      * @Route("/by-token/mytresoreries", methods={"GET"})
      */
     public function getUserTresoreriesByToken(Request $request) {
-        $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
-        $tokenAuth = $this->getDoctrine()
-                ->getRepository(RtlqAuthToken::class)
-                ->findOneBy(array("value"=>$authTokenHeader));
+        $tokenAuth = $this->_getUserByToken($request);
         if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
 
         // recuperation des lignes de tresoreries de l'utilisateur
@@ -686,10 +684,7 @@ dump($entity->getTaos());
      * @Route("/by-token/mytaos", methods={"GET"})
      */
     public function getUserTaosByToken(Request $request) {
-        $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
-        $tokenAuth = $this->getDoctrine()
-                ->getRepository(RtlqAuthToken::class)
-                ->findOneBy(array("value"=>$authTokenHeader));
+        $tokenAuth = $this->_getUserByToken($request);
         if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
 
         // recuperation des lignes de taos de l'utilisateur
@@ -704,4 +699,40 @@ dump($entity->getTaos());
         //get user information based on the id associate from the token
         return $this->returnNewResponse($dtos, Response::HTTP_ACCEPTED, false);
     }
+
+    /**
+     * @Route("/by-token/myStats", methods={"GET"})
+     * 
+     * Methode permettant la récupéation des stats d'un adhérent
+     *  - tao
+     *      nb_ao
+     *      nb_tao_total
+     *      pourcentage_avancement
+     */
+    public function getUserStats(Request $request) {
+        $tokenAuth = $this->_getUserByToken($request);
+        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+
+        // recuperation des lignes de taos de l'utilisateur
+        $nbTaoOfUser = $this->getDoctrine()
+            ->getRepository(RtlqKungfuTao::class)
+            ->countAllTaoFilterByAdherent($tokenAuth->getUser()->getId());
+
+        // recuperation des lignes de taos de l'utilisateur
+        $nbTao = $this->getDoctrine()
+            ->getRepository(RtlqKungfuTao::class)
+            ->countAllTaoActif($tokenAuth->getUser()->getId());
+        
+        // recuperation des lignes de taos de l'utilisateur
+        $infoTresorerieEnRetard = $this->getDoctrine()
+            ->getRepository(RtlqTresorie::class)
+            ->infoTresorieEnRetardFilterByAdherent($tokenAuth->getUser()->getId());
+        
+        $stats = new RtlqAdherentStatsDTO($nbTaoOfUser, $nbTao, abs($infoTresorerieEnRetard[0]['montant']), $infoTresorerieEnRetard[0]['date']);
+
+        //get user information based on the id associate from the token
+        return $this->returnNewResponse($stats, Response::HTTP_ACCEPTED, false);
+
+    }
+
 }

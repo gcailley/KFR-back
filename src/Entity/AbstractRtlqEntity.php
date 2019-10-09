@@ -6,6 +6,11 @@ abstract class AbstractRtlqEntity {
 
     abstract function getId();
 
+    public function __construct()
+    {
+    }
+
+
     public function isInto($collections) {
         foreach ($collections as $key => $value) {
             if ($this->isEquals($value)) {

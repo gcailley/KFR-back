@@ -29,7 +29,7 @@ class BenevolatController extends AbstractCrudApiController
      */
     public function defaultSort()
     {
-        return ['dateCreation' => 'ASC'];
+        return ['dateCreation' => 'DESC'];
     }
 }
 

@@ -172,7 +172,6 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
     
 
     public function __construct() {
-        parent::__construct();
         $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->cotisation = null;
         $this->tresories = new \Doctrine\Common\Collections\ArrayCollection();

@@ -8,6 +8,7 @@ use App\Entity\AbstractRtlqEntity;
 use App\Entity\Kungfu\RtlqKungfuStyle;
 use App\Entity\Kungfu\RtlqKungfuNiveau;
 use App\Entity\Association\RtlqAdherent;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * RtlqCotisation

@@ -40,6 +40,21 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
         return $query;
     }
 
+    public function infoTresorieEnRetardFilterByAdherent($adherent_id)
+    {
+        return $this->createQueryBuilder('u')
+            ->select('SUM(u.montant) as montant, MIN(u.dateCreation) as date')
+            ->innerJoin('u.adherent', 'a')
+            ->innerJoin('u.etat', 'etat')
+            ->where('a.id = :adherent_id AND etat IN (:etats)')
+            ->setParameter('adherent_id', $adherent_id)
+            ->setParameter('etats', [RtlqTresorieEtat::A_ENCAISSER, RtlqTresorieEtat::A_RECLAMER])
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
     public function countByKpi($name)
     {
         if (TresorieRepository::KPI_TRESORERIE_TOTALE == $name) {
