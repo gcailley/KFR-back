@@ -22,20 +22,21 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
     const PATTERN_KPI = 'KPI_TRESORERIE';
     const KPI_TRESORERIE_TOTALE = 'KPI_TRESORERIE_TOTALE';
     const KPI_TRESORERIE_EN_RETARD = 'KPI_TRESORERIE_EN_RETARD';
-    const KPI_TRESORERIE_TOTALE_SAISON_COURANTE = 'KPI_TRESORERIE_TOTALE_SAISON_COURANTE';
+    const KPI_TRESORERIE_SAISON_COURANTE_PREVISIONNELLE = 'KPI_TRESORERIE_SAISON_COURANTE_PREVISIONNELLE';
+    const KPI_TRESORERIE_SAISON_COURANTE_A_DATE = 'KPI_TRESORERIE_SAISON_COURANTE_A_DATE';
     const KPI_TRESORERIE_TOTALE_POINTEE = 'KPI_TRESORERIE_TOTALE_POINTEE';
     const KPI_TRESORERIE_TOTALE_NON_POINTEE = 'KPI_TRESORERIE_TOTALE_NON_POINTEE';
-    
+
     public function findAllTresorieFilterByAdherent($adherent_id)
     {
         $query = $this->createQueryBuilder('t')
-                        ->innerJoin('t.adherent', 'a')
-                        ->where('a.id = :adherent_id')
-                        ->setParameter('adherent_id', $adherent_id)
-                        ->addOrderBy('t.etat', 'DESC')
-                        ->addOrderBy('t.dateCreation', 'DESC')  
-                        ->getQuery()
-                        ->getResult();
+            ->innerJoin('t.adherent', 'a')
+            ->where('a.id = :adherent_id')
+            ->setParameter('adherent_id', $adherent_id)
+            ->addOrderBy('t.etat', 'DESC')
+            ->addOrderBy('t.dateCreation', 'DESC')
+            ->getQuery()
+            ->getResult();
 
         return $query;
     }
@@ -53,61 +54,70 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
             ->getResult();
     }
 
-
-
     public function countByKpi($name)
     {
         if (TresorieRepository::KPI_TRESORERIE_TOTALE == $name) {
             return $this->createQueryBuilder('u')
-            ->select('SUM(u.montant)')
-            ->innerJoin('u.etat', 'etat')
-            ->where('etat NOT IN (:etats)')
-            ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
-            ->getQuery()
-            ->getSingleScalarResult();
+                ->select('SUM(u.montant)')
+                ->innerJoin('u.etat', 'etat')
+                ->where('etat NOT IN (:etats)')
+                ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
+                ->getQuery()
+                ->getSingleScalarResult();
         } else if (TresorieRepository::KPI_TRESORERIE_EN_RETARD == $name) {
             return $this->createQueryBuilder('u')
-            ->select('SUM(u.montant)')
-            ->innerJoin('u.etat', 'etat')
-            ->where('etat IN (:etats)')
-            ->setParameter('etats', [RtlqTresorieEtat::A_ENCAISSER, RtlqTresorieEtat::A_RECLAMER])
-            ->getQuery()
-            ->getSingleScalarResult();
-        } else if (TresorieRepository::KPI_TRESORERIE_TOTALE_SAISON_COURANTE == $name) {
+                ->select('SUM(u.montant)')
+                ->innerJoin('u.etat', 'etat')
+                ->where('etat IN (:etats) AND u.dateCreation <= CURRENT_DATE()')
+                ->setParameter('etats', [RtlqTresorieEtat::A_ENCAISSER, RtlqTresorieEtat::A_RECLAMER])
+                ->getQuery()
+                ->getSingleScalarResult();
+        } else if (TresorieRepository::KPI_TRESORERIE_SAISON_COURANTE_PREVISIONNELLE == $name) {
             return $this->createQueryBuilder('u')
-            ->select('SUM(u.montant)')
-            ->innerJoin('u.etat', 'etat')
-            ->innerJoin('u.saison', 's')
-            ->where('etat NOT IN (:etats) AND s.active = :sactive')
-            ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
-            ->setParameter('sactive', true)
-            ->getQuery()
-            ->getSingleScalarResult();
+                ->select('SUM(u.montant)')
+                ->innerJoin('u.etat', 'etat')
+                ->innerJoin('u.saison', 's')
+                ->where('etat NOT IN (:etats) AND s.active = :sactive')
+                ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
+                ->setParameter('sactive', true)
+                ->getQuery()
+                ->getSingleScalarResult();
+        } else if (TresorieRepository::KPI_TRESORERIE_SAISON_COURANTE_A_DATE == $name) {
+            return $this->createQueryBuilder('u')
+                ->select('SUM(u.montant)')
+                ->innerJoin('u.etat', 'etat')
+                ->innerJoin('u.saison', 's')
+                ->where('etat NOT IN (:etats) AND s.active = :sactive AND u.dateCreation <= CURRENT_DATE()')
+                ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
+                ->setParameter('sactive', true)
+                ->getQuery()
+                ->getSingleScalarResult();
         } else if (TresorieRepository::KPI_TRESORERIE_TOTALE_POINTEE == $name) {
             return $this->createQueryBuilder('u')
-            ->select('SUM(u.montant)')
-            ->innerJoin('u.etat', 'etat')
-            ->where('etat NOT IN (:etats) AND u.pointe = :spointe')
-            ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
-            ->setParameter('spointe', true)
-            ->getQuery()
-            ->getSingleScalarResult();
+                ->select('SUM(u.montant)')
+                ->innerJoin('u.etat', 'etat')
+                ->where('etat NOT IN (:etats) AND u.pointe = :spointe')
+                ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
+                ->setParameter('spointe', true)
+                ->getQuery()
+                ->getSingleScalarResult();
         } else if (TresorieRepository::KPI_TRESORERIE_TOTALE_NON_POINTEE == $name) {
             return $this->createQueryBuilder('u')
-            ->select('SUM(u.montant)')
-            ->innerJoin('u.etat', 'etat')
-            ->where('etat NOT IN (:etats) AND u.pointe != :spointe')
-            ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
-            ->setParameter('spointe', true)
-            ->getQuery()
-            ->getSingleScalarResult();
-        } 
-        
+                ->select('SUM(u.montant)')
+                ->innerJoin('u.etat', 'etat')
+                ->where('etat NOT IN (:etats) AND u.pointe != :spointe')
+                ->setParameter('etats', [RtlqTresorieEtat::ANNULE])
+                ->setParameter('spointe', true)
+                ->getQuery()
+                ->getSingleScalarResult();
+        }
+
         return -1;
     }
 
 
-    function extractAllKpis() {
+    function extractAllKpis()
+    {
         return $this->createQueryBuilder('u')
             ->select('saison.nom as saison_name, etat.value as etat_name, u.pointe as pointe, SUM(u.montant) as montant')
             ->innerJoin('u.etat', 'etat')
@@ -117,8 +127,9 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
             ->getResult();
     }
 
-    function extractMontantsDepenseParCategories($idSaison) {
-        return 
+    function extractMontantsDepenseParCategories($idSaison)
+    {
+        return
             $this->createQueryBuilder('u')
             ->select('c.id as categorie_id, SUM(u.montant) as montant')
             ->innerJoin('u.etat', 'etat')
@@ -132,8 +143,9 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
             ->getResult();
     }
 
-    function extractMontantsDepenseParSaisons() {
-        return 
+    function extractMontantsDepenseParSaisons()
+    {
+        return
             $this->createQueryBuilder('u')
             ->select('s.id as saison_id, s.nom as saison_name, SUM(u.montant) as montant')
             ->innerJoin('u.etat', 'etat')
@@ -145,8 +157,9 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
             ->getResult();
     }
 
-    function extractMontantsDepenseParSaison($idSaison) {
-        return 
+    function extractMontantsDepenseParSaison($idSaison)
+    {
+        return
             $this->createQueryBuilder('u')
             ->select('u.dateCreation as month, SUM(u.montant) as montant')
             ->innerJoin('u.etat', 'etat')
