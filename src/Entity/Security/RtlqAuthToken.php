@@ -68,7 +68,7 @@ class RtlqAuthToken
         $this->createdAt = $createdAt;
     }
 
-    public function getUser()
+    public function getUser(): RtlqAdherent
     {
         return $this->user;
     }

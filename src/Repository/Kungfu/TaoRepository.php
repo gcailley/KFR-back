@@ -16,32 +16,7 @@ use Doctrine\ORM\EntityRepository;
  * @author GREGORY
  */
 class TaoRepository extends EntityRepository {
-   
-    public function findAllTaoFilterByAdherent($adherentId)
-    {
-        $query = $this->createQueryBuilder('t')
-                        ->innerJoin('t.adherents', 'a')
-                        ->where('a.id = :adherentId')
-                        ->setParameter('adherentId', $adherentId)
-                        ->getQuery()
-                        ->getResult();
-
-        return $query;
-    }
-
-    public function countAllTaoFilterByAdherent($adherentId)
-    {
-        // TODO faire un count
-        $query = $this->createQueryBuilder('t')
-                        ->innerJoin('t.adherents', 'a')
-                        ->where('a.id = :adherentId')
-                        ->setParameter('adherentId', $adherentId)
-                        ->getQuery()
-                        ->getResult();
-
-        return sizeof($query);
-    }
-
+       
     public function countAllTaoActif()
     {
         // TODO faire un count

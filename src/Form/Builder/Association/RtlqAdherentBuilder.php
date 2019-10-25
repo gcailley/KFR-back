@@ -9,6 +9,7 @@ use App\Form\Builder\AbstractRtlqBuilder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\Cotisation\RtlqCotisation;
 use App\Entity\Kungfu\RtlqKungfuTao;
+use App\Entity\Kungfu\RtlqKungfuAdherentTao;
 use App\Entity\Saison\RtlqSaison;
 use App\Entity\Tresorie\RtlqTresorie;
 use App\Entity\Tresorie\RtlqTresorieEtat;
@@ -61,7 +62,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
             $modele->addGroupe($em->getReference(RtlqGroupe::class, $groupeId()));
         }
         foreach ($postModele->getTaos() as $taoId) {
-            $modele->addTao($em->getReference(RtlqKungfuTao::class, $taoId()));
+            $modele->addTao($em->getReference(RtlqKungfuAdherentTao::class, $taoId()));
         }
 
         if ($postModele->getCotisationId() != null) {

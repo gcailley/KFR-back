@@ -14,10 +14,10 @@ abstract class AbstractRtlqEntity {
     public function isInto($collections) {
         foreach ($collections as $key => $value) {
             if ($this->isEquals($value)) {
-                return true;
+                return $value;
             }
         }
-        return false;
+        return null;
     }
 
     public function isEquals(AbstractRtlqEntity $entity) {

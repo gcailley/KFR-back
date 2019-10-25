@@ -78,8 +78,10 @@ security:
         - { path: ^/security/tokens/check-user, methods: [GET, OPTIONS], roles: ROLE_USER }
         - { path: ^/association/adherents/trombinoscope, methods: [GET, OPTIONS], roles: ROLE_USER }
         - { path: ^/association/adherents/by-token, methods: [GET, OPTIONS, PUT], roles: ROLE_USER }
+        - { path: ^/association/adherents/by-token/mytaos, methods: [GET, OPTIONS, DELETE, POST], roles: ROLE_USER }
         - { path: ^/association/drive/by-token, methods: [GET, OPTIONS], roles: ROLE_USER }
-        
+        - { path: ^/kungfu/taos, methods: [GET, OPTIONS], roles: ROLE_USER }
+    
         - { path: ^/kpis, roles: ROLE_KPI }
 
         - { path: ^/association/photo_directories, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_COM }

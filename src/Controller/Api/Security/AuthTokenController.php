@@ -19,6 +19,7 @@ use App\Service\Security\User\AuthTokenAuthenticator;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\Security\RtlqAuthToken;
 use App\Form\Type\Security\RtlqCredentialsType;
+use DateTime;
 
 /**
  * @Route("/security/tokens")
@@ -69,15 +70,18 @@ class AuthTokenController extends AbstractCrudApiController
     public function checkuserAction(Request $request)
     {
         $entity = $this->getTokenByValue($request);
-
+        $user =  $entity->getUser();
         // delete all keys
         $em = $this->getDoctrine()->getManager();
         $authTokenRepo = $em->getRepository(RtlqAuthToken::class);
-        $entities = $authTokenRepo->findOldToken($entity->getUser(), AuthTokenAuthenticator::TOKEN_VALIDITY_DURATION);
+        $entities = $authTokenRepo->findOldToken($user, AuthTokenAuthenticator::TOKEN_VALIDITY_DURATION);
         
         foreach ($entities as $entity) {
             $em->remove($entity);
         }
+        // get user to update last authentication date
+        $user->setDateLastAuth(new DateTime());
+
         $em->flush();
 
         $dto_entity = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass());
@@ -92,7 +96,7 @@ class AuthTokenController extends AbstractCrudApiController
         return $authTokenHeader;
     }
 
-    private function getTokenByValue(Request $request)
+    private function getTokenByValue(Request $request) : RtlqAuthToken
     {
         
         $authTokenHeader = $this->getTokenHeader($request);

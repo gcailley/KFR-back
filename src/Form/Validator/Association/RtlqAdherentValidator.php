@@ -20,23 +20,33 @@ use App\Entity\Cotisation\RtlqCotisation;
 use App\Entity\Tresorie\RtlqTresorie;
 use App\Form\Validator\RtlqValidator;
 use App\Entity\Kungfu\RtlqKungfuTao;
+use App\Entity\Kungfu\RtlqKungfuAdherentTao;
 
-class RtlqAdherentValidator extends RtlqValidator {
+class RtlqAdherentValidator extends RtlqValidator
+{
 
-    public function hasCotisation(RtlqAdherent $adherent, RtlqCotisation $cotisation) {
+    public function hasCotisation(RtlqAdherent $adherent, RtlqCotisation $cotisation)
+    {
         return $cotisation->isEquals($adherent->getCotisation());
     }
 
-    public function hasGroupe(RtlqAdherent $adherent, RtlqGroupe $groupe) {
+    public function hasGroupe(RtlqAdherent $adherent, RtlqGroupe $groupe)
+    {
         return $groupe->isInto($adherent->getGroupes());
     }
 
-    public function hasTao(RtlqAdherent $adherent, RtlqKungfuTao $tao) {
-        return $tao->isInto($adherent->getTaos());
+    public function hasTao(RtlqAdherent $adherent, RtlqKungfuTao $tao)
+    {
+        foreach ($adherent->getTaos() as $key => $value) {
+            if( $value->getTao() == $tao) {
+                return $value;
+            }
+        } 
+        return null;
     }
 
-    public function hasTresorie(RtlqAdherent $adherent, RtlqTresorie $tresorie) {
+    public function hasTresorie(RtlqAdherent $adherent, RtlqTresorie $tresorie)
+    {
         return $tresorie->isInto($adherent->getTresories());
     }
-
 }

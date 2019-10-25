@@ -23,15 +23,18 @@ use App\Entity\Association\RtlqGroupe;
 use App\Entity\Saison\RtlqSaison;
 use App\Entity\Cotisation\RtlqCotisation;
 use App\Entity\Kungfu\RtlqKungfuTao;
+use App\Entity\Kungfu\RtlqKungfuAdherentTao;
 use App\Form\Builder\Tresorie\RtlqTresorieBuilder;
 use App\Entity\Tresorie\RtlqTresorieCategorie;
 use App\Entity\Security\RtlqAuthToken;
 use App\Entity\Tresorie\RtlqTresorie;
 use App\Form\Builder\Association\RtlqAdherentLightBuilder;
+use App\Form\Builder\Kungfu\RtlqKungfuAdherentTaoBuilder;
 use App\Form\Builder\Kungfu\RtlqKungfuTaoBuilder;
 use App\Form\Dto\Association\RtlqAdherentLightDTO;
 use App\Form\Dto\Association\RtlqAdherentStatsDTO;
 use App\Form\Dto\Association\RtlqAdherentTrombinoscopeDTO;
+use App\Form\Dto\Kungfu\RtlqKungfuAdherentTaoDTO;
 use App\Form\Dto\Kungfu\RtlqKungfuTaoDTO;
 use App\Form\Dto\Tresorie\RtlqTresorieDTO;
 use App\Form\Type\Association\RtlqAdherentType;
@@ -50,6 +53,7 @@ class AdherentController extends AbstractCrudApiController {
         $this->encoder = $encoder;
         $this->rtlqTresorieBuilder=new RtlqTresorieBuilder();
         $this->rtlqTaoBuilder=new RtlqKungfuTaoBuilder();
+        $this->rtlqAdherentTaoBuilder=new RtlqKungfuAdherentTaoBuilder();
         $this->rtlqAdherentLightBuilder=new RtlqAdherentLightBuilder();
         $this->init();
     }
@@ -437,12 +441,12 @@ class AdherentController extends AbstractCrudApiController {
 
         // recuperation des lignes de taos de l'utilisateur
         $entitiesAssociate = $this->getDoctrine()
-            ->getRepository(RtlqKungfuTao::class)
+            ->getRepository(RtlqKungfuAdherentTao::class)
             ->findAllTaoFilterByAdherent($entity->getId());
         if (sizeof($entitiesAssociate) == 0) { return $this->returnNotFoundResponse(); }
         
         // conversion modele en DTO
-        $dtos = $this->rtlqTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuTaoDTO::class);
+        $dtos = $this->rtlqAdherentTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuAdherentTaoDTO::class);
 
         //get user information based on the id associate from the token
         return $this->returnNewResponse($dtos, Response::HTTP_ACCEPTED, false);
@@ -460,11 +464,16 @@ class AdherentController extends AbstractCrudApiController {
         if (!is_object($tao)) {
             throw new NotFoundHttpException("Tao $idTao not found");
         }
-dump($this->getValidator()->hasTao($entity, $tao));
-        if (!$this->getValidator()->hasTao($entity, $tao)) {
-            //add Tao to adherent
-            $entity->addTao($tao);
 
+        $adherentTao = $this->getValidator()->hasTao($entity, $tao);
+        if ($adherentTao == null) {
+
+            $AdherentTao = new RtlqKungfuAdherentTao();
+            $AdherentTao->setAdherent($entity);
+            $AdherentTao->setTao($tao);
+
+            //add Tao to adherent
+            $entity->addTao($AdherentTao);
             $em = $this->getDoctrine()->getManager();
             $em->merge($entity);
             $em->flush();
@@ -485,17 +494,19 @@ dump($this->getValidator()->hasTao($entity, $tao));
             throw new NotFoundHttpException("Tao $idTao not found");
         }
 
-        if ($this->getValidator()->hasTao($entity, $tao)) {
-dump($entity->getTaos());
+        $adherentTao = $this->getValidator()->hasTao($entity, $tao);
+        if ($adherentTao != null) {
+            $adherentTao->removeAdherent();
+            $adherentTao->removeTao();
+            
             //add tao to adherent
-            $entity->removeTao($tao);
+            $entity->removeTao($adherentTao);
 
             $em = $this->getDoctrine()->getManager();
             $em->merge($entity);
+            $em->remove($adherentTao);
             $em->flush();
-        }
-dump($entity->getTaos());
-
+        } 
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
@@ -689,15 +700,35 @@ dump($entity->getTaos());
 
         // recuperation des lignes de taos de l'utilisateur
         $entitiesAssociate = $this->getDoctrine()
-            ->getRepository(RtlqKungfuTao::class)
+            ->getRepository(RtlqKungfuAdherentTao::class)
             ->findAllTaoFilterByAdherent($tokenAuth->getUser()->getId());
         if (sizeof($entitiesAssociate) == 0) { return $this->returnNotFoundResponse(); }
         
         // conversion modele en DTO
-        $dtos = $this->rtlqTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuTaoDTO::class);
+        $dtos = $this->rtlqAdherentTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuAdherentTaoDTO::class);
 
         //get user information based on the id associate from the token
         return $this->returnNewResponse($dtos, Response::HTTP_ACCEPTED, false);
+    }
+
+  /**
+     * @Route("/by-token/mytaos/{idTao}", methods={"POST"})
+     */
+    public function addTaoByToken($idTao, Request $request) {
+        $tokenAuth = $this->_getUserByToken($request);
+        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+
+        return $this-> addTaoToUser($tokenAuth->getUser()->getId(), $idTao);
+    }
+
+    /**
+     * @Route("/by-token/mytaos/{idTao}", methods={"DELETE"})
+     */
+    public function removeTaoByToken($idTao, Request $request) {
+        $tokenAuth = $this->_getUserByToken($request);
+        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+
+        return $this-> removeTaoToUser($tokenAuth->getUser()->getId(), $idTao);
     }
 
     /**
@@ -715,7 +746,7 @@ dump($entity->getTaos());
 
         // recuperation des lignes de taos de l'utilisateur
         $nbTaoOfUser = $this->getDoctrine()
-            ->getRepository(RtlqKungfuTao::class)
+            ->getRepository(RtlqKungfuAdherentTao::class)
             ->countAllTaoFilterByAdherent($tokenAuth->getUser()->getId());
 
         // recuperation des lignes de taos de l'utilisateur

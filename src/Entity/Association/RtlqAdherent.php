@@ -5,6 +5,7 @@ namespace App\Entity\Association;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\AbstractRtlqEntity;
+use App\Entity\Kungfu\RtlqKungfuAdherentTao;
 use App\Entity\Saison\RtlqSaison;
 use App\Entity\Tresorie\RtlqTresorie;
 
@@ -490,19 +491,19 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
 
     /**
      * 
-     * @ORM\ManyToMany(targetEntity="App\Entity\Kungfu\RtlqKungfuTao", mappedBy="adherents", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Kungfu\RtlqKungfuAdherentTao", mappedBy="adherent", cascade={"persist"})
      */
     private $taos;
 
     /**
      * Add groupe
      *
-     * @param \App\Entity\Kungfu\RtlqKungfuTao $tao
+     * @param \App\Entity\Kungfu\RtlqKungfuAdherentTao $tao
      *
-     * @return RtlqKungfuTao
+     * @return RtlqKungfuAdherentTao
      */
-    public function addTao(\App\Entity\Kungfu\RtlqKungfuTao $tao) {
-        $tao->addAdherent($this);
+    public function addTao(RtlqKungfuAdherentTao $tao) {
+        $tao->setAdherent($this);
         $this->taos[] = $tao;
 
         return $this;
@@ -511,10 +512,10 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
     /**
      * Remove groupe
      *
-     * @param \App\Entity\KungFu\RtlqKungfuTao $tao
+     * @param \App\Entity\KungFu\RtlqKungfuAdherentTao $tao
      */
-    public function removeTao(\App\Entity\Kungfu\RtlqKungfuTao $tao) {
-        $tao->removeAdherent($this);
+    public function removeTao(RtlqKungfuAdherentTao   $tao) {
+        $tao->removeAdherent();
         $this->taos->removeElement($tao);
     }
 
