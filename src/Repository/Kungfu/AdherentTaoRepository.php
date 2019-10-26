@@ -15,16 +15,18 @@ use Doctrine\ORM\EntityRepository;
  *
  * @author GREGORY
  */
-class AdherentTaoRepository extends EntityRepository {
-   
+class AdherentTaoRepository extends EntityRepository
+{
+
     public function findAllTaoFilterByAdherent($adherentId)
     {
-        $query = $this->createQueryBuilder('t')
-                        ->innerJoin('t.adherent', 'a')
-                        ->where('a.id = :adherentId')
-                        ->setParameter('adherentId', $adherentId)
-                        ->getQuery()
-                        ->getResult();
+        $query = $this->createQueryBuilder('at')
+            ->innerJoin('at.adherent', 'a')
+            ->innerJoin('at.tao', 't')
+            ->where('a.id = :adherentId')
+            ->setParameter('adherentId', $adherentId)
+            ->getQuery()
+            ->getResult();
 
         return $query;
     }
@@ -32,12 +34,12 @@ class AdherentTaoRepository extends EntityRepository {
     public function countAllTaoFilterByAdherent($adherentId)
     {
         // TODO faire un count
-        $query = $this->createQueryBuilder('t')
-                        ->innerJoin('t.adherent', 'a')
-                        ->where('a.id = :adherentId')
-                        ->setParameter('adherentId', $adherentId)
-                        ->getQuery()
-                        ->getResult();
+        $query = $this->createQueryBuilder('at')
+            ->innerJoin('at.adherent', 'a')
+            ->where('a.id = :adherentId')
+            ->setParameter('adherentId', $adherentId)
+            ->getQuery()
+            ->getResult();
 
         return sizeof($query);
     }

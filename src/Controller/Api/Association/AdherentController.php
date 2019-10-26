@@ -703,7 +703,7 @@ class AdherentController extends AbstractCrudApiController {
             ->getRepository(RtlqKungfuAdherentTao::class)
             ->findAllTaoFilterByAdherent($tokenAuth->getUser()->getId());
         if (sizeof($entitiesAssociate) == 0) { return $this->returnNotFoundResponse(); }
-        
+
         // conversion modele en DTO
         $dtos = $this->rtlqAdherentTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuAdherentTaoDTO::class);
 

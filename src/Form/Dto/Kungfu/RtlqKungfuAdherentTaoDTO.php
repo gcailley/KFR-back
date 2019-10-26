@@ -52,4 +52,47 @@ class RtlqKungfuAdherentTaoDTO extends AbstractRtlqDTO {
         return $this->tao_id;
     }
 
+    protected $nom;
+    public function setNom($value)
+    {
+        $this->nom = $value;
+        return $this;
+    }
+
+    public  function getNom() {
+        return $this->nom;
+    }
+
+    protected $nom_chinois;
+    public function setNomChinois($value)
+    {
+        $this->nom_chinois = $value;
+        return $this;
+    }
+
+    public  function getNomChinois() {
+        return $this->nom_chinois;
+    }
+    
+    protected $style_name;
+    public function setStyleName($value)
+    {
+        $this->style_name = $value;
+        return $this;
+    }
+
+    public  function getStyleName() {
+        return $this->style_name;
+    }
+    
+    protected $description;
+    public function setDescription($value)
+    {
+        $this->description = $value;
+        return $this;
+    }
+
+    public  function getDescription() {
+        return $this->description;
+    }
 }

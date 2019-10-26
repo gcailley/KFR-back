@@ -2,6 +2,7 @@
 
 namespace App\Form\Builder\Kungfu;
 
+use App\Entity\Association\RtlqAdherent;
 use App\Entity\Kungfu\RtlqKungfuNiveau;
 use App\Entity\Kungfu\RtlqKungfuStyle;
 use App\Form\Dto\Kungfu\RtlqKungfuTaoDTO;
@@ -16,8 +17,8 @@ class RtlqKungfuAdherentTaoBuilder extends AbstractRtlqBuilder
         $modele->setNiveau ( $postModele->getNiveau () );
         $modele->setNbRevision ( $postModele->getNbRevision () );
 
-        $modele->setTao($em->getReference ( RtlqKungfuStyle::class, $postModele->getTaoId ())) ;
-        $modele->setAdherent($em->getReference ( RtlqKungfuNiveau::class, $postModele->getAdherentId ())) ;
+        $modele->setTao($em->getReference ( RtlqKungfuTao::class, $postModele->getTaoId ())) ;
+        $modele->setAdherent($em->getReference ( RtlqAdherent::class, $postModele->getAdherentId ())) ;
 
         return $modele;
     }
@@ -32,6 +33,10 @@ class RtlqKungfuAdherentTaoBuilder extends AbstractRtlqBuilder
         $dto->setNbRevision ( $modele->getNbRevision () );
         $dto->setAdherentId( $modele->getAdherentId() );
         $dto->setTaoId( $modele->getTaoId() );
+        $dto->setNom( $modele->getTao()->getNom() );
+        $dto->setNomChinois( $modele->getTao()->getNomChinois() );
+        $dto->setStyleName( $modele->getTao()->getStyleName() );
+        $dto->setDescription( $modele->getTao()->getDescription() );
 
         return $dto;
     }
