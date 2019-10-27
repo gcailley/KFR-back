@@ -22,10 +22,10 @@ class RtlqKungfuTaoType extends AbstractRtlqType
         $builder
         ->add ( 'nom', TextType::class )
         ->add ( 'nom_chinois', TextType::class )
-        ->add ( 'description', TextType::class )
+        ->add ( 'traduction', TextType::class )
+        ->add ( 'pinyin', TextType::class )
         ->add ( 'origine', TextType::class )
         ->add ( 'arme', TextType::class )
-        ->add ( 'arme_url', TextType::class )
         ->add ( 'video_url', TextType::class )
         ->add ( 'style_id', NumberType::class )
         ->add ( 'style_name', TextType::class )

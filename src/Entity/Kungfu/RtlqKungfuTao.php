@@ -72,17 +72,17 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
 
     /**
      *
-     * @var string @ORM\Column(name="description", type="string", length=100, nullable=false)
+     * @var string @ORM\Column(name="traduction", type="string", length=100, nullable=false)
      */
-    private $description;
-    public function setDescription($value)
+    private $traduction;
+    public function setTraduction($value)
     {
-        $this->description = $value;
+        $this->traduction = $value;
         return $this;
     }
 
-    public  function getDescription() {
-        return $this->description;
+    public  function getTraduction() {
+        return $this->traduction;
     }
 
 
@@ -163,17 +163,17 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
 
     /**
      *
-     * @var string @ORM\Column(name="arme_url", type="string", length=100, nullable=true)
+     * @var string @ORM\Column(name="pinyin", type="string", length=100, nullable=true)
      */
-    private $armeUrl;
-    public function setArmeUrl($value)
+    private $pinyin;
+    public function setPinyin($value)
     {
-        $this->armeUrl = $value;
+        $this->pinyin = $value;
         return $this;
     }
 
-    public  function getArmeUrl() {
-        return $this->armeUrl;
+    public  function getPinYin() {
+        return $this->pinyin;
     }
 
     /**

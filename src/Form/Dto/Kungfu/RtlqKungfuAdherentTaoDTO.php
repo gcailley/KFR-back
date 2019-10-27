@@ -52,15 +52,15 @@ class RtlqKungfuAdherentTaoDTO extends AbstractRtlqDTO {
         return $this->tao_id;
     }
 
-    protected $nom;
-    public function setNom($value)
+    protected $pinyin;
+    public function setPinyin($value)
     {
-        $this->nom = $value;
+        $this->pinyin = $value;
         return $this;
     }
 
-    public  function getNom() {
-        return $this->nom;
+    public  function getPinyin() {
+        return $this->pinyin;
     }
 
     protected $nom_chinois;
@@ -85,14 +85,14 @@ class RtlqKungfuAdherentTaoDTO extends AbstractRtlqDTO {
         return $this->style_name;
     }
     
-    protected $description;
-    public function setDescription($value)
+    protected $traduction;
+    public function setTraduction($value)
     {
-        $this->description = $value;
+        $this->traduction = $value;
         return $this;
     }
 
-    public  function getDescription() {
-        return $this->description;
+    public  function getTraduction() {
+        return $this->traduction;
     }
 }

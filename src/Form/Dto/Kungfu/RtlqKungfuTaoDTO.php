@@ -29,17 +29,27 @@ class RtlqKungfuTaoDTO extends AbstractRtlqDTO {
         return $this->nom_chinois;
     }
 
-    protected $description;
-    public function setDescription($value)
+    protected $traduction;
+    public function setTraduction($value)
     {
-        $this->description = $value;
+        $this->traduction = $value;
         return $this;
     }
 
-    public  function getDescription() {
-        return $this->description;
+    public  function getTraduction() {
+        return $this->traduction;
     }
 
+    protected $pinyin;
+    public function setPinyin($value)
+    {
+        $this->pinyin = $value;
+        return $this;
+    }
+
+    public  function getPinyin() {
+        return $this->pinyin;
+    }
 
     protected $origine;
     public function setOrigine($value)
@@ -120,17 +130,6 @@ class RtlqKungfuTaoDTO extends AbstractRtlqDTO {
 
     public  function getArme() {
         return $this->arme;
-    }
-
-    protected $arme_url;
-    public function setArmeUrl($value)
-    {
-        $this->arme_url = $value;
-        return $this;
-    }
-
-    public  function getArmeUrl() {
-        return $this->arme_url;
     }
 
     protected $video_url;
