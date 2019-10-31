@@ -9,11 +9,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Controller\Api\AbstractApiController;
- 
+use App\Entity\Security\RtlqAuthToken;
+use App\Service\Security\User\AuthTokenAuthenticator;
+
 abstract class AbstractCrudApiController extends AbstractApiController
 {
 
-    
+
     /**
      * @Route("/{id}", methods={"GET"})
      */
@@ -33,12 +35,14 @@ abstract class AbstractCrudApiController extends AbstractApiController
      * Trie utilisé dans la requete getAllAction.
      * exemple : ['username' => 'ASC']
      */
-    public function defaultSort() {
+    public function defaultSort()
+    {
         return [];
     }
 
 
-    public function convertModele2DtoResponse($entityMetier, $response, $status) {
+    public function convertModele2DtoResponse($entityMetier, $response, $status)
+    {
         if ($response) {
             $dto = $this->getBuilder()->modeleToDto($entityMetier,  $this->newDtoClass());
             return $this->newResponse($dto, $status);
@@ -47,7 +51,8 @@ abstract class AbstractCrudApiController extends AbstractApiController
         }
     }
 
-    public function convertDto2Response($dtoEntities, $response, $status) {
+    public function convertDto2Response($dtoEntities, $response, $status)
+    {
         if ($response) {
             return $this->newResponse($dtoEntities, $status);
         } else {
@@ -58,10 +63,10 @@ abstract class AbstractCrudApiController extends AbstractApiController
     /**
      * @Route("", methods={"GET"})
      */
-    public function getAllAction(Request $request, $response=true)
+    public function getAllAction(Request $request, $response = true)
     {
         $tresories = $this->getDoctrine()->getRepository($this->newModeleClass())->findBy([], $this->defaultSort());
-        
+
         $dto_tresories = $this->getBuilder()->modelesToDtos($tresories,  $this->newDtoClass());
         return $this->convertDto2Response($dto_tresories, $response, Response::HTTP_ACCEPTED);
     }
@@ -69,7 +74,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
     /**
      * @Route("/{id}", methods={"PUT"})
      */
-    public function updateAction($id, Request $request, $response =true)
+    public function updateAction($id, Request $request, $response = true)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -102,8 +107,8 @@ abstract class AbstractCrudApiController extends AbstractApiController
         return $this->convertModele2DtoResponse($entityMetier, $response, Response::HTTP_ACCEPTED);
     }
 
-    protected function updateBeforeSaved($em, $entityMetier) {
-    }
+    protected function updateBeforeSaved($em, $entityMetier)
+    { }
 
 
     /**
@@ -114,7 +119,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $data = json_decode($request->getContent(), true);
 
         $entityDto = $this->newDto();
-        $form = $this->createForm( $this->newTypeClass(), $entityDto);
+        $form = $this->createForm($this->newTypeClass(), $entityDto);
         $form->submit($data);
 
         // recuperation entityManager
@@ -133,7 +138,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
 
         //action à faire dans le controller
         $this->innerCreateAction($em, $entityMetier);
-        
+
         try {
             $preConditionErrors = $this->preConditionCreationAction($em, $entityMetier);
             if ($preConditionErrors != null && sizeof($preConditionErrors) != 0) {
@@ -151,8 +156,8 @@ abstract class AbstractCrudApiController extends AbstractApiController
     }
 
 
-    protected function innerCreateAction($em, $entityMetier) {
-    }
+    protected function innerCreateAction($em, $entityMetier)
+    { }
 
     protected function preConditionCreationAction($em, $entityMetier)
     {
@@ -179,16 +184,17 @@ abstract class AbstractCrudApiController extends AbstractApiController
     }
 
     protected function internalDeleteByIdAction($em, $entity)
+    { }
+
+
+    protected function getNewModeleInstance()
     {
-    }
-
-
-    protected function getNewModeleInstance() {
         $modeleClass = $this->newModeleClass();
         return new $modeleClass;
     }
 
-    protected function returnNewResponse($entities, $statusCode = Response::HTTP_ACCEPTED, $convert = true ) {
+    protected function returnNewResponse($entities, $statusCode = Response::HTTP_ACCEPTED, $convert = true)
+    {
         if ($entities === null || empty($entities)) {
             $dto_entities = [];
         } else {
@@ -201,11 +207,23 @@ abstract class AbstractCrudApiController extends AbstractApiController
         return new Response(json_encode($dto_entities), $statusCode);
     }
 
-    protected function returnNotFoundResponse() {
+    protected function returnNotFoundResponse()
+    {
         return $this->returnNewResponse(null, Response::HTTP_NOT_FOUND);
     }
 
-    protected function returnUnAuthorizedResponse() {
+    protected function returnUnAuthorizedResponse()
+    {
         return $this->returnNewResponse(null, Response::HTTP_UNAUTHORIZED);
+    }
+
+
+    public function extractUserByToken(Request $request): RtlqAuthToken
+    {
+        $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
+        $tokenAuth = $this->getDoctrine()
+            ->getRepository(RtlqAuthToken::class)
+            ->findOneBy(array("value" => $authTokenHeader));
+        return $tokenAuth;
     }
 }

@@ -132,17 +132,6 @@ class RtlqKungfuTaoDTO extends AbstractRtlqDTO {
         return $this->arme;
     }
 
-    protected $video_url;
-    public function setVideoUrl($value)
-    {
-        $this->video_url = $value;
-        return $this;
-    }
-
-    public  function getVideoUrl() {
-        return $this->video_url;
-    }
-
     protected $actif;
     public function getActif() {
         return $this->actif;

@@ -95,4 +95,16 @@ class RtlqKungfuAdherentTaoDTO extends AbstractRtlqDTO {
     public  function getTraduction() {
         return $this->traduction;
     }
+
+    protected $annee_apprentissage;
+    public function setAnneeApprentissage($value)
+    {
+        $this->annee_apprentissage = $value;
+        return $this;
+    }
+
+    public  function getAnneeApprentissage() {
+        return $this->annee_apprentissage;
+    }
+
 }

@@ -91,7 +91,7 @@ class AuthTokenController extends AbstractCrudApiController
     private function getTokenHeader(Request $request) {
         $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
         if (!$authTokenHeader) {
-            throw new BadCredentialsException(AuthTokenAuthenticator::X_AUTH_TOKEN . ' header is required');
+            return new BadCredentialsException(AuthTokenAuthenticator::X_AUTH_TOKEN . ' header is required');
         }
         return $authTokenHeader;
     }

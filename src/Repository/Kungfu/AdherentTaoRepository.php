@@ -31,6 +31,20 @@ class AdherentTaoRepository extends EntityRepository
         return $query;
     }
 
+    public function findTaoFilterByAdherentAndTao($adherentId, $taoId)
+    {
+        $query = $this->createQueryBuilder('at')
+            ->innerJoin('at.adherent', 'a')
+            ->innerJoin('at.tao', 't')
+            ->where('a.id = :adherentId AND t.id = :taoId')
+            ->setParameter('adherentId', $adherentId)
+            ->setParameter('taoId', $taoId)
+            ->getQuery()
+            ->getResult();
+
+        return $query;
+    }
+
     public function countAllTaoFilterByAdherent($adherentId)
     {
         // TODO faire un count

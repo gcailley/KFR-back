@@ -17,10 +17,11 @@ use Doctrine\Common\Collections\ArrayCollection;
  * indexes={@ORM\Index(name="id", columns={"id"})})
  * @ORM\Entity(repositoryClass="App\Repository\Kungfu\AdherentTaoRepository")
  */
-class RtlqKungfuAdherentTao extends AbstractRtlqEntity{
+class RtlqKungfuAdherentTao extends AbstractRtlqEntity
+{
 
-    public function __construct() {
-    }
+    public function __construct()
+    { }
 
     /**
      *
@@ -35,7 +36,8 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getId() {
+    public  function getId()
+    {
         return $this->id;
     }
 
@@ -51,7 +53,8 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getNbRevision() {
+    public  function getNbRevision()
+    {
         return $this->nbRevision;
     }
 
@@ -66,11 +69,30 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getNiveau() {
+    public  function getNiveau()
+    {
         return $this->niveau;
     }
 
-     /**
+
+    /**
+     *
+     * @var string @ORM\Column(name="annee_apprentissage", type="string", nullable=true)
+     */
+    private $anneeApprentissage = null;
+    public function setAnneeApprentissage($value)
+    {
+        $this->anneeApprentissage = $value;
+        return $this;
+    }
+
+    public  function getAnneeApprentissage()
+    {
+        return $this->anneeApprentissage;
+    }
+
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Association\RtlqAdherent", inversedBy="taos")
      * @ORM\JoinColumn(name="adherent_id", referencedColumnName="id", nullable=true)
      */
@@ -83,7 +105,8 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity{
      *
      * @return RtlqAdherent
      */
-    public function setAdherent(RtlqAdherent $adherent) {
+    public function setAdherent(RtlqAdherent $adherent)
+    {
         $this->adherent = $adherent;
         return $this;
     }
@@ -92,21 +115,24 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity{
      *
      * @return Collection
      */
-    public function getAdherent() {
+    public function getAdherent()
+    {
         return $this->adherent;
     }
 
-    public function getAdherentId() {
+    public function getAdherentId()
+    {
         return $this->adherent->getId();
     }
 
-    public function removeAdherent() {
-        $this->adherent=null;
+    public function removeAdherent()
+    {
+        $this->adherent = null;
     }
 
 
-    
-     /**
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Kungfu\RtlqKungfuTao")
      * @ORM\JoinColumn(name="tao_id", referencedColumnName="id", nullable=false)
      */
@@ -119,7 +145,8 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity{
      *
      * @return RtlqKungfuTao
      */
-    public function setTao(RtlqKungfuTao $tao) {
+    public function setTao(RtlqKungfuTao $tao)
+    {
         $this->tao = $tao;
         return $this;
     }
@@ -128,15 +155,18 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity{
      *
      * @return Collection
      */
-    public function getTao() {
+    public function getTao()
+    {
         return $this->tao;
     }
 
-    public function getTaoId() {
+    public function getTaoId()
+    {
         return $this->tao->getId();
     }
 
-    public function removeTao() {
-        $this->tao=null;
+    public function removeTao()
+    {
+        $this->tao = null;
     }
 }

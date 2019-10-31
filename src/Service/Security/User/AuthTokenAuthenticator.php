@@ -3,6 +3,7 @@
 namespace App\Service\Security\User;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -33,7 +34,7 @@ class AuthTokenAuthenticator implements SimplePreAuthenticatorInterface, Authent
     {
         $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
         if (!$authTokenHeader) {
-            throw new BadCredentialsException(AuthTokenAuthenticator::X_AUTH_TOKEN . ' header is required');
+            throw new AccessDeniedHttpException(AuthTokenAuthenticator::X_AUTH_TOKEN . ' header is required');
         }
 
         return new PreAuthenticatedToken(
@@ -57,7 +58,7 @@ class AuthTokenAuthenticator implements SimplePreAuthenticatorInterface, Authent
         $authToken = $userProvider->getAuthToken($authTokenHeader);
 
         if (!$authToken || !$this->isTokenValid($authToken)) {
-            throw new BadCredentialsException('Invalid authentication token : ' . $authToken);
+            throw new AccessDeniedHttpException('Invalid authentication token : ' . $authToken);
         } 
         
         $user = $authToken->getUser();

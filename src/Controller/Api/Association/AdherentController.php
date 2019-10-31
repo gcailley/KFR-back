@@ -42,30 +42,45 @@ use App\Form\Type\Association\RtlqAdherentType;
 /**
  * @Route("/association/adherents")
  */
-class AdherentController extends AbstractCrudApiController {
+class AdherentController extends AbstractCrudApiController
+{
     private $mailer;
     private $encoder;
 
     public function __construct(
-        \Swift_Mailer $mailer=null, 
-        UserPasswordEncoderInterface $encoder=null) {
+        \Swift_Mailer $mailer = null,
+        UserPasswordEncoderInterface $encoder = null
+    ) {
         $this->mailer = $mailer;
         $this->encoder = $encoder;
-        $this->rtlqTresorieBuilder=new RtlqTresorieBuilder();
-        $this->rtlqTaoBuilder=new RtlqKungfuTaoBuilder();
-        $this->rtlqAdherentTaoBuilder=new RtlqKungfuAdherentTaoBuilder();
-        $this->rtlqAdherentLightBuilder=new RtlqAdherentLightBuilder();
+        $this->rtlqTresorieBuilder = new RtlqTresorieBuilder();
+        $this->rtlqTaoBuilder = new RtlqKungfuTaoBuilder();
+        $this->rtlqAdherentTaoBuilder = new RtlqKungfuAdherentTaoBuilder();
+        $this->rtlqAdherentLightBuilder = new RtlqAdherentLightBuilder();
         $this->init();
     }
 
-    public function initBuilder() {
+    public function initBuilder()
+    {
         return new RtlqAdherentBuilder($this->encoder);
     }
 
-    function newTypeClass(): string {return RtlqAdherentType::class;}
-    function newDtoClass(): string {return RtlqAdherentDTO::class;}
-    function newBuilderClass(): string {return RtlqAdherentBuilder::class;}
-    function newModeleClass(): string {return RtlqAdherent::class;}
+    function newTypeClass(): string
+    {
+        return RtlqAdherentType::class;
+    }
+    function newDtoClass(): string
+    {
+        return RtlqAdherentDTO::class;
+    }
+    function newBuilderClass(): string
+    {
+        return RtlqAdherentBuilder::class;
+    }
+    function newModeleClass(): string
+    {
+        return RtlqAdherent::class;
+    }
 
 
     /**
@@ -81,14 +96,16 @@ class AdherentController extends AbstractCrudApiController {
      * Validateur par defaut ne faisant aucune validation spécifique sur le bean.
      *
      */
-    public function getValidator() {
+    public function getValidator()
+    {
         return new RtlqAdherentValidator();
     }
-    
+
     /**
      * Cas spécifique de détachement des tresories. 
      */
-    protected function internalDeleteByIdAction($em, $entity) {
+    protected function internalDeleteByIdAction($em, $entity)
+    {
         $entity->removeAllTresories();
         $entity->removeCotisation();
         $entity->removeAllGroupes();
@@ -101,11 +118,11 @@ class AdherentController extends AbstractCrudApiController {
     public function getTrombinoscopeAction(Request $request)
     {
         $entities = $this->getDoctrine()
-                            ->getRepository($this->newModeleClass())
-                            ->findBy(
-                                array("actif"=>true), 
-                                $this->defaultSort()
-                            );
+            ->getRepository($this->newModeleClass())
+            ->findBy(
+                array("actif" => true),
+                $this->defaultSort()
+            );
         $dto_entities = $this->getBuilder()->ofuscated($entities, RtlqAdherentTrombinoscopeDTO::class);
         return $this->newResponse($dto_entities, Response::HTTP_ACCEPTED);
     }
@@ -117,10 +134,11 @@ class AdherentController extends AbstractCrudApiController {
     public function getListeAction(Request $request)
     {
         $entities = $this->getDoctrine()
-                            ->getRepository($this->newModeleClass())
-                            ->findBy([],
-                                $this->defaultSort()
-                            );
+            ->getRepository($this->newModeleClass())
+            ->findBy(
+                [],
+                $this->defaultSort()
+            );
         $dto_entities = $this->rtlqAdherentLightBuilder->modelesToDtos($entities, RtlqAdherentLightDTO::class);
         return $this->newResponse($dto_entities, Response::HTTP_ACCEPTED);
     }
@@ -128,22 +146,23 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("", methods={"GET"})
      */
-    public function getAllAction(Request $request, $response=true)
+    public function getAllAction(Request $request, $response = true)
     {
         return parent::getAllAction($request, $response);
     }
 
-     /**
+    /**
      * @Route("/{id}/send-email/{type}", methods={"POST"})
      */
-    public function sendEmail($id, $type) {
+    public function sendEmail($id, $type)
+    {
         $adherent = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($adherent)) {
             throw new NotFoundHttpException("Adherent '$id' not found");
         }
 
-       
-        $mail_info = array('message' =>'', 'twig' =>'', 'data' => array());
+
+        $mail_info = array('message' => '', 'twig' => '', 'data' => array());
         switch ($type) {
             case 'welcome':
                 //reset password
@@ -152,30 +171,33 @@ class AdherentController extends AbstractCrudApiController {
                 $mail_info['message'] = '[' . $this->getParameter('association_nom') . '] Bienvenue !';
                 $mail_info['twig'] = 'emails/creation-compte.html.twig';
                 $mail_info['data'] =  array(
-                    'prenom' => $adherent->getPrenom(), 
-                    'login' => $adherent->getUsername(), 
+                    'prenom' => $adherent->getPrenom(),
+                    'login' => $adherent->getUsername(),
                     'urlReset' => $this->getParameter('url_reinitialisation'),
-                    'resetToken'=> $adherent->getTokenPwd(),
+                    'resetToken' => $adherent->getTokenPwd(),
                     'urlDiscord' => $this->getParameter('url_invitation_discord'),
-                    'urlSite' => $this->getParameter('url_site' ),
-                    'urlSiteIntranet' => $this->getParameter('url_site_intranet' ),
+                    'urlSite' => $this->getParameter('url_site'),
+                    'urlSiteIntranet' => $this->getParameter('url_site_intranet'),
                     'associationNom' => $this->getParameter('association_nom'),
-                    'associationTelephone' => $this->getParameter('association_telephone'));
-            break;
+                    'associationTelephone' => $this->getParameter('association_telephone')
+                );
+                break;
             default:
                 throw new NotFoundHttpException("Email type '$type' not found");
         }
-        
+
 
         // send email avec le lien
         $message = (new \Swift_Message($mail_info['message']))
-        ->setFrom($this->getParameter('association_email'))
-        ->setTo($adherent->getEmail())
-        ->addPart(
-            $this->renderView( $mail_info['twig'], $mail_info['data']), 'text/html' );
+            ->setFrom($this->getParameter('association_email'))
+            ->setTo($adherent->getEmail())
+            ->addPart(
+                $this->renderView($mail_info['twig'], $mail_info['data']),
+                'text/html'
+            );
 
         $this->mailer->send($message);
-        
+
         $dto = $this->getBuilder()->modeleToDto($adherent, $this->newDtoClass());
         return $this->newResponse($dto, Response::HTTP_ACCEPTED);
     }
@@ -183,27 +205,28 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/{id}/finalise-inscription", methods={"POST"})
      */
-    public function finalizeInscription($id) {
+    public function finalizeInscription($id)
+    {
         $adherent = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
-        if (!is_object($adherent )) {
+        if (!is_object($adherent)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
         // ajouter le adherents dans le groupe USER
-        $groupeModele = $this 
-                    ->getDoctrine()
-                    ->getRepository(RtlqGroupe::class)
-                    ->findOneBy(array("role"=>'ROLE_USER'), null, 1 , null);
+        $groupeModele = $this
+            ->getDoctrine()
+            ->getRepository(RtlqGroupe::class)
+            ->findOneBy(array("role" => 'ROLE_USER'), null, 1, null);
         $adherent->addGroupe($groupeModele);
 
         // get reduction de licence
         $tresorieLicenceDeduction  = sizeof($adherent->getSaisons());
 
         // ajouter l'adherents dans la saison active
-        $saisonModele = $this 
-                    ->getDoctrine()
-                    ->getRepository(RtlqSaison::class)
-                    ->findOneBy(array("active"=>true), null, 1 , null);
+        $saisonModele = $this
+            ->getDoctrine()
+            ->getRepository(RtlqSaison::class)
+            ->findOneBy(array("active" => true), null, 1, null);
         $adherent->addSaison($saisonModele);
 
         // rendre l'adherent actif et public
@@ -218,9 +241,9 @@ class AdherentController extends AbstractCrudApiController {
         if ($adherent->getCotisation() != null) {
             $cotisation_id = $adherent->getCotisation()->getId();
             $cotisationModele = $this
-                    ->getDoctrine()
-                    ->getRepository(RtlqCotisation::class)
-                    ->findOneBy(array("id"=>$cotisation_id), null, 1 , null);
+                ->getDoctrine()
+                ->getRepository(RtlqCotisation::class)
+                ->findOneBy(array("id" => $cotisation_id), null, 1, null);
             //creation d'une tresorie
             $tresories = $this->rtlqTresorieBuilder->createTresorieByCotisation($adherent, $responsable, $this->getDoctrine());
             foreach ($tresories as $key => $value) {
@@ -231,18 +254,18 @@ class AdherentController extends AbstractCrudApiController {
         }
 
         //creation de la licence
-        $categorieLicence = $this->getDoctrine()->getRepository(RtlqTresorieCategorie::class)->findOneBy(array("id"=>RtlqTresorieCategorie::LICENCE), null, 1 , null);
-        $licenceModele = $this 
+        $categorieLicence = $this->getDoctrine()->getRepository(RtlqTresorieCategorie::class)->findOneBy(array("id" => RtlqTresorieCategorie::LICENCE), null, 1, null);
+        $licenceModele = $this
             ->getDoctrine()
             ->getRepository(RtlqCotisation::class)
-            ->findOneBy(array("active"=>true, "saison"=> $saisonModele, "categorie" => $categorieLicence), null, 1 , null);
+            ->findOneBy(array("active" => true, "saison" => $saisonModele, "categorie" => $categorieLicence), null, 1, null);
         $tresorieLicence = $this->rtlqTresorieBuilder->createTresorieByLicence($adherent, $responsable, $licenceModele, $this->getDoctrine());
         $adherent->addTresorie($tresorieLicence);
-        
+
         //creation de la déduction sur la licence si > 0
-        if ($tresorieLicenceDeduction > 0 ) {
+        if ($tresorieLicenceDeduction > 0) {
             $tresorieLicenceDeduction = $this->rtlqTresorieBuilder->createTresorieByLicenceDeduction($adherent, $responsable, $licenceModele, $this->getDoctrine());
-            $adherent->addTresorie($tresorieLicenceDeduction);                
+            $adherent->addTresorie($tresorieLicenceDeduction);
         }
 
 
@@ -256,12 +279,13 @@ class AdherentController extends AbstractCrudApiController {
 
 
 
-    
+
     // ********************************* USER RESET PASSWORD **********************************************//
-    private function _changePaswordAdherent($adherent) {
-         // generation token unique
-         $adherent->setTokenPwd(bin2hex(random_bytes(20)));
-         // sauvegarde du token unique dans l'utilisateur
+    private function _changePaswordAdherent($adherent)
+    {
+        // generation token unique
+        $adherent->setTokenPwd(bin2hex(random_bytes(20)));
+        // sauvegarde du token unique dans l'utilisateur
         $em = $this->getDoctrine()->getManager();
         $em->merge($adherent);
         $em->flush();
@@ -269,43 +293,45 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/password-reset", methods={"POST"})
      */
-    public function resetPassword(Request $request) {
+    public function resetPassword(Request $request)
+    {
 
-        
+
         // recupetation de l'email
         $data = json_decode($request->getContent(), true);
 
         // looking for object into the database.
         $entityDB = $this->getDoctrine()
             ->getRepository($this->newModeleClass())
-            ->findOneBy(array("email"=>$data['email']));
+            ->findOneBy(array("email" => $data['email']));
         if (!is_object($entityDB)) {
             throw new NotFoundHttpException("Adherent not found");
         }
-        
+
         $this->_changePaswordAdherent($entityDB);
 
         // send email avec le lien
         $message = (new \Swift_Message('[' . $this->getParameter('association_nom') . '] Change ton mot de passe !'))
-        ->setFrom($this->getParameter('association_email'))
-        ->setTo($entityDB->getEmail())
-        ->addPart(
-            $this->renderView(
-                'emails/reset-password.html.twig',
-                array(
-                    'prenom' => $entityDB->getPrenom(), 
-                    'urlReset' => $this->getParameter('url_reinitialisation'),
-                    'resetToken'=> $entityDB->getTokenPwd(),
-                    'urlSite' => $this->getParameter('url_site' ),
-                    'urlSiteIntranet' => $this->getParameter('url_site_intranet'),
-                    'associationNom' => $this->getParameter('association_nom'),
-                    'associationTelephone' => $this->getParameter('association_telephone'))
-            ),
-            'text/html'
-        );
+            ->setFrom($this->getParameter('association_email'))
+            ->setTo($entityDB->getEmail())
+            ->addPart(
+                $this->renderView(
+                    'emails/reset-password.html.twig',
+                    array(
+                        'prenom' => $entityDB->getPrenom(),
+                        'urlReset' => $this->getParameter('url_reinitialisation'),
+                        'resetToken' => $entityDB->getTokenPwd(),
+                        'urlSite' => $this->getParameter('url_site'),
+                        'urlSiteIntranet' => $this->getParameter('url_site_intranet'),
+                        'associationNom' => $this->getParameter('association_nom'),
+                        'associationTelephone' => $this->getParameter('association_telephone')
+                    )
+                ),
+                'text/html'
+            );
 
         $this->mailer->send($message);
-        return $this->newResponse((array( 'message' => "Email sent to " . $data['email'] )), Response::HTTP_ACCEPTED);
+        return $this->newResponse((array('message' => "Email sent to " . $data['email'])), Response::HTTP_ACCEPTED);
     }
 
 
@@ -313,7 +339,8 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/password-change", methods={"POST"})
      */
-    public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder) {
+    public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
 
         // recuperation du token
         $data = json_decode($request->getContent(), true);
@@ -326,16 +353,17 @@ class AdherentController extends AbstractCrudApiController {
 
         // recuperation de l'utilsiateur via le token
         $entityDB = $this->getDoctrine()
-        ->getRepository($this->newModeleClass())
-        ->findOneBy(array("tokenPwd"=>$token));
+            ->getRepository($this->newModeleClass())
+            ->findOneBy(array("tokenPwd" => $token));
         if (!is_object($entityDB)) {
             throw new NotFoundHttpException("Adherent not found");
         }
         // suppression du token
         $encodedPassword = $passwordEncoder->encodePassword(
-//            $this->encoder,
+            //            $this->encoder,
             $this->getNewModeleInstance(),
-            $password);
+            $password
+        );
         $entityDB->setPassword($encodedPassword);
         $entityDB->setTokenPwd(null);
 
@@ -346,25 +374,25 @@ class AdherentController extends AbstractCrudApiController {
 
         // send email de confirmation
         $message = (new \Swift_Message('[' . $this->getParameter('association_nom') . '] Confirmation de changement de mot de passe'))
-        ->setFrom($this->getParameter('association_email'))
-        ->setTo($entityDB->getEmail())
-        ->addPart(
-            $this->renderView(
-                'emails/change-password.html.twig',
-                array(
-                    'prenom' => $entityDB->getPrenom(),
-                    'urlSite' => $this->getParameter('url_site'),
-                    'urlSiteIntranet' => $this->getParameter('url_site_intranet'),
-                    'associationNom' => $this->getParameter('association_nom'),
-                    'associationTelephone' => $this->getParameter('association_telephone')
-                )
-            ),
-            'text/html'
-        );
+            ->setFrom($this->getParameter('association_email'))
+            ->setTo($entityDB->getEmail())
+            ->addPart(
+                $this->renderView(
+                    'emails/change-password.html.twig',
+                    array(
+                        'prenom' => $entityDB->getPrenom(),
+                        'urlSite' => $this->getParameter('url_site'),
+                        'urlSiteIntranet' => $this->getParameter('url_site_intranet'),
+                        'associationNom' => $this->getParameter('association_nom'),
+                        'associationTelephone' => $this->getParameter('association_telephone')
+                    )
+                ),
+                'text/html'
+            );
 
         $this->mailer->send($message);
 
-        return $this->newResponse((array( 'message' => "Mot de passe changé." )), Response::HTTP_ACCEPTED);
+        return $this->newResponse((array('message' => "Mot de passe changé.")), Response::HTTP_ACCEPTED);
     }
 
     // ********************************* COTISATION **********************************************//
@@ -372,7 +400,8 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/{id}/cotisation", methods={"GET"})
      */
-    public function getUserCotisation($id) {
+    public function getUserCotisation($id)
+    {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
@@ -385,7 +414,8 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/{id}/cotisation/{idCotisation}", methods={"POST"})
      */
-    public function addCotisationToUser($id, $idCotisation) {
+    public function addCotisationToUser($id, $idCotisation)
+    {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
@@ -407,7 +437,8 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/{id}/cotisation/{idCotisation}", methods={"DELETE"})
      */
-    public function removeCotisationToUser($id, $idCotisation) {
+    public function removeCotisationToUser($id, $idCotisation)
+    {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
@@ -435,16 +466,21 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/{id}/taos", methods={"GET"})
      */
-    public function getUserTaos($id) {
+    public function getUserTaos($id)
+    {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
-        if (!is_object($entity)) { return $this->returnNotFoundResponse(); }
+        if (!is_object($entity)) {
+            return $this->returnNotFoundResponse();
+        }
 
         // recuperation des lignes de taos de l'utilisateur
         $entitiesAssociate = $this->getDoctrine()
             ->getRepository(RtlqKungfuAdherentTao::class)
             ->findAllTaoFilterByAdherent($entity->getId());
-        if (sizeof($entitiesAssociate) == 0) { return $this->returnNotFoundResponse(); }
-        
+        if (sizeof($entitiesAssociate) == 0) {
+            return $this->returnNotFoundResponse();
+        }
+
         // conversion modele en DTO
         $dtos = $this->rtlqAdherentTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuAdherentTaoDTO::class);
 
@@ -455,7 +491,8 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/{id}/taos/{idTao}", methods={"POST"})
      */
-    public function addTaoToUser($id, $idTao) {
+    public function addTaoToUser($id, $idTao)
+    {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
@@ -466,6 +503,7 @@ class AdherentController extends AbstractCrudApiController {
         }
 
         $adherentTao = $this->getValidator()->hasTao($entity, $tao);
+
         if ($adherentTao == null) {
 
             $AdherentTao = new RtlqKungfuAdherentTao();
@@ -477,14 +515,20 @@ class AdherentController extends AbstractCrudApiController {
             $em = $this->getDoctrine()->getManager();
             $em->merge($entity);
             $em->flush();
+        } else {
+            $entity = $adherentTao;
         }
-        return new Response(null, Response::HTTP_CREATED);
+
+        // conversion modele en DTO
+        $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($entity, RtlqKungfuAdherentTaoDTO::class);
+        return $this->newResponse(($dtos), Response::HTTP_CREATED);
     }
 
     /**
      * @Route("/{id}/taos/{idTao}", methods={"DELETE"})
      */
-    public function removeTaoToUser($id, $idTao) {
+    public function removeTaoToUser($id, $idTao)
+    {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
@@ -498,7 +542,7 @@ class AdherentController extends AbstractCrudApiController {
         if ($adherentTao != null) {
             $adherentTao->removeAdherent();
             $adherentTao->removeTao();
-            
+
             //add tao to adherent
             $entity->removeTao($adherentTao);
 
@@ -506,18 +550,19 @@ class AdherentController extends AbstractCrudApiController {
             $em->merge($entity);
             $em->remove($adherentTao);
             $em->flush();
-        } 
+        }
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
-    
+
 
     // ********************************* GROUPE **********************************************//
 
     /**
      * @Route("/{id}/groupes", methods={"GET"})
      */
-    public function getUserGroupes($id) {
+    public function getUserGroupes($id)
+    {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
@@ -530,7 +575,8 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/{id}/groupes/{idGroupe}", methods={"POST"})
      */
-    public function addGroupeToUser($id, $idGroupe) {
+    public function addGroupeToUser($id, $idGroupe)
+    {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
@@ -554,7 +600,8 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/{id}/groupes/{idGroupe}", methods={"DELETE"})
      */
-    public function removeGroupeToUser($id, $idGroupe) {
+    public function removeGroupeToUser($id, $idGroupe)
+    {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
@@ -579,7 +626,8 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/{id}/tresories", methods={"GET"})
      */
-    public function getUserTresories($id) {
+    public function getUserTresories($id)
+    {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
@@ -592,7 +640,8 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/{id}/tresories/{idEntityAssociate}", methods={"POST"})
      */
-    public function addTresorieToUser($id, $idEntityAssociate) {
+    public function addTresorieToUser($id, $idEntityAssociate)
+    {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
@@ -611,7 +660,6 @@ class AdherentController extends AbstractCrudApiController {
             $em->merge($entity);
             $em->merge($entityAssociate);
             $em->flush();
-
         }
 
         return $this->newResponse(($entity), Response::HTTP_CREATED);
@@ -620,7 +668,8 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/{id}/tresories/{idEntityAssociate}", methods={"DELETE"})
      */
-    public function removeTresorieToUser($id, $idEntityAssociate) {
+    public function removeTresorieToUser($id, $idEntityAssociate)
+    {
         $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
         if (!is_object($entity)) {
             throw new NotFoundHttpException("Adherent $id not found");
@@ -641,20 +690,16 @@ class AdherentController extends AbstractCrudApiController {
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
-    private function _getUserByToken(Request $request) {
-        $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
-        $tokenAuth = $this->getDoctrine()
-                ->getRepository(RtlqAuthToken::class)
-                ->findOneBy(array("value"=>$authTokenHeader));
-        return $tokenAuth;
-    }
 
     /**
      * @Route("/by-token", methods={"GET"})
      */
-    public function getUserByToken(Request $request) {
-        $tokenAuth = $this->_getUserByToken($request);
-        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+    public function getUserByToken(Request $request)
+    {
+        $tokenAuth = $this->extractUserByToken($request);
+        if (!is_object($tokenAuth)) {
+            return $this->returnNotFoundResponse();
+        }
 
         //get user information based on the id associate from the token
         return $this->getByIdAction($request, $tokenAuth->getUser()->getId());
@@ -663,9 +708,12 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/by-token", methods={"PUT"})
      */
-    public function putUserByToken(Request $request) {
-        $tokenAuth = $this->_getUserByToken($request);
-        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+    public function putUserByToken(Request $request)
+    {
+        $tokenAuth = $this->extractUserByToken($request);
+        if (!is_object($tokenAuth)) {
+            return $this->returnNotFoundResponse();
+        }
 
         return $this->updateAction($tokenAuth->getUser()->getId(), $request);
     }
@@ -673,16 +721,21 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/by-token/mytresoreries", methods={"GET"})
      */
-    public function getUserTresoreriesByToken(Request $request) {
-        $tokenAuth = $this->_getUserByToken($request);
-        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+    public function getUserTresoreriesByToken(Request $request)
+    {
+        $tokenAuth = $this->extractUserByToken($request);
+        if (!is_object($tokenAuth)) {
+            return $this->returnNotFoundResponse();
+        }
 
         // recuperation des lignes de tresoreries de l'utilisateur
         $entitiesAssociate = $this->getDoctrine()
             ->getRepository(RtlqTresorie::class)
             ->findAllTresorieFilterByAdherent($tokenAuth->getUser()->getId());
-        if (sizeof($entitiesAssociate) == 0) { return $this->returnNotFoundResponse(); }
-        
+        if (sizeof($entitiesAssociate) == 0) {
+            return $this->returnNotFoundResponse();
+        }
+
         // conversion modele en DTO
         $dtos = $this->rtlqTresorieBuilder->modelesToDtos($entitiesAssociate, RtlqTresorieDTO::class);
 
@@ -694,15 +747,20 @@ class AdherentController extends AbstractCrudApiController {
     /**
      * @Route("/by-token/mytaos", methods={"GET"})
      */
-    public function getUserTaosByToken(Request $request) {
-        $tokenAuth = $this->_getUserByToken($request);
-        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+    public function getUserTaosByToken(Request $request)
+    {
+        $tokenAuth = $this->extractUserByToken($request);
+        if (!is_object($tokenAuth)) {
+            return $this->returnNotFoundResponse();
+        }
 
         // recuperation des lignes de taos de l'utilisateur
         $entitiesAssociate = $this->getDoctrine()
             ->getRepository(RtlqKungfuAdherentTao::class)
             ->findAllTaoFilterByAdherent($tokenAuth->getUser()->getId());
-        if (sizeof($entitiesAssociate) == 0) { return $this->returnNotFoundResponse(); }
+        if (sizeof($entitiesAssociate) == 0) {
+            return $this->returnNotFoundResponse();
+        }
 
         // conversion modele en DTO
         $dtos = $this->rtlqAdherentTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuAdherentTaoDTO::class);
@@ -711,25 +769,64 @@ class AdherentController extends AbstractCrudApiController {
         return $this->returnNewResponse($dtos, Response::HTTP_ACCEPTED, false);
     }
 
-  /**
+    /**
      * @Route("/by-token/mytaos/{idTao}", methods={"POST"})
      */
-    public function addTaoByToken($idTao, Request $request) {
-        $tokenAuth = $this->_getUserByToken($request);
-        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+    public function addTaoByToken($idTao, Request $request)
+    {
+        $tokenAuth = $this->extractUserByToken($request);
+        if (!is_object($tokenAuth)) {
+            return $this->returnNotFoundResponse();
+        }
 
-        return $this-> addTaoToUser($tokenAuth->getUser()->getId(), $idTao);
+        return $this->addTaoToUser($tokenAuth->getUser()->getId(), $idTao);
     }
 
     /**
      * @Route("/by-token/mytaos/{idTao}", methods={"DELETE"})
      */
-    public function removeTaoByToken($idTao, Request $request) {
-        $tokenAuth = $this->_getUserByToken($request);
-        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+    public function removeTaoByToken($idTao, Request $request)
+    {
+        $tokenAuth = $this->extractUserByToken($request);
+        if (!is_object($tokenAuth)) {
+            return $this->returnNotFoundResponse();
+        }
 
-        return $this-> removeTaoToUser($tokenAuth->getUser()->getId(), $idTao);
+        return $this->removeTaoToUser($tokenAuth->getUser()->getId(), $idTao);
     }
+
+    /**
+     * @Route("/by-token/mytaos/{idTao}", methods={"PUT"})
+     */
+    public function updateTaoByToken($idTao, Request $request)
+    {
+        $tokenAuth = $this->extractUserByToken($request);
+        if (!is_object($tokenAuth)) {
+            return $this->returnNotFoundResponse();
+        }
+        $id = $tokenAuth->getUser()->getId();
+
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
+        if (!is_object($entity)) {
+            throw new NotFoundHttpException("Adherent $id not found");
+        }
+
+        $taoJointure = $this->getDoctrine()->getRepository(RtlqKungfuAdherentTao::class)->findTaoFilterByAdherentAndTao($id, $idTao);
+        if (sizeof($taoJointure) === 0) {
+            throw new NotFoundHttpException("Tao $idTao not found for this user");
+        }
+
+        $data = json_decode($request->getContent(), true);
+        $taoJointure[0]->setNiveau($data['niveau']);
+        $taoJointure[0]->setNbRevision($data['nb_revision']);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->merge($taoJointure[0]);
+        $em->flush();
+
+        return $this->returnNewResponse($taoJointure[0], Response::HTTP_ACCEPTED, false);
+    }
+
 
     /**
      * @Route("/by-token/myStats", methods={"GET"})
@@ -740,9 +837,12 @@ class AdherentController extends AbstractCrudApiController {
      *      nb_tao_total
      *      pourcentage_avancement
      */
-    public function getUserStats(Request $request) {
-        $tokenAuth = $this->_getUserByToken($request);
-        if (!is_object($tokenAuth)) { return $this->returnNotFoundResponse(); }
+    public function getUserStats(Request $request)
+    {
+        $tokenAuth = $this->extractUserByToken($request);
+        if (!is_object($tokenAuth)) {
+            return $this->returnNotFoundResponse();
+        }
 
         // recuperation des lignes de taos de l'utilisateur
         $nbTaoOfUser = $this->getDoctrine()
@@ -753,17 +853,15 @@ class AdherentController extends AbstractCrudApiController {
         $nbTao = $this->getDoctrine()
             ->getRepository(RtlqKungfuTao::class)
             ->countAllTaoActif($tokenAuth->getUser()->getId());
-        
+
         // recuperation des lignes de taos de l'utilisateur
         $infoTresorerieEnRetard = $this->getDoctrine()
             ->getRepository(RtlqTresorie::class)
             ->infoTresorieEnRetardFilterByAdherent($tokenAuth->getUser()->getId());
-        
+
         $stats = new RtlqAdherentStatsDTO($nbTaoOfUser, $nbTao, abs($infoTresorerieEnRetard[0]['montant']), $infoTresorerieEnRetard[0]['date']);
 
         //get user information based on the id associate from the token
         return $this->returnNewResponse($stats, Response::HTTP_ACCEPTED, false);
-
     }
-
 }
