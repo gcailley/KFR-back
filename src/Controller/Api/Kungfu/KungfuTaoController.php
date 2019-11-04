@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Annotation\Method;
 
+
 /**
  * @Route("/kungfu/taos")
  */
@@ -41,7 +42,7 @@ class KungfuTaoController extends AbstractCrudApiController
 
 
     /**
-     * @Route("/{id}", methods={"GET"})
+     * @Route("/{id}", methods={"GET"}, requirements={"id"="\d+"})
      */
     public function getByIdAction(Request $request, $id)
     {
@@ -65,9 +66,9 @@ class KungfuTaoController extends AbstractCrudApiController
     /**
      * @Route("", methods={"GET"})
      */
-    public function getAllAction(Request $request, $response = true)
+    public function getAllAction(Request $request, $response = true, $filtre=[])
     {
-        $entities = $this->getDoctrine()->getRepository($this->newModeleClass())->findBy([], $this->defaultSort());
+        $entities = $this->getDoctrine()->getRepository($this->newModeleClass())->findBy($filtre, $this->defaultSort());
 
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_PROF')) {
             $dto_entities = $this->getLimitedTaoBuilder()->modelesToDtos($entities,  RtlqKungfuTaoDTO::class);
@@ -77,6 +78,15 @@ class KungfuTaoController extends AbstractCrudApiController
 
         return $this->convertDto2Response($dto_entities, $response, Response::HTTP_ACCEPTED);
     }
+
+    /**
+     * @Route("/actif", methods={"GET"})
+     */
+    public function getActifAction(Request $request)
+    {
+        return $this->getAllAction($request, true, array("actif"=>true));
+    }
+
 
     private function getLimitedTaoBuilder()
     {
