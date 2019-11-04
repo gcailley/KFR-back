@@ -30,6 +30,8 @@ class RtlqTresorieBuilder extends AbstractRtlqBuilder
         $modele->setSaison ( $em->getReference ( RtlqSaison::class, $postModele->getSaisonId () ) );
         if ($postModele->getAdherentId () != null) {
             $modele->setAdherent ( $em->getReference ( RtlqAdherent::class, $postModele->getAdherentId() ) );
+        } else {
+            $modele-> setAdherent (null);
         }
                 
         return $modele;
