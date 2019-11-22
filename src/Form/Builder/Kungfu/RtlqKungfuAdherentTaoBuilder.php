@@ -17,6 +17,7 @@ class RtlqKungfuAdherentTaoBuilder extends AbstractRtlqBuilder
         $modele->setNiveau ( $postModele->getNiveau () );
         $modele->setNbRevision ( $postModele->getNbRevision () );
         $modele->setAnneeApprentissage( $postModele->getAnneeApprentissage() );
+        $modele->setDriveId( $postModele->getDriveId() );
 
         $modele->setTao($em->getReference ( RtlqKungfuTao::class, $postModele->getTaoId ())) ;
         $modele->setAdherent($em->getReference ( RtlqAdherent::class, $postModele->getAdherentId ())) ;
@@ -32,6 +33,7 @@ class RtlqKungfuAdherentTaoBuilder extends AbstractRtlqBuilder
         $dto->setId ( $modele->getId () );
         $dto->setNiveau ( $modele->getNiveau () );
         $dto->setNbRevision ( $modele->getNbRevision () );
+        $dto->setDriveId( $modele->getDriveId () );
         $dto->setAnneeApprentissage( $modele->getAnneeApprentissage() );
         $dto->setAdherentId( $modele->getAdherentId() );
         

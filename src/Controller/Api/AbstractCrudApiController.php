@@ -207,23 +207,4 @@ abstract class AbstractCrudApiController extends AbstractApiController
         return new Response(json_encode($dto_entities), $statusCode);
     }
 
-    protected function returnNotFoundResponse()
-    {
-        return $this->returnNewResponse(null, Response::HTTP_NOT_FOUND);
-    }
-
-    protected function returnUnAuthorizedResponse()
-    {
-        return $this->returnNewResponse(null, Response::HTTP_UNAUTHORIZED);
-    }
-
-
-    public function extractUserByToken(Request $request): RtlqAuthToken
-    {
-        $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
-        $tokenAuth = $this->getDoctrine()
-            ->getRepository(RtlqAuthToken::class)
-            ->findOneBy(array("value" => $authTokenHeader));
-        return $tokenAuth;
-    }
 }

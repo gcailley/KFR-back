@@ -816,15 +816,19 @@ class AdherentController extends AbstractCrudApiController
             throw new NotFoundHttpException("Tao $idTao not found for this user");
         }
 
+        // TODO faire Type et Builder ...
         $data = json_decode($request->getContent(), true);
         $taoJointure[0]->setNiveau($data['niveau']);
         $taoJointure[0]->setNbRevision($data['nb_revision']);
+        $taoJointure[0]->setDriveId($data['drive_id']);
 
         $em = $this->getDoctrine()->getManager();
         $em->merge($taoJointure[0]);
         $em->flush();
 
-        return $this->returnNewResponse($taoJointure[0], Response::HTTP_ACCEPTED, false);
+        // conversion modele en DTO
+        $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($taoJointure[0], RtlqKungfuAdherentTaoDTO::class);
+        return $this->newResponse(($dtos), Response::HTTP_CREATED);
     }
 
 

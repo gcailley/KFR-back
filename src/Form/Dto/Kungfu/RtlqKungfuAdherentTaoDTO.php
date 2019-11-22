@@ -17,6 +17,16 @@ class RtlqKungfuAdherentTaoDTO extends AbstractRtlqDTO {
         return $this->niveau;
     }
 
+    protected $drive_id;
+    public function setDriveId($value)
+    {
+        $this->drive_id = $value;
+        return $this;
+    }
+
+    public  function getDriveId() {
+        return $this->drive_id;
+    }
 
     protected $nb_revision;
     public function setNbRevision($value)
@@ -106,5 +116,4 @@ class RtlqKungfuAdherentTaoDTO extends AbstractRtlqDTO {
     public  function getAnneeApprentissage() {
         return $this->annee_apprentissage;
     }
-
 }

@@ -54,7 +54,12 @@ security:
             pattern: ^/association/adherents/password-change
             methods: [POST]
             anonymous: ~
-        
+            
+        public_drive_by_key_api:
+            pattern: ^/association/drive/by-key
+            methods: [GET]
+            anonymous: ~            
+
         internal_api:
             pattern: ^/
             methods: [GET, PUT, DELETE, POST, OPTIONS]
@@ -74,6 +79,8 @@ security:
         - { path: ^/technique/setup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/security/tokens, methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/photos, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/photos, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/drive/by-key, methods: [GET, OPTIONS], roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: ^/security/tokens/check-user, methods: [GET, OPTIONS], roles: ROLE_USER }
         - { path: ^/association/adherents/trombinoscope, methods: [GET, OPTIONS], roles: ROLE_USER }
@@ -84,8 +91,8 @@ security:
     
         - { path: ^/kpis, roles: ROLE_KPI }
 
-        - { path: ^/association/photo_directories, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_COM }
-        - { path: ^/association/photos, methods: [DELETE, PUT, POST, OPTIONS], roles: ROLE_COM }
+        - { path: ^/association/photo_directories, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_COM] }
+        - { path: ^/association/photos, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_COM] }
         - { path: ^/association/news, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_COM] }
 
         - { path: ^/association/events, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_BEN] }

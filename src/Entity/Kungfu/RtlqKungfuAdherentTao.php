@@ -93,6 +93,23 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity
 
 
     /**
+     *
+     * @var string @ORM\Column(name="drive_id", type="string", nullable=true)
+     */
+    private $drive_id = 0;
+    public function setDriveId($value)
+    {
+        $this->drive_id = $value;
+        return $this;
+    }
+
+    public  function getDriveId()
+    {
+        return $this->drive_id;
+    }
+
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Association\RtlqAdherent", inversedBy="taos")
      * @ORM\JoinColumn(name="adherent_id", referencedColumnName="id", nullable=true)
      */

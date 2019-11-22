@@ -33,7 +33,12 @@ parameters:
         photos_drive_basedir: '%env(PHOTOS_DRIVE_BASEDIR)%'
         thumbnails_drive_basedir: '%env(THUMBNAILS_DRIVE_BASEDIR)%'
     locale: 'en'
-    
+
+    security:
+        encryptage:
+            key: '%env(SECURITY_ENCRYPTAGE_KEY)%'
+            cipher: '%env(SECURITY_ENCRYPTAGE_CIPHER)%'
+
 services:
     # default configuration for services in *this* file
     _defaults:
