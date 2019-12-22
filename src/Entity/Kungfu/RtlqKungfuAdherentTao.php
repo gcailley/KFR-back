@@ -186,4 +186,19 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity
     {
         $this->tao = null;
     }
+
+    /**
+     *
+     * @var string @ORM\Column(name="favoris", type="boolean", nullable=false)
+     */
+    protected $favoris = false;
+    public function getFavoris()
+    {
+        return $this->favoris;
+    }
+    public function setFavoris($value)
+    {
+        $this->favoris = $value;
+        return $this;
+    }
 }

@@ -6,6 +6,7 @@ use App\Entity\Security\RtlqAuthToken;
 use GuzzleHttp\json_encode;
 use App\Form\Validator\RtlqValidator;
 use App\Service\Security\User\AuthTokenAuthenticator;
+use Monolog\Logger;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

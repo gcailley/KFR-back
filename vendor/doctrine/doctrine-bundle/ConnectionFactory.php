@@ -6,28 +6,21 @@ use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 
-/**
- * Connection
- */
 class ConnectionFactory
 {
     /** @var mixed[][] */
     private $typesConfig = [];
 
-    /** @var string[] */
-    private $commentedTypes = [];
-
     /** @var bool */
     private $initialized = false;
 
     /**
-     * Construct.
-     *
      * @param mixed[][] $typesConfig
      */
     public function __construct(array $typesConfig)
@@ -51,16 +44,26 @@ class ConnectionFactory
 
         $connection = DriverManager::getConnection($params, $config, $eventManager);
 
+        if (! isset($params['pdo']) && ! isset($params['charset'])) {
+            $params            = $connection->getParams();
+            $params['charset'] = 'utf8';
+            $driver            = $connection->getDriver();
+
+            if ($driver instanceof AbstractMySQLDriver) {
+                $params['charset'] = 'utf8mb4';
+
+                if (! isset($params['defaultTableOptions']['collate'])) {
+                    $params['defaultTableOptions']['collate'] = 'utf8mb4_unicode_ci';
+                }
+            }
+
+            $connection = new $connection($params, $driver, $connection->getConfiguration(), $connection->getEventManager());
+        }
+
         if (! empty($mappingTypes)) {
             $platform = $this->getDatabasePlatform($connection);
             foreach ($mappingTypes as $dbType => $doctrineType) {
                 $platform->registerDoctrineTypeMapping($dbType, $doctrineType);
-            }
-        }
-        if (! empty($this->commentedTypes)) {
-            $platform = $this->getDatabasePlatform($connection);
-            foreach ($this->commentedTypes as $type) {
-                $platform->markDoctrineTypeCommented(Type::getType($type));
             }
         }
 
@@ -74,26 +77,23 @@ class ConnectionFactory
      * and the platform version is unknown.
      * For details have a look at DoctrineBundle issue #673.
      *
-     *
      * @return AbstractPlatform
+     *
      * @throws DBALException
      */
     private function getDatabasePlatform(Connection $connection)
     {
         try {
             return $connection->getDatabasePlatform();
-        } catch (DBALException $driverException) {
-            if ($driverException instanceof DriverException) {
-                throw new DBALException(
-                    'An exception occured while establishing a connection to figure out your platform version.' . PHP_EOL .
-                    "You can circumvent this by setting a 'server_version' configuration value" . PHP_EOL . PHP_EOL .
-                    'For further information have a look at:' . PHP_EOL .
-                    'https://github.com/doctrine/DoctrineBundle/issues/673',
-                    0,
-                    $driverException
-                );
-            }
-            throw $driverException;
+        } catch (DriverException $driverException) {
+            throw new DBALException(
+                'An exception occured while establishing a connection to figure out your platform version.' . PHP_EOL .
+                "You can circumvent this by setting a 'server_version' configuration value" . PHP_EOL . PHP_EOL .
+                'For further information have a look at:' . PHP_EOL .
+                'https://github.com/doctrine/DoctrineBundle/issues/673',
+                0,
+                $driverException
+            );
         }
     }
 
@@ -102,18 +102,14 @@ class ConnectionFactory
      */
     private function initializeTypes()
     {
-        foreach ($this->typesConfig as $type => $typeConfig) {
-            if (Type::hasType($type)) {
-                Type::overrideType($type, $typeConfig['class']);
+        foreach ($this->typesConfig as $typeName => $typeConfig) {
+            if (Type::hasType($typeName)) {
+                Type::overrideType($typeName, $typeConfig['class']);
             } else {
-                Type::addType($type, $typeConfig['class']);
+                Type::addType($typeName, $typeConfig['class']);
             }
-            if (! $typeConfig['commented']) {
-                continue;
-            }
-
-            $this->commentedTypes[] = $type;
         }
+
         $this->initialized = true;
     }
 }

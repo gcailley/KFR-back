@@ -2,17 +2,31 @@
 
 namespace Doctrine\Bundle\DoctrineBundle\Command;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Sharding\PoolingShardConnection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\EntityGenerator;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use LogicException;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Base class for Doctrine console commands to extend from.
+ *
+ * @internal
  */
-abstract class DoctrineCommand extends ContainerAwareCommand
+abstract class DoctrineCommand extends Command
 {
+    /** @var ManagerRegistry */
+    private $doctrine;
+
+    public function __construct(ManagerRegistry $doctrine)
+    {
+        parent::__construct();
+
+        $this->doctrine = $doctrine;
+    }
+
     /**
      * get a doctrine entity generator
      *
@@ -35,17 +49,17 @@ abstract class DoctrineCommand extends ContainerAwareCommand
      * Get a doctrine entity manager by symfony name.
      *
      * @param string   $name
-     * @param null|int $shardId
+     * @param int|null $shardId
      *
      * @return EntityManager
      */
     protected function getEntityManager($name, $shardId = null)
     {
-        $manager = $this->getContainer()->get('doctrine')->getManager($name);
+        $manager = $this->getDoctrine()->getManager($name);
 
         if ($shardId) {
             if (! $manager->getConnection() instanceof PoolingShardConnection) {
-                throw new \LogicException(sprintf("Connection of EntityManager '%s' must implement shards configuration.", $name));
+                throw new LogicException(sprintf("Connection of EntityManager '%s' must implement shards configuration.", $name));
             }
 
             $manager->getConnection()->connect($shardId);
@@ -63,6 +77,14 @@ abstract class DoctrineCommand extends ContainerAwareCommand
      */
     protected function getDoctrineConnection($name)
     {
-        return $this->getContainer()->get('doctrine')->getConnection($name);
+        return $this->getDoctrine()->getConnection($name);
+    }
+
+    /**
+     * @return ManagerRegistry
+     */
+    protected function getDoctrine()
+    {
+        return $this->doctrine;
     }
 }

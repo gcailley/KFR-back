@@ -821,6 +821,7 @@ class AdherentController extends AbstractCrudApiController
         $taoJointure[0]->setNiveau($data['niveau']);
         $taoJointure[0]->setNbRevision($data['nb_revision']);
         $taoJointure[0]->setDriveId($data['drive_id']);
+        $taoJointure[0]->setFavoris($data['favoris']);
 
         $em = $this->getDoctrine()->getManager();
         $em->merge($taoJointure[0]);

@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use GuzzleHttp\json_encode;
 use App\Entity\Tresorie\RtlqTresorie;
 use App\Entity\Association\RtlqAdherent;
+use App\Entity\Kungfu\RtlqKungfuCours;
 use App\Repository\Tresorie\TresorieRepository;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Repository\Association\AdherentRepository;
@@ -30,6 +31,21 @@ class KpiController extends AbstractRtlqController
     }
 
 
+    /**
+     * @Route("/stats-tresoreries", methods={"GET"})
+     *
+     * public function extractStatsTersorerie()
+     * {
+     *    $repositorie = $this->getDoctrine()->getRepository(RtlqTresorie::class);
+     *   $results = [];
+     *  $kpis = $repositorie->getAllKpis();
+     *  foreach ($kpis as $kpi) {
+     *     $number = $repositorie->countByKpi($kpi);    
+     *    $results[$kpi] = $number;
+     *  }
+     *  return  $this->newResponse($results, Response::HTTP_ACCEPTED);
+     *  }
+     */
 
     /**
      * @Route("/{action}", methods={"GET"})
@@ -51,4 +67,15 @@ class KpiController extends AbstractRtlqController
         return  $this->newResponse($results, Response::HTTP_ACCEPTED);
     }
 
+    /**
+     * @Route("/cours", methods={"GET"})
+     */
+    // public function extractCoursStats()
+    // {
+    // $repositorie = $this->getDoctrine()->getRepository(RtlqKungfuCours::class);
+    // $nb_cours = $repositorie->extractNbCoursSaisonCourante();
+    // 
+    // $results = ['nb_cours' => $nb_cours];
+    // return  $this->newResponse($results, Response::HTTP_ACCEPTED);
+    // }
 }

@@ -1,0 +1,1 @@
+     ALTER TABLE rtlq_adherents_taos ADD favoris TINYINT(1) NOT NULL;

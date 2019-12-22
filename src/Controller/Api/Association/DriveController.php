@@ -12,7 +12,7 @@ use App\Service\Security\User\AuthTokenAuthenticator;
 use GuzzleHttp\json_encode;
 use App\Entity\Security\RtlqAuthToken;
 use Exception;
-use PhpParser\Node\Expr\BinaryOp\BooleanAnd;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -22,6 +22,12 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class DriveController extends AbstractRtlqController
 {
+    protected $logger;
+
+    public function __construct(LoggerInterface $logger) 
+    {
+        $this->logger = $logger;
+    }
 
     function newTypeClass(): string
     {
@@ -169,6 +175,9 @@ class DriveController extends AbstractRtlqController
         }
 
         $img = $request->files->get('source');
+        if ($img == null ) {
+            return $this->newResponse("source empty.", Response::HTTP_BAD_REQUEST);
+        }
         $idUser = $tokenAuth->getUser()->getId();
         $baseDir = $this->getParameter("user_drive_basedir");
         $userDrive = "${baseDir}/${idUser}/drive";
@@ -177,15 +186,21 @@ class DriveController extends AbstractRtlqController
         }
         $uid = md5(uniqid(rand(), true));
         $name = $request->request->get('filename');
-
         $file_path = $userDrive . DIRECTORY_SEPARATOR . $uid . '#' . $name;
 
         try {
             $img->move($userDrive, basename($file_path));
+            $img == null;
             $dto = $this->createDriveDto($file_path);
             return $this->newResponse($dto, Response::HTTP_ACCEPTED);
+        } catch (\Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException $th) {
+print($th->getMessage());
+            $this->logger->error('An error occurred' . $th->getMessage());
+            return $this->newResponse($th->getMessage(), Response::HTTP_REQUEST_ENTITY_TOO_LARGE);
         } catch (\Throwable $th) {
-            return $this->newResponse($th, Response::HTTP_INTERNAL_SERVER_ERROR);
+print($th->getMessage());            
+            $this->logger->error('An error occurred' . $th->getMessage());
+            return $this->newResponse($th->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -248,6 +263,30 @@ class DriveController extends AbstractRtlqController
     }
 
     /**
+     * @Route("/by-token/{id}", methods={"GET"}, requirements={"id"="^(\w)*$"})
+     */
+    public function checkDriveByToken(Request $request, $id)
+    {
+        $tokenAuth = $this->extractUserByToken($request);
+        if (!is_object($tokenAuth)) {
+            return $this->returnNotFoundResponse();
+        }
+
+        $idUser = $tokenAuth->getUser()->getId();
+        $baseDir = $this->getParameter("user_drive_basedir");
+        $userDrive = "${baseDir}/${idUser}/drive/";
+
+        $list = $this->dirToArray($userDrive, $id);
+        if (sizeof($list) == 0) {
+            return $this->newResponse(null, Response::HTTP_ACCEPTED);
+        }
+        $driveDto = $this->createDriveDto($list[0]);
+        return $this->newResponse($driveDto, Response::HTTP_ACCEPTED);
+    }
+
+
+
+    /**
      * @Route("/by-token/{id}/key", methods={"GET"}, requirements={"id"="^(\w)*$"})
      */
     public function generateDriveByToken(Request $request, $id)
@@ -272,7 +311,7 @@ class DriveController extends AbstractRtlqController
 
         $keyDecrypted = $this->decrypter($keyEncrypted);
         $key = \json_decode($keyDecrypted, true);
-        
+
         $userId = $key['userId'];
         $id = $key['id'];
 

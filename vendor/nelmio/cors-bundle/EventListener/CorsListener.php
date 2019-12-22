@@ -70,7 +70,7 @@ class CorsListener
         }
 
         // perform preflight checks
-        if ('OPTIONS' === $request->getMethod()) {
+        if ('OPTIONS' === $request->getMethod() && $request->headers->has('Access-Control-Request-Method')) {
             $event->setResponse($this->getPreflightResponse($request, $options));
 
             return;
@@ -116,6 +116,7 @@ class CorsListener
     protected function getPreflightResponse(Request $request, array $options)
     {
         $response = new Response();
+        $response->setVary(array('Origin'));
 
         if ($options['allow_credentials']) {
             $response->headers->set('Access-Control-Allow-Credentials', 'true');

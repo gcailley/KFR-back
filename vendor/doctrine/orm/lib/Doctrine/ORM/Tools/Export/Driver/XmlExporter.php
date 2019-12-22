@@ -28,6 +28,8 @@ use SimpleXMLElement;
  * @link    www.doctrine-project.org
  * @since   2.0
  * @author  Jonathan Wage <jonwage@gmail.com>
+ *
+ * @deprecated 2.7 This class is being removed from the ORM and won't have any replacement
  */
 class XmlExporter extends AbstractExporter
 {
@@ -44,7 +46,7 @@ class XmlExporter extends AbstractExporter
         $xml = new SimpleXmlElement('<?xml version="1.0" encoding="utf-8"?><doctrine-mapping ' .
             'xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" ' .
             'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' .
-            'xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd" />');
+            'xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd" />');
 
         if ($metadata->isMappedSuperclass) {
             $root = $xml->addChild('mapped-superclass');

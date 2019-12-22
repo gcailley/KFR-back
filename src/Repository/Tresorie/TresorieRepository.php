@@ -27,6 +27,15 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
     const KPI_TRESORERIE_TOTALE_POINTEE = 'KPI_TRESORERIE_TOTALE_POINTEE';
     const KPI_TRESORERIE_TOTALE_NON_POINTEE = 'KPI_TRESORERIE_TOTALE_NON_POINTEE';
 
+    public function getAllKpis() {
+        return [
+            TresorieRepository::KPI_TRESORERIE_TOTALE
+            ,TresorieRepository::KPI_TRESORERIE_EN_RETARD
+            ,TresorieRepository::KPI_TRESORERIE_SAISON_COURANTE_PREVISIONNELLE
+            ,TresorieRepository::KPI_TRESORERIE_SAISON_COURANTE_A_DATE
+            ,TresorieRepository::KPI_TRESORERIE_TOTALE_POINTEE
+            ,TresorieRepository::KPI_TRESORERIE_TOTALE_NON_POINTEE];
+    }
     public function findAllTresorieFilterByAdherent($adherent_id)
     {
         $query = $this->createQueryBuilder('t')

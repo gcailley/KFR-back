@@ -19,21 +19,20 @@ installed:
 
 - PHP (latest stable version)
 - Composer Package Manager (`Install Composer
-  <http://getcomposer.org/doc/00-intro.md>`_)
+  <https://getcomposer.org/doc/00-intro.md>`_)
 
 The code of this tutorial is `available on Github <https://github.com/doctrine/doctrine2-orm-tutorial>`_.
 
 .. note::
 
-    This tutorial assumes you work with **Doctrine 2.4** and above.
+    This tutorial assumes you work with **Doctrine 2.6** and above.
     Some of the code will not work with lower versions.
 
 What is Doctrine?
 -----------------
 
-Doctrine 2 is an `object-relational mapper (ORM)
-<http://en.wikipedia.org/wiki/Object-relational_mapping>`_ for PHP 5.4+ that
-provides transparent persistence for PHP objects. It uses the Data Mapper
+Doctrine 2 is an `object-relational mapper (ORM) <https://en.wikipedia.org/wiki/Object-relational_mapping>`_
+for PHP 7.1+ that provides transparent persistence for PHP objects. It uses the Data Mapper
 pattern at the heart, aiming for a complete separation of your domain/business
 logic from the persistence in a relational database management system.
 
@@ -62,7 +61,7 @@ An Example Model: Bug Tracker
 
 For this Getting Started Guide for Doctrine we will implement the
 Bug Tracker domain model from the
-`Zend\_Db\_Table <http://framework.zend.com/manual/1.12/en/zend.db.adapter.html>`_
+`Zend_Db_Table <https://framework.zend.com/manual/1.12/en/zend.db.adapter.html>`_
 documentation. Reading their documentation we can extract the
 requirements:
 
@@ -80,14 +79,14 @@ Project Setup
 -------------
 
 Create a new empty folder for this tutorial project, for example
-``doctrine2-tutorial`` and create a new file ``composer.json`` with
-the following contents:
+``doctrine2-tutorial`` and create a new file ``composer.json`` inside
+that directory with the following contents:
 
 ::
 
     {
         "require": {
-            "doctrine/orm": "2.4.*",
+            "doctrine/orm": "^2.6.2",
             "symfony/yaml": "2.*"
         },
         "autoload": {
@@ -103,17 +102,20 @@ Install Doctrine using the Composer Dependency Management tool, by calling:
     $ composer install
 
 This will install the packages Doctrine Common, Doctrine DBAL, Doctrine ORM,
-Symfony YAML and Symfony Console into the `vendor` directory. The Symfony 
-dependencies are not required by Doctrine but will be used in this tutorial.
+into the ``vendor`` directory.
 
 Add the following directories:
 ::
 
     doctrine2-tutorial
     |-- config
-    |   |-- xml
+    |   `-- xml
     |   `-- yaml
     `-- src
+
+.. note::
+    The YAML driver is deprecated and will be removed in version 3.0.
+    It is strongly recommended to switch to one of the other mappings.
 
 Obtaining the EntityManager
 ---------------------------
@@ -136,7 +138,10 @@ step:
     
     // Create a simple "default" Doctrine ORM configuration for Annotations
     $isDevMode = true;
-    $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/src"), $isDevMode);
+    $proxyDir = null;
+    $cache = null;
+    $useSimpleAnnotationReader = false;
+    $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/src"), $isDevMode, $proxyDir, $cache, $useSimpleAnnotationReader);
     // or if you prefer yaml or XML
     //$config = Setup::createXMLMetadataConfiguration(array(__DIR__."/config/xml"), $isDevMode);
     //$config = Setup::createYAMLMetadataConfiguration(array(__DIR__."/config/yaml"), $isDevMode);
@@ -150,7 +155,15 @@ step:
     // obtaining the entity manager
     $entityManager = EntityManager::create($conn, $config);
 
-The require_once statement sets up the class autoloading for Doctrine and
+.. note::
+    The YAML driver is deprecated and will be removed in version 3.0.
+    It is strongly recommended to switch to one of the other mappings.
+
+.. note::
+    It is recommended not to use the SimpleAnnotationReader because its
+    usage will be removed for version 3.0.
+
+The ``require_once`` statement sets up the class autoloading for Doctrine and
 its dependencies using Composer's autoloader.
 
 The second block consists of the instantiation of the ORM
@@ -162,7 +175,7 @@ read up on the configuration details in the
 The third block shows the configuration options required to connect to
 a database. In this case, we'll use a file-based SQLite database. All the
 configuration options for all the shipped drivers are given in the
-`DBAL Configuration section of the manual <http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/>`_.
+`DBAL Configuration section of the manual <https://www.doctrine-project.org/projects/doctrine-dbal/en/current/>`_.
 
 The last block shows how the ``EntityManager`` is obtained from a
 factory method.
@@ -173,7 +186,7 @@ Generating the Database Schema
 Doctrine has a command-line interface that allows you to access the SchemaTool,
 a component that can generate a relational database schema based entirely on the
 defined entity classes and their metadata. For this tool to work, a
-cli-config.php file must exist in the project root directory:
+``cli-config.php`` file must exist in the project root directory:
 
 .. code-block:: php
 
@@ -183,20 +196,19 @@ cli-config.php file must exist in the project root directory:
     
     return \Doctrine\ORM\Tools\Console\ConsoleRunner::createHelperSet($entityManager);
 
-Change into your project directory and call the Doctrine command-line tool:
+Now call the Doctrine command-line tool:
 
 ::
 
-    $ cd project/
     $ vendor/bin/doctrine orm:schema-tool:create
 
-Since we haven't added any entity metadata in `src` yet, you'll see a message
+Since we haven't added any entity metadata in ``src`` yet, you'll see a message
 stating "No Metadata Classes to process." In the next section, we'll create a
 Product entity along with the corresponding metadata, and run this command again.
 
 Note that as you modify your entities' metadata during the development process,
 you'll need to update your database schema to stay in sync with the metadata.
-You can rasily recreate the database using the following commands:
+You can easily recreate the database using the following commands:
 
 ::
 
@@ -209,8 +221,8 @@ Or you can use the update functionality:
 
     $ vendor/bin/doctrine orm:schema-tool:update --force
 
-The updating of databases uses a Diff Algorithm for a given
-Database Schema. This is a cornerstone of the ``Doctrine\DBAL`` package,
+The updating of databases uses a diff algorithm for a given
+database schema. This is a cornerstone of the ``Doctrine\DBAL`` package,
 which can even be used without the Doctrine ORM package.
 
 Starting with the Product Entity
@@ -250,16 +262,16 @@ entity definition:
         }
     }
 
-When creating entity classes, all of the fields should be protected or private
-(not public), with getter and setter methods for each one (except $id).
+When creating entity classes, all of the fields should be ``protected`` or ``private``
+(not ``public``), with getter and setter methods for each one (except ``$id``).
 The use of mutators allows Doctrine to hook into calls which
-manipulate the entities in ways that it could not if you just 
+manipulate the entities in ways that it could not if you just
 directly set the values with ``entity#field = foo;``
 
-The id field has no setter since, generally speaking, your code 
-should not set this value since it represents a database id value. 
-(Note that Doctrine itself can still set the value using the 
-Reflection API instead of a defined setter function)
+The id field has no setter since, generally speaking, your code
+should not set this value since it represents a database id value.
+(Note that Doctrine itself can still set the value using the
+Reflection API instead of a defined setter function.)
 
 The next step for persistence with Doctrine is to describe the
 structure of the ``Product`` entity to Doctrine using a metadata
@@ -278,14 +290,24 @@ but you only need to choose one.
 
         <?php
         // src/Product.php
+
+        use Doctrine\ORM\Mapping as ORM;
+
         /**
-         * @Entity @Table(name="products")
-         **/
+         * @ORM\Entity
+         * @ORM\Table(name="products")
+         */
         class Product
         {
-            /** @Id @Column(type="integer") @GeneratedValue **/
+            /** 
+             * @ORM\Id
+             * @ORM\Column(type="integer")
+             * @ORM\GeneratedValue
+             */
             protected $id;
-            /** @Column(type="string") **/
+            /** 
+             * @ORM\Column(type="string") 
+             */
             protected $name;
 
             // .. (other code)
@@ -297,7 +319,7 @@ but you only need to choose one.
         <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                            http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+                                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
               <entity name="Product" table="products">
                   <id name="id" type="integer">
@@ -307,6 +329,10 @@ but you only need to choose one.
                   <field name="name" type="string" />
               </entity>
         </doctrine-mapping>
+
+.. note::
+    The YAML driver is deprecated and will be removed in version 3.0.
+    It is strongly recommended to switch to one of the other mappings.
 
     .. code-block:: yaml
 
@@ -323,8 +349,8 @@ but you only need to choose one.
             name:
               type: string
 
-The top-level ``entity`` definition tag specifies information about
-the class and table-name. The primitive type ``Product#name`` is
+The top-level ``entity`` definition specifies information about
+the class and table name. The primitive type ``Product#name`` is
 defined as a ``field`` attribute. The ``id`` property is defined with
 the ``id`` tag.  It has a ``generator`` tag nested inside, which
 specifies that the primary key generation mechanism should automatically
@@ -458,28 +484,37 @@ classes. We'll store them in ``src/Bug.php`` and ``src/User.php``, respectively.
 
     <?php
     // src/Bug.php
+
+    use Doctrine\ORM\Mapping as ORM;
+
     /**
-     * @Entity(repositoryClass="BugRepository") @Table(name="bugs")
+     * @ORM\Entity(repositoryClass="BugRepository")
+     * @ORM\Table(name="bugs")
      */
     class Bug
     {
         /**
-         * @Id @Column(type="integer") @GeneratedValue
+         * @ORM\Id
+         * @ORM\Column(type="integer")
+         * @ORM\GeneratedValue
          * @var int
          */
         protected $id;
+
         /**
-         * @Column(type="string")
+         * @ORM\Column(type="string")
          * @var string
          */
         protected $description;
+
         /**
-         * @Column(type="datetime")
+         * @ORM\Column(type="datetime")
          * @var DateTime
          */
         protected $created;
+
         /**
-         * @Column(type="string")
+         * @ORM\Column(type="string")
          * @var string
          */
         protected $status;
@@ -524,18 +559,25 @@ classes. We'll store them in ``src/Bug.php`` and ``src/User.php``, respectively.
 
     <?php
     // src/User.php
+
+    use Doctrine\ORM\Mapping as ORM;
+
     /**
-     * @Entity @Table(name="users")
+     * @ORM\Entity 
+     * @ORM\Table(name="users")
      */
     class User
     {
         /**
-         * @Id @GeneratedValue @Column(type="integer")
+         * @ORM\Id
+         * @ORM\GeneratedValue
+         * @ORM\Column(type="integer")
          * @var int
          */
         protected $id;
+
         /**
-         * @Column(type="string")
+         * @ORM\Column(type="string")
          * @var string
          */
         protected $name;
@@ -765,7 +807,7 @@ the database that points from Bugs to Products.
     {
         // ... (previous code)
 
-        protected $products = null;
+        protected $products;
 
         public function assignToProduct(Product $product)
         {
@@ -787,41 +829,50 @@ the ``Product`` before:
 
         <?php
         // src/Bug.php
+
+        use Doctrine\ORM\Mapping as ORM;
+
         /**
-         * @Entity @Table(name="bugs")
-         **/
+         * @ORM\Entity 
+         * @ORM\Table(name="bugs")
+         */
         class Bug
         {
             /**
-             * @Id @Column(type="integer") @GeneratedValue
-             **/
+             * @ORM\Id 
+             * @ORM\Column(type="integer") 
+             * @ORM\GeneratedValue
+             */
             protected $id;
+
             /**
-             * @Column(type="string")
-             **/
+             * @ORM\Column(type="string")
+             */
             protected $description;
+
             /**
-             * @Column(type="datetime")
-             **/
+             * @ORM\Column(type="datetime")
+             */
             protected $created;
+
             /**
-             * @Column(type="string")
-             **/
+             * @ORM\Column(type="string")
+             */
             protected $status;
 
             /**
-             * @ManyToOne(targetEntity="User", inversedBy="assignedBugs")
-             **/
+             * @ORM\ManyToOne(targetEntity="User", inversedBy="assignedBugs")
+             */
             protected $engineer;
 
             /**
-             * @ManyToOne(targetEntity="User", inversedBy="reportedBugs")
-             **/
+             * @ORM\ManyToOne(targetEntity="User", inversedBy="reportedBugs")
+             */
             protected $reporter;
 
             /**
-             * @ManyToMany(targetEntity="Product")
-             **/
+             * @ORM\ManyToMany(targetEntity="Product")
+             */
             protected $products;
 
             // ... (other code)
@@ -833,7 +884,7 @@ the ``Product`` before:
         <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                            http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+                                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
             <entity name="Bug" table="bugs">
                 <id name="id" type="integer">
@@ -850,6 +901,10 @@ the ``Product`` before:
                 <many-to-many target-entity="Product" field="products" />
             </entity>
         </doctrine-mapping>
+
+.. note::
+    The YAML driver is deprecated and will be removed in version 3.0.
+    It is strongly recommended to switch to one of the other mappings.
 
     .. code-block:: yaml
 
@@ -911,34 +966,40 @@ Finally, we'll add metadata mappings for the ``User`` entity.
 
         <?php
         // src/User.php
+
+        use Doctrine\ORM\Mapping as ORM;
+
         /**
-         * @Entity @Table(name="users")
-         **/
+         * @ORM\Entity
+         * @ORM\Table(name="users")
+         */
         class User
         {
             /**
-             * @Id @GeneratedValue @Column(type="integer")
+             * @ORM\Id 
+             * @ORM\GeneratedValue 
+             * @ORM\Column(type="integer")
              * @var int
-             **/
+             */
             protected $id;
 
             /**
-             * @Column(type="string")
+             * @ORM\Column(type="string")
              * @var string
-             **/
+             */
             protected $name;
 
             /**
-             * @OneToMany(targetEntity="Bug", mappedBy="reporter")
+             * @ORM\OneToMany(targetEntity="Bug", mappedBy="reporter")
              * @var Bug[] An ArrayCollection of Bug objects.
-             **/
-            protected $reportedBugs = null;
+             */
+            protected $reportedBugs;
 
             /**
-             * @OneToMany(targetEntity="Bug", mappedBy="engineer")
+             * @ORM\OneToMany(targetEntity="Bug", mappedBy="engineer")
              * @var Bug[] An ArrayCollection of Bug objects.
-             **/
-            protected $assignedBugs = null;
+             */
+            protected $assignedBugs;
 
             // .. (other code)
         }
@@ -949,7 +1010,7 @@ Finally, we'll add metadata mappings for the ``User`` entity.
         <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                            http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+                                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
              <entity name="User" table="users">
                  <id name="id" type="integer">
@@ -962,6 +1023,10 @@ Finally, we'll add metadata mappings for the ``User`` entity.
                  <one-to-many target-entity="Bug" field="assignedBugs" mapped-by="engineer" />
              </entity>
         </doctrine-mapping>
+
+.. note::
+    The YAML driver is deprecated and will be removed in version 3.0.
+    It is strongly recommended to switch to one of the other mappings.
 
     .. code-block:: yaml
 
@@ -1145,8 +1210,7 @@ The console output of this script is then:
     throw your ORM into the dumpster, because it doesn't support some
     the more powerful SQL concepts.
 
-
-    Instead of handwriting DQL you can use the ``QueryBuilder`` retrieved
+    If you need to build your query dynamically, you can use the ``QueryBuilder`` retrieved
     by calling ``$entityManager->createQueryBuilder()``. There are more
     details about this in the relevant part of the documentation.
 
@@ -1472,9 +1536,12 @@ we have to adjust the metadata slightly.
     .. code-block:: php
 
         <?php
+
+        use Doctrine\ORM\Mapping as ORM;
+
         /**
-         * @Entity(repositoryClass="BugRepository")
-         * @Table(name="bugs")
+         * @ORM\Entity(repositoryClass="BugRepository")
+         * @ORM\Table(name="bugs")
          **/
         class Bug
         {
@@ -1486,12 +1553,16 @@ we have to adjust the metadata slightly.
         <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                            http://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+                                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
               <entity name="Bug" table="bugs" repository-class="BugRepository">
 
               </entity>
         </doctrine-mapping>
+
+.. note::
+    The YAML driver is deprecated and will be removed in version 3.0.
+    It is strongly recommended to switch to one of the other mappings.
 
     .. code-block:: yaml
 

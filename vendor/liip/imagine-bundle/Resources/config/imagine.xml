@@ -139,12 +139,19 @@
             <argument type="service" id="logger" on-invalid="ignore" />
         </service>
 
+        <!-- Config -->
+
+        <service id="liip_imagine.controller.config" class="Liip\ImagineBundle\Config\Controller\ControllerConfig" public="false">
+            <argument><!-- will be injected by LiipImagineExtension --></argument>
+        </service>
+
         <!-- Controller -->
 
         <service id="Liip\ImagineBundle\Controller\ImagineController" public="true">
             <argument type="service" id="liip_imagine.service.filter" />
             <argument type="service" id="liip_imagine.data.manager" />
             <argument type="service" id="liip_imagine.cache.signer" />
+            <argument type="service" id="liip_imagine.controller.config" />
         </service>
 
         <service id="liip_imagine.controller" alias="Liip\ImagineBundle\Controller\ImagineController" public="true" />
@@ -177,11 +184,6 @@
 
         <service id="liip_imagine.templating.filter_extension" class="Liip\ImagineBundle\Templating\FilterExtension" public="false">
             <tag name="twig.extension" />
-            <argument type="service" id="liip_imagine.cache.manager" />
-        </service>
-
-        <service id="liip_imagine.templating.filter_helper" class="Liip\ImagineBundle\Templating\Helper\FilterHelper">
-            <tag name="templating.helper" alias="imagine" />
             <argument type="service" id="liip_imagine.cache.manager" />
         </service>
 
@@ -256,6 +258,11 @@
             <tag name="liip_imagine.filter.loader" loader="interlace" />
         </service>
 
+        <service id="liip_imagine.filter.loader.resample" class="Liip\ImagineBundle\Imagine\Filter\Loader\ResampleFilterLoader" public="true">
+            <argument type="service" id="liip_imagine" />
+            <tag name="liip_imagine.filter.loader" loader="resample" />
+        </service>
+
         <!-- Data loaders -->
 
         <service id="liip_imagine.binary.loader.prototype.filesystem" class="Liip\ImagineBundle\Binary\Loader\FileSystemLoader">
@@ -282,10 +289,12 @@
 
         <service id="liip_imagine.binary.locator.filesystem" class="Liip\ImagineBundle\Binary\Locator\FileSystemLocator" public="false" shared="false">
             <argument><!-- will be injected by FilesystemLoaderFactory --></argument>
+            <argument><!-- will be injected by FilesystemLoaderFactory --></argument>
             <tag name="liip_imagine.binary.locator" shared="false" />
         </service>
 
         <service id="liip_imagine.binary.locator.filesystem_insecure" class="Liip\ImagineBundle\Binary\Locator\FileSystemInsecureLocator" public="false" shared="false">
+            <argument><!-- will be injected by FilesystemLoaderFactory --></argument>
             <argument><!-- will be injected by FilesystemLoaderFactory --></argument>
             <tag name="liip_imagine.binary.locator" shared="false" />
         </service>

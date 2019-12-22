@@ -323,7 +323,7 @@ XML would look something like this:
     <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-                              /Users/robo/dev/php/Doctrine/doctrine-mapping.xsd">
+                              https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
         <entity name="User">
 
@@ -548,8 +548,9 @@ preFlush
 ~~~~~~~~
 
 ``preFlush`` is called at ``EntityManager#flush()`` before
-anything else. ``EntityManager#flush()`` can be called safely
-inside its listeners.
+anything else. ``EntityManager#flush()`` should not be called inside
+its listeners, since `preFlush` event is dispatched in it, which would
+result in infinite loop.
 
 .. code-block:: php
 

@@ -39,6 +39,16 @@ class RtlqKungfuAdherentTaoDTO extends AbstractRtlqDTO {
         return $this->nb_revision;
     }
 
+    protected $favoris;
+    public function setFavoris($value)
+    {
+        $this->favoris = $value;
+        return $this;
+    }
+    public  function getFavoris() {
+        return $this->favoris;
+    }
+
     protected $adherent_id;
     public function setAdherentId($value)
     {

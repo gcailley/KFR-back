@@ -27,7 +27,6 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use ReflectionClass;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
-use Doctrine\Common\ClassLoader;
 use Doctrine\ORM\Cache\CacheException;
 
 /**
@@ -242,9 +241,9 @@ class ClassMetadataInfo implements ClassMetadata
      * )
      * </code>
      *
-     * @var array
-     *
      * @todo Merge with tableGeneratorDefinition into generic generatorDefinition
+     *
+     * @var array<string, string>|null
      */
     public $customGeneratorDefinition;
 
@@ -1025,7 +1024,11 @@ class ClassMetadataInfo implements ClassMetadata
     public function validateAssociations()
     {
         foreach ($this->associationMappings as $mapping) {
-            if ( ! ClassLoader::classExists($mapping['targetEntity']) ) {
+            if (
+                ! class_exists($mapping['targetEntity'])
+                && ! interface_exists($mapping['targetEntity'])
+                && ! trait_exists($mapping['targetEntity'])
+            ) {
                 throw MappingException::invalidTargetEntityClass($mapping['targetEntity'], $this->name, $mapping['fieldName']);
             }
         }
@@ -2014,7 +2017,7 @@ class ClassMetadataInfo implements ClassMetadata
      *
      * @param string $fieldName
      *
-     * @return \Doctrine\DBAL\Types\Type|string|null
+     * @return string|null
      *
      * @todo 3.0 Remove this. PersisterHelper should fix it somehow
      */
@@ -2030,7 +2033,7 @@ class ClassMetadataInfo implements ClassMetadata
      *
      * @param string $columnName
      *
-     * @return \Doctrine\DBAL\Types\Type|string|null
+     * @return string|null
      *
      * @deprecated 3.0 remove this. this method is bogus and unreliable, since it cannot resolve the type of a column
      *             that is derived by a referenced field on a different entity.
