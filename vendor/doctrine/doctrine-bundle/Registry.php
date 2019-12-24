@@ -3,13 +3,15 @@
 namespace Doctrine\Bundle\DoctrineBundle;
 
 use Doctrine\ORM\ORMException;
+use ProxyManager\Proxy\LazyLoadingInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * References all Doctrine connections and entity managers in a given Container.
  */
-class Registry extends ManagerRegistry
+class Registry extends ManagerRegistry implements ResetInterface
 {
     /**
      * @param string[] $connections
@@ -45,5 +47,29 @@ class Registry extends ManagerRegistry
         }
 
         throw ORMException::unknownEntityNamespace($alias);
+    }
+
+    public function reset() : void
+    {
+        foreach ($this->getManagerNames() as $managerName => $serviceId) {
+            $this->resetOrClearManager($managerName, $serviceId);
+        }
+    }
+
+    private function resetOrClearManager(string $managerName, string $serviceId) : void
+    {
+        if (! $this->container->initialized($serviceId)) {
+            return;
+        }
+
+        $manager = $this->container->get($serviceId);
+
+        if (! $manager instanceof LazyLoadingInterface) {
+            $manager->clear();
+
+            return;
+        }
+
+        $this->resetManager($managerName);
     }
 }

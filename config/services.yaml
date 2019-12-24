@@ -69,9 +69,6 @@ services:
             - "@=service('doctrine.orm.entity_manager').getRepository('App:Security\\\\RtlqAuthToken')"
             - "@=service('doctrine.orm.entity_manager').getRepository('App:Association\\\\RtlqAdherent')"
 
-    routanglangquanbundle.auth_token_authenticator:
-        class: App\Service\Security\User\AuthTokenAuthenticator
-        arguments: ["@security.http_utils"]
 
     # routanglangquanbundle.adherent_controller:
     #    class: App\Controller\Api\Association\AdherentController

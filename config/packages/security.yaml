@@ -64,8 +64,9 @@ security:
             pattern: ^/
             methods: [GET, PUT, DELETE, POST, OPTIONS]
             stateless: true
-            simple_preauth:
-                authenticator: routanglangquanbundle.auth_token_authenticator
+            guard:
+                authenticators:
+                    - App\Service\Security\User\AuthTokenAuthenticator
             provider: auth_token_provider
             anonymous: ~
 
@@ -83,6 +84,7 @@ security:
         - { path: ^/association/drive/by-key, methods: [GET, OPTIONS], roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
         - { path: ^/security/tokens/check-user, methods: [GET, OPTIONS], roles: ROLE_USER }
+        - { path: ^/security/tokens/logout, methods: [DELETE, OPTIONS], roles: ROLE_USER }
         - { path: ^/association/adherents/trombinoscope, methods: [GET, OPTIONS], roles: ROLE_USER }
         - { path: ^/association/adherents/by-token, methods: [GET, OPTIONS, PUT], roles: ROLE_USER }
         - { path: ^/association/adherents/by-token/mytaos, methods: [GET, OPTIONS, DELETE, POST], roles: ROLE_USER }

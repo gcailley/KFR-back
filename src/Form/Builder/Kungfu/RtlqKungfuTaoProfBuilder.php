@@ -10,19 +10,19 @@ use App\Form\Dto\Kungfu\RtlqKungfuTaoProfDTO;
 
 class RtlqKungfuTaoProfBuilder extends RtlqKungfuTaoBuilder
 {
-    public function dtoToModele($em, $postModele, $modele)
+    public function dtoToModele($em, $postModele, $modele): RtlqKungfuTao
     {
         $modele = parent::dtoToModele($em, $postModele, $modele);
-        $modele->setVideoUrl( $postModele->getVideoUrl() );
+        $modele->setVideoUrl($postModele->getVideoUrl());
 
         return $modele;
     }
-    
-    
-    public function modeleToDto($modele, $dtoClass)
+
+
+    public function modeleToDto($modele, $dtoClass): RtlqKungfuTaoDTO
     {
         $dto = parent::modeleToDto($modele, $dtoClass);
-        $dto->setVideoUrl( $modele->getVideoUrl() );
+        $dto->setVideoUrl($modele->getVideoUrl());
 
         return $dto;
     }

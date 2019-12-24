@@ -8,6 +8,7 @@
 
 namespace App\Repository\Security;
 
+use DateTime;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -20,10 +21,14 @@ class SecurityRepository extends EntityRepository
     
     public function findOldToken($adherent, $duree)
     {
+
+        $dateLimite = new DateTime();
+        $dateLimite->setTimestamp( time() - $duree);
+
         $data = $this->createQueryBuilder('s')
                         ->where('s.user = :adherent AND s.createdAt < :duree')
                         ->setParameter('adherent', $adherent)
-                        ->setParameter('duree', time() - $duree)
+                        ->setParameter('duree', $dateLimite)
                         ->getQuery()
                         ->getResult();
 
