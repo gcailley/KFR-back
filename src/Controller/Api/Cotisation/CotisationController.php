@@ -10,8 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Cotisation\RtlqCotisation;
-
-
+use App\Form\Type\Cotisation\RtlqCotisationType;
 
 /**
  * @Route("/cotisations")
@@ -23,6 +22,15 @@ class CotisationController extends AbstractCrudApiController
     function newDtoClass(): string {return RtlqCotisationDTO::class;}
     function newBuilderClass(): string {return RtlqCotisationBuilder::class;}
     function newModeleClass(): string {return RtlqCotisation::class;}
+
+    /**
+     * Trie utilisé dans la requete getAllAction.
+     * exemple : ['username' => 'ASC'].
+     */
+    public function defaultSort()
+    {
+        return ['saison' => 'DESC'];
+    }
 
 
     /**

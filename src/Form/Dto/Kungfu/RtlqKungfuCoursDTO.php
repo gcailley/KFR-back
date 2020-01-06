@@ -87,12 +87,12 @@ class RtlqKungfuCoursDTO extends AbstractRtlqDTO {
         return $this->saison_id;
     }
 
-    protected $date;
-    public function getDate() {
-        return $this->date;
+    protected $date_creation;
+    public function getDateCreation() {
+        return $this->date_creation;
     }
-    public function setDate($value) {
-        $this->date = $value;
+    public function setDateCreation($value) {
+        $this->date_creation = $value;
         return $this;
     }
 }

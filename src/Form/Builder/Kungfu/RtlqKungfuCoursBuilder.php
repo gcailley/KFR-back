@@ -16,7 +16,7 @@ class RtlqKungfuCoursBuilder extends AbstractRtlqBuilder
         $modele->setThematiqueTao( $postModele->getThematiqueTao() );
         $modele->setThematiqueApplication( $postModele->getThematiqueApplication() );
         $modele->setThematiqueCombat( $postModele->getThematiqueCombat() );
-        $modele->setDate( $postModele->getDate() );
+        $modele->setDate( $postModele->getDateCreation() );
         $modele->setNbCoursEssais( $postModele->getNbCoursEssais() );
         
 
@@ -39,7 +39,7 @@ class RtlqKungfuCoursBuilder extends AbstractRtlqBuilder
         $dto->setThematiqueApplication( $modele->getThematiqueApplication() );
         $dto->setThematiqueCombat( $modele->getThematiqueCombat() );
 
-        $dto->setDate($this->dateToString($modele->getDate()));
+        $dto->setDateCreation($this->dateToString($modele->getDate()));
         $dto->setNbCoursEssais($modele->getNbCoursEssais());
 
         

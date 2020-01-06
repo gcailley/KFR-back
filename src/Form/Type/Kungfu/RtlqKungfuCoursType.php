@@ -20,7 +20,7 @@ class RtlqKungfuCoursType extends AbstractRtlqType
     {
         $builder
         ->add ( 'description', TextType::class )
-        ->add ( 'date', DateType::class, $this->getDateFormatTZ())
+        ->add ( 'date_creation', DateType::class, $this->getDateFormatTZ())
         ->add ( 'thematique_tao', CheckBoxType::class )
         ->add ( 'thematique_application', CheckBoxType::class )
         ->add ( 'thematique_combat', CheckBoxType::class )
