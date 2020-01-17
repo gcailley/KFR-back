@@ -50,14 +50,18 @@ class AuthTokenAuthenticator extends AbstractGuardAuthenticator
      */
     private function isAuthTokenValid($authToken)
     {
-        return (time() - $authToken->getCreatedAt()->getTimestamp()) < self::TOKEN_VALIDITY_DURATION;
+        if ($authToken == null || $authToken->getCreatedAt() == null) {
+            return false;
+        } else {
+            return (time() - $authToken->getCreatedAt()->getTimestamp()) < self::TOKEN_VALIDITY_DURATION;
+        }
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         $apiToken = $credentials['token'];
 
-        if (null === $apiToken) {
+        if (null == $apiToken) {
             return;
         }
 
@@ -65,7 +69,7 @@ class AuthTokenAuthenticator extends AbstractGuardAuthenticator
         $authToken = $this->em->getRepository(RtlqAuthToken::class)
             ->findOneBy(['value' =>  $apiToken]);
         
-        if (!$this->isAuthTokenValid($authToken)) {
+        if (null == $authToken || !$this->isAuthTokenValid($authToken)) {
             throw new CustomUserMessageAuthenticationException('Invalid authentication token : ' . $authToken);
         } 
 

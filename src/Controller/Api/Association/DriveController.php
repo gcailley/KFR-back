@@ -44,36 +44,7 @@ class DriveController extends AbstractRtlqController
         return new $class;
     }
 
-    private function dirToArray($dir, $pattern = null)
-    {
-
-        $result = array();
-
-        $cdir = scandir($dir);
-        foreach ($cdir as $key => $value) {
-            if (!in_array($value, array(".", ".."))) {
-                if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) {
-                    $result[$value] = $this->dirToArray($dir . DIRECTORY_SEPARATOR . $value, $pattern);
-                } else {
-                    if (null == $pattern || ($pattern != null && strpos($value, $pattern) !== false)) {
-                        $result[] = $value;
-                    }
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    private function createPath($path)
-    {
-        if (is_dir($path)) return true;
-        $prev_path = substr($path, 0, strrpos($path, '/', -2) + 1);
-        $return = $this->createPath($prev_path);
-        return ($return && is_writable($prev_path)) ? mkdir($path) : false;
-    }
-
-
+   
     /**
      * 
      * Generate Thumbnail using Imagick class
@@ -106,8 +77,7 @@ class DriveController extends AbstractRtlqController
 
     private function getAllByUserId($id)
     {
-        $baseDir = $this->getParameter("user_drive_basedir");
-        $userDrive = "${baseDir}/${id}/drive";
+        $userDrive = $this->getUserHomeDirectory($id) . 'drive';
         if (!is_dir($userDrive)) {
             $this->createPath($userDrive);
         }

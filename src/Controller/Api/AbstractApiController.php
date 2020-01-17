@@ -9,18 +9,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-abstract class AbstractApiController  extends AbstractRtlqController  implements IApiController 
+abstract class AbstractApiController  extends AbstractRtlqController  implements IApiController
 {
     private $builder;
 
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->init();
     }
 
-    public function init() {
+    public function init()
+    {
     }
-   
+
     /**
      * @Route("/{id}", methods={"GET"})
      */
@@ -45,7 +47,8 @@ abstract class AbstractApiController  extends AbstractRtlqController  implements
      * 
      * @return RtlqValidator
      */
-    public function getValidator() {
+    public function getValidator()
+    {
         return new RtlqValidator();
     }
 
@@ -53,19 +56,33 @@ abstract class AbstractApiController  extends AbstractRtlqController  implements
     {
         if (null == $this->builder) {
             $this->builder = $this->initBuilder();
-        } 
+        }
         return $this->builder;
-        
     }
 
-    public function initBuilder() {
+    public function initBuilder()
+    {
         $class = $this->newBuilderClass();
         return new $class;
     }
 
-    function newDto() {
+    function newDto()
+    {
         $class = $this->newDtoClass();
         return new $class;
     }
 
+    /**
+     * recuperation du répertoire pour le stockage de l'image de l'utilisateur.
+     *
+     * @return void
+     */
+    protected function getSharedPhotoDirectory()
+    {
+        $userPhoto = $this->getSharedUserDirectory() . DIRECTORY_SEPARATOR .  'photo';
+        if (!is_dir($userPhoto)) {
+            mkdir($userPhoto, 0750, true);
+        }
+        return $userPhoto;
+    }
 }

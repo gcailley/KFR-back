@@ -44,6 +44,7 @@ use App\Form\Type\Association\RtlqAdherentType;
  */
 class AdherentController extends AbstractCrudApiController
 {
+    public const URI_AVATAR = '/association/adherents/avatar/';
     private $mailer;
     private $encoder;
 
@@ -112,6 +113,63 @@ class AdherentController extends AbstractCrudApiController
     }
 
 
+    protected function innerCreateAction($em, $entityMetier)
+    {
+        $this->savePhotoIntoFile($entityMetier);
+    }
+    protected function innerUpdateAction($em, $entityMetier)
+    {
+        $this->savePhotoIntoFile($entityMetier);
+    }
+    protected function innerGetAction($em, $entityMetier)
+    {
+        if (null === $entityMetier->getAvatarName()) {
+            $this->savePhotoIntoFile($entityMetier);
+        }
+    }
+
+
+    /**
+     * Methode permettant de sauvegarder l'image dans la base utilisauteur.
+     *
+     * @param [type] $entityMetier
+     * @return void
+     */
+    private function savePhotoIntoFile(RtlqAdherent $entityMetier)
+    {
+        $patternPhotoUser = 'user' . $entityMetier->getId();
+        $photosDir = $this->getSharedPhotoDirectory();
+        //recuperation de la liste des photos de l'utilisateur pour suppression apres enregistrement
+        $files = $this->dirToArray($photosDir, $patternPhotoUser);
+
+        //extract information sur la photo
+        $avatarName = $patternPhotoUser . '_' . md5(uniqid(rand(), true)) . '.jpeg';
+        $file_path = $photosDir . DIRECTORY_SEPARATOR .  $avatarName;
+
+        $base64 = $entityMetier->getAvatar();
+        if ("resource" === gettype($base64)) {
+            $base64String = stream_get_contents($base64);
+        } else {
+            $base64String = $base64;
+        }
+
+        if (null != $base64String) {
+            //creation de la photo sur le serveur
+            $decoded = base64_decode(substr($base64String, 22));
+            if (file_put_contents($file_path, $decoded)) {
+                //suppression des vieilles images
+                foreach ($files as $file) {
+                    unlink($photosDir . DIRECTORY_SEPARATOR . $file);
+                }
+            }
+
+            //Sauvegarde de la photo dans l'entité metier
+            $entityMetier->setAvatarName(AdherentController::URI_AVATAR . $avatarName);
+            $entityMetier->setAvatar(null);
+        }
+    }
+
+
     /**
      * @Route("/trombinoscope", methods={"GET"})
      */
@@ -125,6 +183,40 @@ class AdherentController extends AbstractCrudApiController
             );
         $dto_entities = $this->getBuilder()->ofuscated($entities, RtlqAdherentTrombinoscopeDTO::class);
         return $this->newResponse($dto_entities, Response::HTTP_ACCEPTED);
+    }
+
+
+    /**
+     * @Route("/avatar/{avatarName}", methods={"GET"})
+     */
+    public function getPhotoAdherentAction(Request $request, String $avatarName)
+    {
+        $photosDir = $this->getSharedPhotoDirectory();
+        // TODO blocage des .. pour remonter dans l'arborscence //
+        if ($avatarName === "") {
+            throw $this->createNotFoundException();
+        }
+
+        // decode image
+        $fileName = $photosDir . DIRECTORY_SEPARATOR  . $avatarName;
+        $decoded = (file_get_contents($fileName));
+
+        //Sauvegarde de la photo dans l'entité metier
+        $minetype = mime_content_type($fileName);
+        $filesize = filesize($fileName);
+
+        //extraction à l'upload de ces informations puis à mettre dans la base de données
+        $response = new Response();
+        $response->headers->set('Cache-Control', 'private');
+        $response->headers->set('Content-type', $minetype);
+        $response->headers->set('Content-Disposition', 'attachement: filename="' . basename($fileName) . "';");
+        $response->headers->set('Content-length', $filesize);
+
+        // Send headers before outputting anything
+        $response->sendHeaders();
+        $response->setContent($decoded);
+
+        return  $response;
     }
 
 

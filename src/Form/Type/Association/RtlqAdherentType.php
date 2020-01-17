@@ -31,6 +31,7 @@ class RtlqAdherentType extends AbstractRtlqType
             ->add('publique', CheckBoxType::class)
             ->add('adresse', TextType::class)
             ->add('avatar', TextType::class)
+            ->add('avatar_uri', TextType::class)
             ->add('code_postal', TextType::class)
             ->add('ville', TextType::class)
             ->add('forum_uid', TextType::class)

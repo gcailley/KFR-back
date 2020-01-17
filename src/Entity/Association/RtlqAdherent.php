@@ -96,6 +96,12 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
     
     /**
      *
+     * @var string @ORM\Column(name="avatar_name", type="string", nullable=true)
+     */
+    private $avatar_name;
+
+    /**
+     *
      * @var string @ORM\Column(name="codePostal", type="string", length=5, nullable=false)
      */
     private $codePostal;
@@ -420,6 +426,28 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      */
     public function getAvatar() {
         return $this->avatar;
+    }
+
+    /**
+     * Set avatar_name
+     *
+     * @param strign $avatar_name
+     *
+     * @return RtlqAdherent
+     */
+    public function setAvatarName($avatar_name) {
+        $this->avatar_name = $avatar_name;
+
+        return $this;
+    }
+
+    /**
+     * Get avatar_name
+     *
+     * @return string
+     */
+    public function getAvatarName() {
+        return $this->avatar_name;
     }
 
     /**

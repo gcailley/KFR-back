@@ -8,7 +8,8 @@ use App\Form\Dto\AbstractRtlqDTO;
  * @author GREGORY
  *
  */
-class RtlqAdherentDTO extends AbstractRtlqDTO {
+class RtlqAdherentDTO extends AbstractRtlqDTO
+{
 
     protected $email;
     protected $pwd;
@@ -21,6 +22,7 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     protected $publique;
     protected $adresse;
     protected $avatar;
+    protected $avatar_uri;
     protected $code_postal;
     protected $ville;
     protected $date_creation;
@@ -40,301 +42,375 @@ class RtlqAdherentDTO extends AbstractRtlqDTO {
     protected $montant_total_en_retard = 0;
     protected $saison_courante = false;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->groupes = array();
         $this->taos = array();
         $this->tresories = array();
     }
 
-    public function addTao($tao) {
+    public function addTao($tao)
+    {
         $this->taos[] = $tao;
         return $this;
     }
 
-    public function addGroupe($groupe) {
+    public function addGroupe($groupe)
+    {
         $this->groupes[] = $groupe;
         return $this;
     }
 
-    public function addTresorie($tresorie) {
+    public function addTresorie($tresorie)
+    {
         $this->tresories[] = $tresorie;
         return $this;
     }
 
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    public function getPwd() {
+    public function getPwd()
+    {
         return $this->pwd;
     }
 
-    public function getTelephone() {
+    public function getTelephone()
+    {
         return $this->telephone;
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->username;
     }
 
-    public function getNom() {
+    public function getNom()
+    {
         return $this->nom;
     }
 
-    public function getPrenom() {
+    public function getPrenom()
+    {
         return $this->prenom;
     }
 
-    public function getDateNaissance() {
+    public function getDateNaissance()
+    {
         return $this->date_naissance;
     }
 
-    public function getActif() {
+    public function getActif()
+    {
         return $this->actif;
     }
 
-    public function getPublique() {
+    public function getPublique()
+    {
         return $this->publique;
     }
 
-    public function getAdresse() {
+    public function getAdresse()
+    {
         return $this->adresse;
     }
 
-    public function getAvatar() {
+    public function getAvatar()
+    {
         return $this->avatar;
     }
 
-    public function getCodePostal() {
+    public function getCodePostal()
+    {
         return $this->code_postal;
     }
 
-    public function getVille() {
+    public function getVille()
+    {
         return $this->ville;
     }
 
-    public function getDateCreation() {
+    public function getDateCreation()
+    {
         return $this->date_creation;
     }
 
-    public function getDateLastAuth() {
+    public function getDateLastAuth()
+    {
         return $this->date_last_auth;
     }
 
-    public function getGroupes() {
+    public function getGroupes()
+    {
         return $this->groupes;
     }
-    
-    public function getTaos() {
+
+    public function getTaos()
+    {
         return $this->taos;
     }
 
-    public function getCotisationId() {
+    public function getCotisationId()
+    {
         return $this->cotisation_id;
     }
 
-    public function setCotisationId($cotisation_id) {
+    public function setCotisationId($cotisation_id)
+    {
         $this->cotisation_id = $cotisation_id;
         return $this;
     }
 
-    public function getCotisationName() {
+    public function getCotisationName()
+    {
         return $this->cotisation_name;
     }
 
-    public function setCotisationName($cotisation_name) {
+    public function setCotisationName($cotisation_name)
+    {
         $this->cotisation_name = $cotisation_name;
         return $this;
     }
 
-    public function setEmail($email) {
+    public function setEmail($email)
+    {
         $this->email = $email;
         return $this;
     }
-    
-    public function setUsername($value) {
+
+    public function setUsername($value)
+    {
         $this->username = $value;
         return $this;
     }
 
-    public function setPwd($pwd) {
+    public function setPwd($pwd)
+    {
         $this->pwd = $pwd;
         return $this;
     }
 
-    public function setTelephone($telephone) {
+    public function setTelephone($telephone)
+    {
         $this->telephone = $telephone;
         return $this;
     }
 
-    public function setNom($nom) {
+    public function setNom($nom)
+    {
         $this->nom = $nom;
         return $this;
     }
 
-    public function setPrenom($prenom) {
+    public function setPrenom($prenom)
+    {
         $this->prenom = $prenom;
         return $this;
     }
 
-    public function setDateNaissance($date_naissance) {
+    public function setDateNaissance($date_naissance)
+    {
         $this->date_naissance = $date_naissance;
         return $this;
     }
 
-    public function setActif($actif) {
+    public function setActif($actif)
+    {
         $this->actif = $actif;
         return $this;
     }
 
-    public function setPublique($publique) {
+    public function setPublique($publique)
+    {
         $this->publique = $publique;
         return $this;
     }
 
-    public function setAdresse($adresse) {
+    public function setAdresse($adresse)
+    {
         $this->adresse = $adresse;
         return $this;
     }
 
-    public function setAvatar($avatar) {
+    public function setAvatar($avatar)
+    {
         $this->avatar = $avatar;
         return $this;
     }
 
-    public function setCodePostal($code_postal) {
+    public function setCodePostal($code_postal)
+    {
         $this->code_postal = $code_postal;
         return $this;
     }
 
-    public function setVille($ville) {
+    public function setVille($ville)
+    {
         $this->ville = $ville;
         return $this;
     }
 
-    public function setDateCreation($dateCreation) {
+    public function setDateCreation($dateCreation)
+    {
         $this->date_creation = $dateCreation;
         return $this;
     }
 
-    public function setDateLastAuth($date_last_auth) {
+    public function setDateLastAuth($date_last_auth)
+    {
         $this->date_last_auth = $date_last_auth;
         return $this;
     }
 
-    public function setTaos($taos) {
+    public function setTaos($taos)
+    {
         $this->taos = $taos;
         return $this;
     }
 
-    public function setGroupes($groupes) {
+    public function setGroupes($groupes)
+    {
         $this->groupes = $groupes;
         return $this;
     }
 
-    public function setTresories($tresories) {
+    public function setTresories($tresories)
+    {
         $this->tresories = $tresories;
         return $this;
     }
 
-    public function getTresories() {
+    public function getTresories()
+    {
         return $this->tresories;
     }
 
-    public function getLicenceNumber() {
+    public function getLicenceNumber()
+    {
         return $this->licence_number;
     }
 
-    public function getLicenceEtat() {
+    public function getLicenceEtat()
+    {
         return $this->licence_etat;
     }
 
-    public function setLicenceNumber($licence_number) {
+    public function setLicenceNumber($licence_number)
+    {
         $this->licence_number = $licence_number;
         return $this;
     }
 
-    public function setLicenceEtat($licence_etat) {
+    public function setLicenceEtat($licence_etat)
+    {
         $this->licence_etat = $licence_etat;
         return $this;
     }
 
-    public function getMontantTotalEncaisse() {
+    public function getMontantTotalEncaisse()
+    {
         return $this->montant_total_encaisse;
     }
 
-    public function getMontantTotalPrevisionnel() {
+    public function getMontantTotalPrevisionnel()
+    {
         return $this->montant_total_previsionnel;
     }
 
-    public function setMontantTotalEncaisse($montant_total_encaisse) {
+    public function setMontantTotalEncaisse($montant_total_encaisse)
+    {
         $this->montant_total_encaisse = $montant_total_encaisse;
         return $this;
     }
 
-    public function setMontantTotalPrevisionnel($montant_total_previsionnel) {
+    public function setMontantTotalPrevisionnel($montant_total_previsionnel)
+    {
         $this->montant_total_previsionnel = $montant_total_previsionnel;
         return $this;
     }
 
-    public function addMontantTotalEncaisse($montant_total_encaisse) {
+    public function addMontantTotalEncaisse($montant_total_encaisse)
+    {
         $this->montant_total_encaisse += $montant_total_encaisse;
     }
 
-    public function addMontantTotalPrevisionnel($montant_total_previsionnel) {
+    public function addMontantTotalPrevisionnel($montant_total_previsionnel)
+    {
         $this->montant_total_previsionnel += $montant_total_previsionnel;
     }
 
-    public function getMontantTotalEnRetard() {
+    public function getMontantTotalEnRetard()
+    {
         return $this->montant_total_en_retard;
     }
 
-    public function setMontantTotalEnRetard($montant_total_en_retard) {
+    public function setMontantTotalEnRetard($montant_total_en_retard)
+    {
         $this->montant_total_en_retard = $montant_total_en_retard;
         return $this;
     }
 
-    public function addMontantTotalEnRetard($montant_total_en_retard) {
+    public function addMontantTotalEnRetard($montant_total_en_retard)
+    {
         $this->montant_total_en_retard += $montant_total_en_retard;
         return $this;
     }
 
 
-    public function getForumUid() {
+    public function getForumUid()
+    {
         return $this->forum_uid;
     }
-    public function setForumUid($value) {
+    public function setForumUid($value)
+    {
         $this->forum_uid = $value;
         return $this;
     }
 
-    public function getForumUsername() {
+    public function getForumUsername()
+    {
         return $this->forum_username;
     }
-    public function setForumUsername($value) {
+    public function setForumUsername($value)
+    {
         $this->forum_username = $value;
         return $this;
     }
 
-    public function getSaisons() {
+    public function getSaisons()
+    {
         return $this->saisons;
     }
-    public function setSaisons($values) {
+    public function setSaisons($values)
+    {
         $this->saisons = $values;
         return $this;
     }
-    public function addSaison($saison) {
+    public function addSaison($saison)
+    {
         $this->saisons[] = $saison;
         return $this;
     }
-    
-    public function getSaisonCourante(){
+
+    public function getSaisonCourante()
+    {
         return $this->saison_courante;
     }
-    public function setSaisonCourante($value) {
+    public function setSaisonCourante($value)
+    {
         $this->saison_courante = $value;
         return $this;
     }
-    
-}
 
+    public function getAvatarUri()
+    {
+        return $this->avatar_uri;
+    }
+    public function setAvatarUri($value)
+    {
+        $this->avatar_uri = $value;
+        return $this;
+    }
+}

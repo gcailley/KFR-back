@@ -115,7 +115,7 @@ class PhotoController extends AbstractCrudApiController
         return $dir;
     }
 
-    protected function updateBeforeSaved($em, $entityMetier) {
+    protected function innerUpdateAction($em, $entityMetier) {
         $this->saveIntoFile($entityMetier);
     }
 
@@ -134,16 +134,21 @@ class PhotoController extends AbstractCrudApiController
         $base64 = $entityMetier->getSourceBase64();
         $base64_extension = substr($base64,0,23);
 
+        //creation de la photo sur le serveur
         $decoded = base64_decode(substr($base64,22));        
         file_put_contents($file_path, $decoded);
+
+        //Sauvegarde de la photo dans l'entité metier
         $entityMetier->setSourceMimeType(mime_content_type($file_path));
         $entityMetier->setSourceFileSize(filesize($file_path));
         $entityMetier->setSourceName($file_name);
         $entityMetier->setSourceBase64(null);
         
-        //extract information sur la photo
+        //extract information sur la photo pour le creation du thumbnail
         $thumbnail_path = $thumbnailsDir . DIRECTORY_SEPARATOR . $file_name;
         $this->createThumbnail($file_path, $thumbnail_path, "squared_thumbnail");
+
+        //Sauvegarde du thumbnail dans l'entité metier
         $entityMetier->setThumbnailMimeType(mime_content_type($thumbnail_path));
         $entityMetier->setThumbnailFileSize(filesize($thumbnail_path));
         $entityMetier->setThumbnailName($file_name);

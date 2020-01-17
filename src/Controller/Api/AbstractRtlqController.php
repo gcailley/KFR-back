@@ -46,6 +46,19 @@ abstract class AbstractRtlqController extends AbstractController
         return new Response(null, Response::HTTP_UNAUTHORIZED);
     }
 
+    protected  function getUserHomeDirectory($idUser) 
+    {
+        $baseDir = $this->getParameter("user_drive_basedir");
+        $userHome = "${baseDir}/${idUser}/";
+        return $userHome;
+    }
+
+    protected  function getSharedUserDirectory() 
+    {
+        $baseDir = $this->getParameter("shared_drive_basedir");
+        $userHome = "${baseDir}/";
+        return $userHome;
+    }
     public function extractUserByToken(Request $request): RtlqAuthToken
     {
         $authTokenHeader = $request->headers->get(AuthTokenAuthenticator::X_AUTH_TOKEN);
@@ -81,6 +94,35 @@ abstract class AbstractRtlqController extends AbstractController
         $ciphertext_raw = substr($c, $ivlen + $sha2len);
         $original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $key, $options = OPENSSL_RAW_DATA, $iv);
         return $original_plaintext;
+    }
+
+    protected function dirToArray($dir, $pattern = null)
+    {
+
+        $result = array();
+
+        $cdir = scandir($dir);
+        foreach ($cdir as $key => $value) {
+            if (!in_array($value, array(".", ".."))) {
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) {
+                    $result[$value] = $this->dirToArray($dir . DIRECTORY_SEPARATOR . $value, $pattern);
+                } else {
+                    if (null == $pattern || ($pattern != null && strpos($value, $pattern) !== false)) {
+                        $result[] = $value;
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    protected function createPath($path)
+    {
+        if (is_dir($path)) return true;
+        $prev_path = substr($path, 0, strrpos($path, '/', -2) + 1);
+        $return = $this->createPath($prev_path);
+        return ($return && is_writable($prev_path)) ? mkdir($path) : false;
     }
 
 }

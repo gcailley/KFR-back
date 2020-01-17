@@ -1,0 +1,1 @@
+ALTER TABLE rtlq_adherent ADD avatar_name VARCHAR(255) DEFAULT NULL;

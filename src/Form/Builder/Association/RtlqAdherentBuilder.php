@@ -2,6 +2,7 @@
 
 namespace App\Form\Builder\Association;
 
+use App\Controller\Api\Association\AdherentController;
 use App\Form\Dto\Association\RtlqAdherentDTO;
 use App\Entity\Association\RtlqAdherent;
 use App\Entity\Association\RtlqGroupe;
@@ -16,14 +17,17 @@ use App\Entity\Tresorie\RtlqTresorieEtat;
 
 class RtlqAdherentBuilder extends AbstractRtlqBuilder
 {
+    
+
     private $encoder;
 
-    public function __construct(UserPasswordEncoderInterface $encoder=null)
+    public function __construct(UserPasswordEncoderInterface $encoder = null)
     {
         $this->encoder = $encoder;
     }
 
-    public function encodePassword($modele, $pwd) {
+    public function encodePassword($modele, $pwd)
+    {
         if ($this->encoder != null) {
             // le mot de passe en claire est encodé avant la sauvegarde
             $encoded = $this->encoder->encodePassword($modele, $pwd);
@@ -48,8 +52,9 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         $modele->setCodePostal($postModele->getCodePostal());
         $modele->setVille($postModele->getVille());
         $modele->setAvatar($postModele->getAvatar());
+        $modele->setAvatarName($postModele->getAvatarUri());
         $modele->setDateCreation($postModele->getDateCreation());
-        if ($postModele->getDateLastAuth()!=null) {
+        if ($postModele->getDateLastAuth() != null) {
             $modele->setDateLastAuth($postModele->getDateLastAuth());
         }
         $modele->setLicenceNumber($postModele->getLicenceNumber());
@@ -66,9 +71,9 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         }
 
         if ($postModele->getCotisationId() != null) {
-            $modele->setCotisation($em->getReference(RtlqCotisation::class, $postModele->getCotisationId() ));
+            $modele->setCotisation($em->getReference(RtlqCotisation::class, $postModele->getCotisationId()));
         }
-        
+
         foreach ($postModele->getTresories() as $tresorieId) {
             $modele->addTresorie($em->getReference(RtlqTresorie::class, $tresorieId()));
         }
@@ -110,6 +115,12 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         } else {
             $dto->setAvatar($modele->getAvatar());
         }
+        if ($modele->getAvatarName() != null) {
+            $dto->setAvatarUri($modele->getAvatarName());
+        } else {
+            $dto->setAvatarUri(AdherentController::URI_AVATAR . '_default_.jpeg');
+        }
+
         $dto->setDateCreation($this->dateToString($modele->getDateCreation()));
         $dto->setDateLastAuth($this->dateToString($modele->getDateLastAuth()));
         $dto->setLicenceNumber($modele->getLicenceNumber());
@@ -125,23 +136,23 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         $dto_array = array();
         foreach ($modeles as $modele) {
             $dto = new $dtoClass;
-            
+
             $dto->setTelephone($modele->getTelephone());
             $dto->setNom($modele->getNom());
             $dto->setPrenom($modele->getPrenom());
             $dto->setDateNaissance($this->dateToString($modele->getDateNaissance()));
             $dto->setActif($modele->getActif());
-            $dto->setPublique($modele->getPublic());    
+            $dto->setPublique($modele->getPublic());
             $dto->setAdresse($modele->getAdresse());
             $dto->setCodePostal($modele->getCodePostal());
             $dto->setVille($modele->getVille());
-            if ("resource" === gettype($modele->getAvatar())) {
-                $dto->setAvatar(stream_get_contents($modele->getAvatar()));
+            if ($modele->getAvatarName() != null) {
+                $dto->setAvatarUri($modele->getAvatarName());
             } else {
-                $dto->setAvatar($modele->getAvatar());
+                $dto->setAvatarUri(AdherentController::URI_AVATAR . '_default_.jpeg');
             }
-
-            if (! $dto->getPublique()) {
+        
+            if (!$dto->getPublique()) {
                 $dto->setTelephone("#####################");
                 $dto->setAdresse("#####################");
                 $dto->setCodePostal("#####################");
@@ -150,7 +161,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         }
         return $dto_array;
     }
-        
+
 
     public function modeleToDto($modele, $dtoClass)
     {
@@ -177,7 +188,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
             $dto->setCotisationId($modele->getCotisation()->getId());
             $dto->setCotisationName($modele->getCotisation()->getName());
         }
-        
+
 
         if ($modele->getTresories() != null) {
             $totalEncaisser = 0;
@@ -191,18 +202,17 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
                     $totalEncaisser += $tresorie->getMontant();
                 } else if (RtlqTresorieEtat::A_ENCAISSER === $tresorie->getEtat()->getId() || RtlqTresorieEtat::A_RECLAMER === $tresorie->getEtat()->getId()) {
                     $totalPrevisionnel += $tresorie->getMontant();
-//                    dump($tresorie);
-                    if (RtlqTresorieEtat::A_RECLAMER === $tresorie->getEtat()->getId() && $now > $tresorie->getDateCreation() ) {
+                    //                    dump($tresorie);
+                    if (RtlqTresorieEtat::A_RECLAMER === $tresorie->getEtat()->getId() && $now > $tresorie->getDateCreation()) {
                         $totalEnRetard += $tresorie->getMontant();
                     }
                 }
-//                dump($totalEncaisser . '/' . $totalPrevisionnel . '/' . $totalEnRetard);
+                //                dump($totalEncaisser . '/' . $totalPrevisionnel . '/' . $totalEnRetard);
             }
 
             $dto->addMontantTotalEncaisse($totalEncaisser);
             $dto->addMontantTotalPrevisionnel($totalPrevisionnel);
             $dto->addMontantTotalEnRetard($totalEnRetard);
-
         }
 
         return $dto;

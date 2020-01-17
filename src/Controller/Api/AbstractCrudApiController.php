@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Controller\Api\AbstractApiController;
 use App\Entity\Security\RtlqAuthToken;
 use App\Service\Security\User\AuthTokenAuthenticator;
+use Exception;
 
 abstract class AbstractCrudApiController extends AbstractApiController
 {
@@ -65,10 +66,34 @@ abstract class AbstractCrudApiController extends AbstractApiController
      */
     public function getAllAction(Request $request, $response = true)
     {
-        $tresories = $this->getDoctrine()->getRepository($this->newModeleClass())->findBy([], $this->defaultSort());
+        $entities = $this->getDoctrine()->getRepository($this->newModeleClass())->findBy([], $this->defaultSort());
 
-        $dto_tresories = $this->getBuilder()->modelesToDtos($tresories,  $this->newDtoClass());
-        return $this->convertDto2Response($dto_tresories, $response, Response::HTTP_ACCEPTED);
+        // TODO A SUPPRIMER 
+        // action à faire dans le controller
+        $em = $this->getDoctrine()->getManager();
+        foreach ($entities as $entityMetier) {
+            $this->innerGetAction($em, $entityMetier);
+            try {
+                $preConditionErrors = $this->preConditionCreationAction($em, $entityMetier);
+                if ($preConditionErrors != null && sizeof($preConditionErrors) != 0) {
+                    throw $this->createInvalideBean($preConditionErrors);
+                }
+            } catch (Exception $exc) {
+                $errors[] = "PréCondition non effectuées : " . $exc;
+                throw $this->createInvalideBean($errors);
+            }
+            $em->persist($entityMetier);
+            $em->flush();
+        }
+        // TODO FIN A SUPPRIMER 
+
+
+        $dto_entities = $this->getBuilder()->modelesToDtos($entities,  $this->newDtoClass());
+        return $this->convertDto2Response($dto_entities, $response, Response::HTTP_ACCEPTED);
+    }
+    // TODO A SUPPRIMER
+    protected function innerGetAction($em, $entityMetier)
+    {
     }
 
     /**
@@ -99,7 +124,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
         $entityMetier = $this->getBuilder()->dtoToModele($em, $entityDto, $entityDB);
 
         //action à faire dans le controller
-        $this->updateBeforeSaved($em, $entityMetier);
+        $this->innerUpdateAction($em, $entityMetier);
 
         $em->merge($entityMetier);
         $em->flush();
@@ -107,8 +132,9 @@ abstract class AbstractCrudApiController extends AbstractApiController
         return $this->convertModele2DtoResponse($entityMetier, $response, Response::HTTP_ACCEPTED);
     }
 
-    protected function updateBeforeSaved($em, $entityMetier)
-    { }
+    protected function innerUpdateAction($em, $entityMetier)
+    {
+    }
 
 
     /**
@@ -157,7 +183,8 @@ abstract class AbstractCrudApiController extends AbstractApiController
 
 
     protected function innerCreateAction($em, $entityMetier)
-    { }
+    {
+    }
 
     protected function preConditionCreationAction($em, $entityMetier)
     {
@@ -184,7 +211,8 @@ abstract class AbstractCrudApiController extends AbstractApiController
     }
 
     protected function internalDeleteByIdAction($em, $entity)
-    { }
+    {
+    }
 
 
     protected function getNewModeleInstance()
@@ -206,5 +234,4 @@ abstract class AbstractCrudApiController extends AbstractApiController
         }
         return new Response(json_encode($dto_entities), $statusCode);
     }
-
 }
