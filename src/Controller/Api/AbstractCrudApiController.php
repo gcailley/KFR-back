@@ -67,33 +67,8 @@ abstract class AbstractCrudApiController extends AbstractApiController
     public function getAllAction(Request $request, $response = true)
     {
         $entities = $this->getDoctrine()->getRepository($this->newModeleClass())->findBy([], $this->defaultSort());
-
-        // TODO A SUPPRIMER 
-        // action à faire dans le controller
-        $em = $this->getDoctrine()->getManager();
-        foreach ($entities as $entityMetier) {
-            $this->innerGetAction($em, $entityMetier);
-            try {
-                $preConditionErrors = $this->preConditionCreationAction($em, $entityMetier);
-                if ($preConditionErrors != null && sizeof($preConditionErrors) != 0) {
-                    throw $this->createInvalideBean($preConditionErrors);
-                }
-            } catch (Exception $exc) {
-                $errors[] = "PréCondition non effectuées : " . $exc;
-                throw $this->createInvalideBean($errors);
-            }
-            $em->persist($entityMetier);
-            $em->flush();
-        }
-        // TODO FIN A SUPPRIMER 
-
-
         $dto_entities = $this->getBuilder()->modelesToDtos($entities,  $this->newDtoClass());
         return $this->convertDto2Response($dto_entities, $response, Response::HTTP_ACCEPTED);
-    }
-    // TODO A SUPPRIMER
-    protected function innerGetAction($em, $entityMetier)
-    {
     }
 
     /**
