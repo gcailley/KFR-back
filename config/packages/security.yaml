@@ -71,6 +71,11 @@ security:
             anonymous: ~
 
     access_control:
+
+
+        - { path: ^/kpis/stats,  methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
+
         - { path: ^/association/adherents/password-change,  methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/adherents/password-reset,  methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/photo_directories, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }

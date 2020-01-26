@@ -16,17 +16,14 @@ use Doctrine\ORM\EntityRepository;
  * @author GREGORY
  */
 class KungFuCoursRepository extends EntityRepository {
-       
-    public function extractNbCoursSaisonCourante()
-    {
-        // TODO faire un count
-        $query = $this->createQueryBuilder('t')
-                        ->where('t.actif = :actif')
-                        ->setParameter('actif', true)
-                        ->getQuery()
-                        ->getResult();
+    
+    public function extractStats() {
 
-        return sizeof($query);
+        return $this->createQueryBuilder('u')
+            ->select('saison.nom as saison_nom, saison.active as saison_actif, COUNT(DISTINCT(u.id)) as nbCours, SUM(u.nbCoursEssais) as nbCoursEssais, SUM(u.thematique_tao) as nbTao, SUM(u.thematique_application) as nbApp, SUM(u.thematique_combat) as nbCom')
+            ->innerJoin('u.saison', 'saison')
+            ->groupby('u.saison')
+            ->getQuery()
+            ->getResult();
     }
-
 }

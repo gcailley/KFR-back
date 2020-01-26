@@ -27,14 +27,11 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
     const KPI_TRESORERIE_TOTALE_POINTEE = 'KPI_TRESORERIE_TOTALE_POINTEE';
     const KPI_TRESORERIE_TOTALE_NON_POINTEE = 'KPI_TRESORERIE_TOTALE_NON_POINTEE';
 
-    public function getAllKpis() {
+    public function getAllKpis()
+    {
         return [
-            TresorieRepository::KPI_TRESORERIE_TOTALE
-            ,TresorieRepository::KPI_TRESORERIE_EN_RETARD
-            ,TresorieRepository::KPI_TRESORERIE_SAISON_COURANTE_PREVISIONNELLE
-            ,TresorieRepository::KPI_TRESORERIE_SAISON_COURANTE_A_DATE
-            ,TresorieRepository::KPI_TRESORERIE_TOTALE_POINTEE
-            ,TresorieRepository::KPI_TRESORERIE_TOTALE_NON_POINTEE];
+            TresorieRepository::KPI_TRESORERIE_TOTALE, TresorieRepository::KPI_TRESORERIE_EN_RETARD, TresorieRepository::KPI_TRESORERIE_SAISON_COURANTE_PREVISIONNELLE, TresorieRepository::KPI_TRESORERIE_SAISON_COURANTE_A_DATE, TresorieRepository::KPI_TRESORERIE_TOTALE_POINTEE, TresorieRepository::KPI_TRESORERIE_TOTALE_NON_POINTEE
+        ];
     }
     public function findAllTresorieFilterByAdherent($adherent_id)
     {
@@ -61,6 +58,19 @@ class TresorieRepository extends EntityRepository implements IKpiRepository
             ->setParameter('etats', [RtlqTresorieEtat::A_ENCAISSER, RtlqTresorieEtat::A_RECLAMER])
             ->getQuery()
             ->getResult();
+    }
+
+    public function extractStats()
+    {
+        $data = [];
+        foreach ($this->getAllKpis() as $key => $value) {
+            $dataValue = $this->countByKpi($value);
+            if ($dataValue == null) {
+                $dataValue = 0;
+            } 
+            $data[$value] = round($dataValue, 0);
+        }
+        return $data;
     }
 
     public function countByKpi($name)

@@ -58,7 +58,23 @@ class KpiController extends AbstractRtlqController
         } else if (strpos($action, AdherentRepository::PATTERN_KPI) === 0) {
             $repositorie = $this->getDoctrine()->getRepository(RtlqAdherent::class);
         } else {
-            throw new HttpException(Response::HTTP_BAD_REQUEST, "No KPI '$action' found.");
+            $repositorieCours = $this->getDoctrine()->getRepository(RtlqKungfuCours::class);
+            $statsCours = $repositorieCours->extractStats();
+    
+            $repositorieAdherents = $this->getDoctrine()->getRepository(RtlqAdherent::class);
+            $statsAdherents = $repositorieAdherents->extractStats();
+
+            $repositorieTresoreries = $this->getDoctrine()->getRepository(RtlqTresorie::class);
+            $statsTresoreries = $repositorieTresoreries->extractStats();
+
+            
+             $results = [
+                 'cours' => $statsCours, 
+                 "users" => $statsAdherents,
+                 'tresorerie' => $statsTresoreries
+                ];
+            return  $this->newResponse($results, Response::HTTP_ACCEPTED);
+    
         }
 
         $number = $repositorie->countByKpi($action);
@@ -67,15 +83,4 @@ class KpiController extends AbstractRtlqController
         return  $this->newResponse($results, Response::HTTP_ACCEPTED);
     }
 
-    /**
-     * @Route("/cours", methods={"GET"})
-     */
-    // public function extractCoursStats()
-    // {
-    // $repositorie = $this->getDoctrine()->getRepository(RtlqKungfuCours::class);
-    // $nb_cours = $repositorie->extractNbCoursSaisonCourante();
-    // 
-    // $results = ['nb_cours' => $nb_cours];
-    // return  $this->newResponse($results, Response::HTTP_ACCEPTED);
-    // }
 }

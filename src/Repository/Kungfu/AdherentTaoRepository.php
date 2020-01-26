@@ -57,4 +57,5 @@ class AdherentTaoRepository extends EntityRepository
 
         return sizeof($query);
     }
+
 }
