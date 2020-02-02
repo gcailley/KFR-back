@@ -1,14 +1,21 @@
 {
     "type": "project",
     "license": "proprietary",
+    "name":"kfr/back",
+    "description":"API Backend de KFR",
     "require": {
         "php": "^7.3.12",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "beberlei/doctrineextensions": "^1.2",
+        "doctrine/cache": "^1.9.1",
+        "doctrine/doctrine-bundle": "^2.0",
+        "doctrine/doctrine-cache-bundle": "^1.4",
         "friendsofphp/php-cs-fixer": "^2.13",
         "liip/imagine-bundle": "^2.2",
         "nelmio/cors-bundle": "^1.5",
+        "ocramius/package-versions": "^1.5",
+        "symfony/cache": "^4.4",
         "symfony/console": "^4.4",
         "symfony/dependency-injection": "^4.4",
         "symfony/dotenv": "^4.4",
@@ -20,8 +27,9 @@
         "symfony/security-bundle": "^4.4",
         "symfony/security-csrf": "^4.4",
         "symfony/security-guard": "^4.4",
-        "symfony/swiftmailer-bundle": "^3.2",
+        "symfony/swiftmailer-bundle": "^3.4",
         "symfony/yaml": "^4.4"
+
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.5",
