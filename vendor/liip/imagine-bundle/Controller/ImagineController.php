@@ -29,7 +29,7 @@ class ImagineController
     /**
      * @var FilterService
      */
-    public $filterService;
+    private $filterService;
 
     /**
      * @var DataManager
