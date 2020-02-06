@@ -572,17 +572,17 @@
     },
     {
         "name": "doctrine/doctrine-bundle",
-        "version": "2.0.6",
-        "version_normalized": "2.0.6.0",
+        "version": "2.0.7",
+        "version_normalized": "2.0.7.0",
         "source": {
             "type": "git",
             "url": "https://github.com/doctrine/DoctrineBundle.git",
-            "reference": "0ef972d3b730f975c80db9fffa4b2a0258c91442"
+            "reference": "6926771140ee87a823c3b2c72602de9dda4490d3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/0ef972d3b730f975c80db9fffa4b2a0258c91442",
-            "reference": "0ef972d3b730f975c80db9fffa4b2a0258c91442",
+            "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/6926771140ee87a823c3b2c72602de9dda4490d3",
+            "reference": "6926771140ee87a823c3b2c72602de9dda4490d3",
             "shasum": ""
         },
         "require": {
@@ -609,6 +609,7 @@
             "phpunit/phpunit": "^7.5",
             "symfony/phpunit-bridge": "^4.2",
             "symfony/property-info": "^4.3.3|^5.0",
+            "symfony/proxy-manager-bridge": "^3.4|^4.3.3|^5.0",
             "symfony/twig-bridge": "^3.4.30|^4.3.3|^5.0",
             "symfony/validator": "^3.4.30|^4.3.3|^5.0",
             "symfony/web-profiler-bundle": "^3.4.30|^4.3.3|^5.0",
@@ -619,7 +620,7 @@
             "doctrine/orm": "The Doctrine ORM integration is optional in the bundle.",
             "symfony/web-profiler-bundle": "To use the data collector."
         },
-        "time": "2019-12-19T13:47:07+00:00",
+        "time": "2020-01-18T11:56:15+00:00",
         "type": "symfony-bundle",
         "extra": {
             "branch-alias": {
@@ -661,6 +662,99 @@
             "dbal",
             "orm",
             "persistence"
+        ]
+    },
+    {
+        "name": "doctrine/doctrine-cache-bundle",
+        "version": "1.4.0",
+        "version_normalized": "1.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/doctrine/DoctrineCacheBundle.git",
+            "reference": "6bee2f9b339847e8a984427353670bad4e7bdccb"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/doctrine/DoctrineCacheBundle/zipball/6bee2f9b339847e8a984427353670bad4e7bdccb",
+            "reference": "6bee2f9b339847e8a984427353670bad4e7bdccb",
+            "shasum": ""
+        },
+        "require": {
+            "doctrine/cache": "^1.4.2",
+            "doctrine/inflector": "^1.0",
+            "php": "^7.1",
+            "symfony/doctrine-bridge": "^3.4|^4.0"
+        },
+        "require-dev": {
+            "instaclick/coding-standard": "~1.1",
+            "instaclick/object-calisthenics-sniffs": "dev-master",
+            "instaclick/symfony2-coding-standard": "dev-remaster",
+            "phpunit/phpunit": "^7.0",
+            "predis/predis": "~0.8",
+            "satooshi/php-coveralls": "^1.0",
+            "squizlabs/php_codesniffer": "~1.5",
+            "symfony/console": "^3.4|^4.0",
+            "symfony/finder": "^3.4|^4.0",
+            "symfony/framework-bundle": "^3.4|^4.0",
+            "symfony/phpunit-bridge": "^3.4|^4.0",
+            "symfony/security-acl": "^2.8",
+            "symfony/validator": "^3.4|^4.0",
+            "symfony/yaml": "^3.4|^4.0"
+        },
+        "suggest": {
+            "symfony/security-acl": "For using this bundle to cache ACLs"
+        },
+        "time": "2019-11-29T11:22:01+00:00",
+        "type": "symfony-bundle",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.4.x-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Doctrine\\Bundle\\DoctrineCacheBundle\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Benjamin Eberlei",
+                "email": "kontakt@beberlei.de"
+            },
+            {
+                "name": "Fabio B. Silva",
+                "email": "fabio.bat.silva@gmail.com"
+            },
+            {
+                "name": "Guilherme Blanco",
+                "email": "guilhermeblanco@hotmail.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "http://symfony.com/contributors"
+            },
+            {
+                "name": "Doctrine Project",
+                "homepage": "http://www.doctrine-project.org/"
+            }
+        ],
+        "description": "Symfony Bundle for Doctrine Cache",
+        "homepage": "https://www.doctrine-project.org",
+        "keywords": [
+            "cache",
+            "caching"
         ]
     },
     {
@@ -6007,7 +6101,8 @@
             "ZendFramework",
             "code",
             "zf"
-        ]
+        ],
+        "abandoned": "laminas/laminas-code"
     },
     {
         "name": "zendframework/zend-eventmanager",
@@ -6063,6 +6158,7 @@
             "eventmanager",
             "events",
             "zf2"
-        ]
+        ],
+        "abandoned": "laminas/laminas-eventmanager"
     }
 ]
