@@ -38,6 +38,9 @@
             "ref": "ae205d5114e719deb64d2110f56ef910787d1e04"
         }
     },
+    "doctrine/doctrine-cache-bundle": {
+        "version": "1.4.0"
+    },
     "doctrine/doctrine-migrations-bundle": {
         "version": "1.2",
         "recipe": {
