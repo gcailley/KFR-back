@@ -5,20 +5,15 @@ namespace App\Controller\Api\Association;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use App\Controller\Api\AbstractCrudApiController;
 use App\Form\Builder\Association\RtlqPhotoBuilder;
 use App\Form\Dto\Association\RtlqPhotoDTO;
-use App\Controller\Api\AbstractApiController;
 use App\Entity\Association\RtlqPhoto;
 use App\Entity\Association\RtlqPhotoDirectory;
 use App\Form\Type\Association\RtlqPhotoType;
+use Liip\ImagineBundle\Imagine\Data\DataManager;
 use Liip\ImagineBundle\Model\FileBinary;
-use Liip\ImagineBundle\Imagine\Filter\FilterManager;
-use Liip\ImagineBundle\Service\FilterService;
-use Liip\ImagineBundle\Imagine\Cache\CacheManager;
-use Liip\ImagineBundle\Controller\ImagineController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 /**
  * @Route("/association/photos")
@@ -28,9 +23,9 @@ class PhotoController extends AbstractCrudApiController
 
     private $filterManager;
     private $params;
-    function __construct(ImagineController $imagineController, ParameterBagInterface $params)
+    function __construct(DataManager $dataManager, ParameterBagInterface $params)
     {
-        $this->filterManager = $imagineController->filterService->filterManager;
+        $this->filterManager = $dataManager;
         $this->params=$params;
         $this->init();
     }

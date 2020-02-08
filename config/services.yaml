@@ -71,6 +71,7 @@ services:
             - "@=service('doctrine.orm.entity_manager').getRepository('App:Security\\\\RtlqAuthToken')"
             - "@=service('doctrine.orm.entity_manager').getRepository('App:Association\\\\RtlqAdherent')"
 
-
+    Liip\ImagineBundle\Imagine\Data\DataManager:
+        alias: 'liip_imagine.data.manager'
     # routanglangquanbundle.adherent_controller:
     #    class: App\Controller\Api\Association\AdherentController
