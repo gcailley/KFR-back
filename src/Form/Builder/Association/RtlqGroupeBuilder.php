@@ -10,6 +10,7 @@ use App\Controller\Api\Association\AdherentController;
 use App\Entity\Association\RtlqAdherent;
 use App\Form\Dto\Association\RtlqAdherentDTO;
 
+
 class RtlqGroupeBuilder extends AbstractRtlqBuilder
 {
     private $rtlqAdherentBuilder;
@@ -20,12 +21,12 @@ class RtlqGroupeBuilder extends AbstractRtlqBuilder
     }
     
 
-    public function dtoToModele($em, $postModele, $modele)
+    public function dtoToModele($em, $dto, $modele)
     {
-        $modele->setNom( $postModele->getNom () );
-        $modele->setRole( $postModele->getRole () );
+        $modele->setNom( $dto->getNom () );
+        $modele->setRole( $dto->getRole () );
         $modele->removeAllAdherents();
-        foreach ($postModele->getAdherents() as $adherentDto) {
+        foreach ($dto->getAdherents() as $adherentDto) {
             $modelAdh = $em->getReference ( RtlqAdherent::class, $adherentDto['id'] );
             $modele->addAdherent($modelAdh);
         }

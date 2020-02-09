@@ -10,15 +10,21 @@ use App\Form\Dto\AbstractRtlqDTO;
  */
 class RtlqEventDTO extends AbstractRtlqDTO
 {
-    
+
     protected $description;
     protected $commentaire;
     protected $adresse;
     protected $date_creation;
     protected $saison_id;
     protected $saison_name;
-    
-    
+    protected $adherents;
+    protected $nb_accompagnants = 0;
+    protected $nb_people = 0;
+
+    public function __construct()
+    {
+        $this->adherents = [];
+    }
     public function getDescription()
     {
         return $this->description;
@@ -43,7 +49,7 @@ class RtlqEventDTO extends AbstractRtlqDTO
     {
         return $this->saison_id;
     }
-    
+
     public function getSaisonName()
     {
         return $this->saison_name;
@@ -79,10 +85,56 @@ class RtlqEventDTO extends AbstractRtlqDTO
         $this->saison_id = $saison_id;
         return $this;
     }
-        
+
     public function setSaisonName($saison_name)
     {
         $this->saison_name = $saison_name;
+        return $this;
+    }
+
+    public function getAdherents()
+    {
+        return $this->adherents;
+    }
+
+    public function addAdherent($adherent)
+    {
+        $this->adherents[] = $adherent;
+        $this->updatePeople();
+        return $this;
+    }
+
+    public function setAdherents($adherents)
+    {
+        $this->adherents = $adherents;
+        $this->updatePeople();
+        return $this;
+    }
+
+    private function updatePeople()
+    {
+        $this->nb_people = sizeof($this->adherents) + $this->nb_accompagnants;
+    }
+
+    public function setNbAccompagnants($value)
+    {
+        $this->nb_accompagnants = $value;
+        $this->updatePeople();
+        return $this;
+    }
+
+    public function getNbAccompagnants()
+    {
+        return $this->nb_accompagnants;
+    }
+    
+    public function getNbPeople()
+    {
+        return $this->nb_people;
+    }
+    public function setNbPeople($value)
+    {
+        $this->nb_people = $value;
         return $this;
     }
 

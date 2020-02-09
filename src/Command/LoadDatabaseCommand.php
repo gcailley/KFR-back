@@ -34,7 +34,7 @@ class LoadDatabaseCommand extends Command
         $this
             // the short description shown while running "php bin/console list"
             ->setDescription('Load database resource files.')
-            ->addOption('initialisation', true, InputOption::VALUE_OPTIONAL, 'Permettant de faire une initialisation de la base', true)
+            ->addOption('initialisation', false, InputOption::VALUE_OPTIONAL, 'Permettant de faire une initialisation de la base', false)
             // the full command description shown when running the command with
             // the "--help" option
             ->setHelp('This command allows you to load database resource files.');
@@ -46,7 +46,7 @@ class LoadDatabaseCommand extends Command
         $output->writeln('Loading ressource files.');
         // outputs multiple lines to the console (adding "\n" at the end of each line)
         $sqlFiles = $this->getRessourceFiles($output);
-        $output->writeln('find ' . sizeof($sqlFiles).' files.');
+        $output->writeln('find ' . sizeof($sqlFiles) . ' files.');
 
         $output->writeln('Checking ressource files.');
         $em = $this->container->get('doctrine')->getManager();
@@ -58,12 +58,12 @@ class LoadDatabaseCommand extends Command
                 $entityMetier = new RtlqDatabaseVersion();
                 $entityMetier->setResourceName(basename($sqlFile));
                 try {
-                    if ('true' != $input->getOption('initialisation')) {
+                    if (! $input->getOption('initialisation')) {
                         // executing script //
                         $sql = file_get_contents($sqlFile);
                         $output->writeln('Processing :: ' . basename($sqlFile) . '  [SQL]');
                         $output->writeln($sql);
-                        $em->getConnection()->exec( $sql );
+                        $em->getConnection()->exec($sql);
                     } else {
                         $output->writeln('Processing :: ' . basename($sqlFile) . '  [INITIALISATION]');
                     }
@@ -75,7 +75,7 @@ class LoadDatabaseCommand extends Command
                     $output->writeln(' -- [KO]');
                     throw new Exception($th);
                 }
-            }  else {
+            } else {
                 $output->writeln('Processing :: ' . basename($sqlFile) . '  [SKIP]');
             }
         }

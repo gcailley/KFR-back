@@ -9,6 +9,7 @@ Generer le SQL de mise à jour de la base
 
     php bin/console doctrine:schema:update --dump-sql
     php bin/console doctrine:schema:update --force
+    php bin/console app:load-database
     
 #generation database#
 /C/xampp7.3.12/mysql/bin
