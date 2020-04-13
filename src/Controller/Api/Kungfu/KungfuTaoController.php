@@ -40,6 +40,15 @@ class KungfuTaoController extends AbstractCrudApiController
         return RtlqKungfuTao::class;
     }
 
+    /**
+     * Trie utilisé dans la requete getAllAction.
+     * exemple : ['username' => 'ASC'].
+     */
+    public function defaultSort()
+    {
+        return ['niveau' => 'ASC', 'style' => 'ASC', 'nom' => 'ASC'];
+    }
+
 
     /**
      * @Route("/{id}", methods={"GET"}, requirements={"id"="\d+"})
@@ -66,7 +75,7 @@ class KungfuTaoController extends AbstractCrudApiController
     /**
      * @Route("", methods={"GET"})
      */
-    public function getAllAction(Request $request, $response = true, $filtre=[])
+    public function getAllAction(Request $request, $response = true, $filtre = [])
     {
         $entities = $this->getDoctrine()->getRepository($this->newModeleClass())->findBy($filtre, $this->defaultSort());
 
@@ -84,7 +93,7 @@ class KungfuTaoController extends AbstractCrudApiController
      */
     public function getActifAction(Request $request)
     {
-        return $this->getAllAction($request, true, array("actif"=>true));
+        return $this->getAllAction($request, true, array("actif" => true));
     }
 
 
@@ -92,9 +101,7 @@ class KungfuTaoController extends AbstractCrudApiController
     {
         if (null == $this->limitedTaoBuilder) {
             $this->limitedTaoBuilder = new RtlqKungfuTaoBuilder();
-        } 
+        }
         return $this->limitedTaoBuilder;
-        
     }
-
 }

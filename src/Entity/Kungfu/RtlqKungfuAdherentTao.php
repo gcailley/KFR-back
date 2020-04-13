@@ -96,7 +96,7 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity
      *
      * @var string @ORM\Column(name="drive_id", type="string", nullable=true)
      */
-    private $drive_id = 0;
+    private $drive_id = null;
     public function setDriveId($value)
     {
         $this->drive_id = $value;

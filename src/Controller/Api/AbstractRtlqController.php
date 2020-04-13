@@ -46,14 +46,14 @@ abstract class AbstractRtlqController extends AbstractController
         return new Response(null, Response::HTTP_UNAUTHORIZED);
     }
 
-    protected  function getUserHomeDirectory($idUser) 
+    protected  function getUserHomeDirectory($idUser)
     {
         $baseDir = $this->getParameter("user_drive_basedir");
         $userHome = "${baseDir}/${idUser}/";
         return $userHome;
     }
 
-    protected  function getSharedUserDirectory() 
+    protected  function getSharedUserDirectory()
     {
         $baseDir = $this->getParameter("shared_drive_basedir");
         $userHome = "${baseDir}/";
@@ -86,7 +86,7 @@ abstract class AbstractRtlqController extends AbstractController
         $security = $this->getParameter('security');
         $key = $security['encryptage']['key'];
         $cipher =  $security['encryptage']['cipher'];
-        
+
         $c = base64_decode($keyEncoded);
         $ivlen = openssl_cipher_iv_length($cipher);
         $iv = substr($c, 0, $ivlen);
@@ -125,4 +125,11 @@ abstract class AbstractRtlqController extends AbstractController
         return ($return && is_writable($prev_path)) ? mkdir($path) : false;
     }
 
+    // Function to check string starting 
+    // with given substring 
+    function startsWith($string, $startString)
+    {
+        $len = strlen($startString);
+        return (substr($string, 0, $len) === $startString);
+    }
 }

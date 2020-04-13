@@ -581,12 +581,43 @@ class AdherentController extends AbstractCrudApiController
     }
 
     /**
+     * @Route("/{id}/taos/{idTao}", methods={"PUT"})
+     */
+    public function updateTaoToUser($id, $idTao, Request $request)
+    {
+        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
+        if (!is_object($entity)) {
+            throw new NotFoundHttpException("Adherent $id not found");
+        }
+
+        $taoJointure = $this->getDoctrine()->getRepository(RtlqKungfuAdherentTao::class)->findTaoFilterByAdherentAndTao($id, $idTao);
+        if (sizeof($taoJointure) === 0) {
+            throw new NotFoundHttpException("Tao $idTao not found for this user");
+        }
+
+        // TODO faire Type et Builder ...
+        $data = json_decode($request->getContent(), true);
+        $taoJointure[0]->setNiveau($data['niveau']);
+        $taoJointure[0]->setNbRevision($data['nb_revision']);
+        $taoJointure[0]->setDriveId($data['drive_id']);
+        $taoJointure[0]->setFavoris($data['favoris']);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->merge($taoJointure[0]);
+        $em->flush();
+
+        // conversion modele en DTO
+        $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($taoJointure[0], RtlqKungfuAdherentTaoDTO::class);
+        return $this->newResponse(($dtos), Response::HTTP_CREATED);
+    }
+
+    /**
      * @Route("/{id}/taos/{idTao}", methods={"POST"})
      */
     public function addTaoToUser($id, $idTao)
     {
-        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
-        if (!is_object($entity)) {
+        $adherent = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
+        if (!is_object($adherent)) {
             throw new NotFoundHttpException("Adherent $id not found");
         }
         $tao = $this->getDoctrine()->getRepository(RtlqKungfuTao::class)->find($idTao);
@@ -594,25 +625,23 @@ class AdherentController extends AbstractCrudApiController
             throw new NotFoundHttpException("Tao $idTao not found");
         }
 
-        $adherentTao = $this->getValidator()->hasTao($entity, $tao);
+        $adherentTao = $this->getValidator()->hasTao($adherent, $tao);
 
         if ($adherentTao == null) {
 
-            $AdherentTao = new RtlqKungfuAdherentTao();
-            $AdherentTao->setAdherent($entity);
-            $AdherentTao->setTao($tao);
+            $adherentTao = new RtlqKungfuAdherentTao();
+            $adherentTao->setAdherent($adherent);
+            $adherentTao->setTao($tao);
 
             //add Tao to adherent
-            $entity->addTao($AdherentTao);
+            $adherent->addTao($adherentTao);
             $em = $this->getDoctrine()->getManager();
-            $em->merge($entity);
+            $em->merge($adherent);
             $em->flush();
-        } else {
-            $entity = $adherentTao;
-        }
-
+        } 
+        
         // conversion modele en DTO
-        $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($entity, RtlqKungfuAdherentTaoDTO::class);
+        $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($adherentTao, RtlqKungfuAdherentTaoDTO::class);
         return $this->newResponse(($dtos), Response::HTTP_CREATED);
     }
 
@@ -896,32 +925,9 @@ class AdherentController extends AbstractCrudApiController
         if (!is_object($tokenAuth)) {
             return $this->returnNotFoundResponse();
         }
-        $id = $tokenAuth->getUser()->getId();
+        $idUser = $tokenAuth->getUser()->getId();
 
-        $entity = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
-        if (!is_object($entity)) {
-            throw new NotFoundHttpException("Adherent $id not found");
-        }
-
-        $taoJointure = $this->getDoctrine()->getRepository(RtlqKungfuAdherentTao::class)->findTaoFilterByAdherentAndTao($id, $idTao);
-        if (sizeof($taoJointure) === 0) {
-            throw new NotFoundHttpException("Tao $idTao not found for this user");
-        }
-
-        // TODO faire Type et Builder ...
-        $data = json_decode($request->getContent(), true);
-        $taoJointure[0]->setNiveau($data['niveau']);
-        $taoJointure[0]->setNbRevision($data['nb_revision']);
-        $taoJointure[0]->setDriveId($data['drive_id']);
-        $taoJointure[0]->setFavoris($data['favoris']);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->merge($taoJointure[0]);
-        $em->flush();
-
-        // conversion modele en DTO
-        $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($taoJointure[0], RtlqKungfuAdherentTaoDTO::class);
-        return $this->newResponse(($dtos), Response::HTTP_CREATED);
+        return $this->updateTaoToUser($idUser, $idTao, $request);
     }
 
 

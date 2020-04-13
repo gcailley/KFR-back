@@ -71,6 +71,9 @@ services:
             - "@=service('doctrine.orm.entity_manager').getRepository('App:Security\\\\RtlqAuthToken')"
             - "@=service('doctrine.orm.entity_manager').getRepository('App:Association\\\\RtlqAdherent')"
 
+    routanglangquanbundle.video_converter:
+        class: App\Service\Video\VideoConverter
+
     # add service from Liip library
     Liip\ImagineBundle\Imagine\Data\DataManager:
         alias: 'liip_imagine.data.manager'

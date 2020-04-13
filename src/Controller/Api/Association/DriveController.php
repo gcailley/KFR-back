@@ -11,6 +11,7 @@ use App\Form\Type\Association\RtlqDriveType;
 use App\Service\Security\User\AuthTokenAuthenticator;
 use GuzzleHttp\json_encode;
 use App\Entity\Security\RtlqAuthToken;
+use App\Service\Video\VideoConverter;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -23,10 +24,12 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class DriveController extends AbstractRtlqController
 {
     protected $logger;
+    protected $videoConverter;
 
-    public function __construct(LoggerInterface $logger) 
+    public function __construct(LoggerInterface $logger, VideoConverter $videoConverter)
     {
         $this->logger = $logger;
+        $this->videoConverter = $videoConverter;
     }
 
     function newTypeClass(): string
@@ -44,7 +47,7 @@ class DriveController extends AbstractRtlqController
         return new $class;
     }
 
-   
+
     /**
      * 
      * Generate Thumbnail using Imagick class
@@ -145,7 +148,7 @@ class DriveController extends AbstractRtlqController
         }
 
         $img = $request->files->get('source');
-        if ($img == null ) {
+        if ($img == null) {
             return $this->newResponse("source empty.", Response::HTTP_BAD_REQUEST);
         }
         $idUser = $tokenAuth->getUser()->getId();
@@ -159,16 +162,28 @@ class DriveController extends AbstractRtlqController
         $file_path = $userDrive . DIRECTORY_SEPARATOR . $uid . '#' . $name;
 
         try {
-            $img->move($userDrive, basename($file_path));
+            if ($this->startsWith($img->getClientMimeType(), "video/") ) {
+                $file_path_finale = $this->videoConverter->convertToMp4(
+                        $img->getPathName(), 
+                        $file_path, 
+                        true);
+                if ($file_path_finale === $img->getPathName()) {
+                    // la convertion n'a pas eu lieu ou est ko
+                    $img->move($userDrive, $file_path);
+                } else {
+                    $file_path = $file_path_finale;
+                }
+            } else {
+                $img->move($userDrive, $file_path);
+            }
             $img == null;
             $dto = $this->createDriveDto($file_path);
             return $this->newResponse($dto, Response::HTTP_ACCEPTED);
         } catch (\Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException $th) {
-print($th->getMessage());
+
             $this->logger->error('An error occurred' . $th->getMessage());
             return $this->newResponse($th->getMessage(), Response::HTTP_REQUEST_ENTITY_TOO_LARGE);
         } catch (\Throwable $th) {
-print($th->getMessage());            
             $this->logger->error('An error occurred' . $th->getMessage());
             return $this->newResponse($th->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
