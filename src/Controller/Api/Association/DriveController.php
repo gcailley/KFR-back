@@ -142,16 +142,21 @@ class DriveController extends AbstractRtlqController
      */
     public function addDriveByToken(Request $request)
     {
+        // checkng user
         $tokenAuth = $this->extractUserByToken($request);
         if (!is_object($tokenAuth)) {
             return $this->returnNotFoundResponse();
         }
+        $idUser = $tokenAuth->getUser()->getId();
 
+        // checking input file
         $img = $request->files->get('source');
         if ($img == null) {
             return $this->newResponse("source empty.", Response::HTTP_BAD_REQUEST);
         }
-        $idUser = $tokenAuth->getUser()->getId();
+
+
+        // generating output filename
         $baseDir = $this->getParameter("user_drive_basedir");
         $userDrive = "${baseDir}/${idUser}/drive";
         if (!is_dir($userDrive)) {
@@ -163,16 +168,9 @@ class DriveController extends AbstractRtlqController
 
         try {
             if ($this->startsWith($img->getClientMimeType(), "video/") ) {
-                $file_path_finale = $this->videoConverter->convertToMp4(
-                        $img->getPathName(), 
-                        $file_path, 
-                        true);
-                if ($file_path_finale === $img->getPathName()) {
-                    // la convertion n'a pas eu lieu ou est ko
-                    $img->move($userDrive, $file_path);
-                } else {
-                    $file_path = $file_path_finale;
-                }
+                $this->videoConverter->convertToMp4(
+                    $img->getPathName(), 
+                    $file_path);
             } else {
                 $img->move($userDrive, $file_path);
             }

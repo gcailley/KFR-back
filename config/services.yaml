@@ -41,6 +41,9 @@ parameters:
             key: '%env(SECURITY_ENCRYPTAGE_KEY)%'
             cipher: '%env(SECURITY_ENCRYPTAGE_CIPHER)%'
 
+    ffmpeg:
+        cmd: '%env(FFMPEG_CMD)%'
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -70,9 +73,6 @@ services:
         arguments: 
             - "@=service('doctrine.orm.entity_manager').getRepository('App:Security\\\\RtlqAuthToken')"
             - "@=service('doctrine.orm.entity_manager').getRepository('App:Association\\\\RtlqAdherent')"
-
-    routanglangquanbundle.video_converter:
-        class: App\Service\Video\VideoConverter
 
     # add service from Liip library
     Liip\ImagineBundle\Imagine\Data\DataManager:
