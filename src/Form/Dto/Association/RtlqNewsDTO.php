@@ -10,65 +10,59 @@ use App\Form\Dto\AbstractRtlqDTO;
  */
 class RtlqNewsDTO extends AbstractRtlqDTO
 {
-    
-    protected $title;
-    protected $description;
-    protected $link;
-    protected $date_creation;
-    protected $actif;
 
-    
     public function __construct()
     {
     }
-    
+
+    protected $title;
     public function getTitle()
     {
         return $this->title;
     }
-
-    public function getDescription()
-    {
-        return $this->description;
-    }
-    
-    public function getLink()
-    {
-        return $this->link;
-    }
-    public function getDateCreation()
-    {
-        return $this->date_creation;
-    }
-
-    public function isActif()
-    {
-        return $this->actif;
-    }
-
     public function setTitle($title)
     {
         $this->title = $title;
         return $this;
     }
 
+    protected $description;
+    public function getDescription()
+    {
+        return $this->description;
+    }
     public function setDescription($description)
     {
         $this->description = $description;
         return $this;
     }
 
+    protected $link;
+    public function getLink()
+    {
+        return $this->link;
+    }
     public function setLink($link)
     {
         $this->link = $link;
         return $this;
     }
 
-    
+    protected $actif;
+    public function isActif()
+    {
+        return $this->actif;
+    }
     public function setActif($actif)
     {
         $this->actif = $actif;
         return $this;
+    }
+
+    protected $date_creation;
+    public function getDateCreation()
+    {
+        return $this->date_creation;
     }
     public function setDateCreation($dateCreation)
     {

@@ -590,17 +590,33 @@ class AdherentController extends AbstractCrudApiController
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $taoJointure = $this->getDoctrine()->getRepository(RtlqKungfuAdherentTao::class)->findTaoFilterByAdherentAndTao($id, $idTao);
+        $taoJointure = $this->getDoctrine()
+            ->getRepository(RtlqKungfuAdherentTao::class)
+            ->findTaoFilterByAdherentAndTao($id, $idTao);
         if (sizeof($taoJointure) === 0) {
             throw new NotFoundHttpException("Tao $idTao not found for this user");
         }
 
         // TODO faire Type et Builder ...
+        //
+        //
         $data = json_decode($request->getContent(), true);
+        // $em = $this->getDoctrine()->getManager();
+        // $entityDto = $this->newDto();
+        // $form = $this->createForm($this->newTypeClass(), $entityDto);
+        // $form->submit($data);
+        // //validation de l'object DTO
+        // $errors = $this->getValidator()->doPutValidateDto($entityDto, $em);
+        // if ($errors != null && sizeof($errors) != 0) {
+        // throw $this->createInvalideBean($errors);
+        // }
+        // // convertion to Modele
+        // $entityMetier = $this->getBuilder()->dtoToModele($em, $entityDto, $entityDB);
         $taoJointure[0]->setNiveau($data['niveau']);
         $taoJointure[0]->setNbRevision($data['nb_revision']);
         $taoJointure[0]->setDriveId($data['drive_id']);
         $taoJointure[0]->setFavoris($data['favoris']);
+        $taoJointure[0]->setDateUpdate($data['date_update']);
 
         $em = $this->getDoctrine()->getManager();
         $em->merge($taoJointure[0]);

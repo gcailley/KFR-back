@@ -122,8 +122,19 @@ class RtlqKungfuAdherentTaoDTO extends AbstractRtlqDTO {
         $this->annee_apprentissage = $value;
         return $this;
     }
-
     public  function getAnneeApprentissage() {
         return $this->annee_apprentissage;
     }
+
+    protected $date_update;
+    public function getDateUpdate()
+    {
+        return $this->date_update;
+    }
+    public function setDateUpdate($DateUpdate)
+    {
+        $this->date_update = $DateUpdate;
+        return $this;
+    }
+
 }

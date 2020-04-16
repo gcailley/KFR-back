@@ -94,7 +94,7 @@ class VideoConverter
             $output = $this->working_directory.DIRECTORY_SEPARATOR.md5(uniqid(rand(), true)).'.mp4';
 
             $process = new VideoProcess($this->logger, $this->video_exec, $inputFilename, $outputFilename);
-            $statusProcess = $process->start();
+            $statusProcess = $process->execute();
             $this->logger->info("Process status : ${statusProcess}");
 
             $pid = $process->getPid();

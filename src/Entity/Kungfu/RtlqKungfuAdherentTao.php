@@ -201,4 +201,33 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity
         $this->favoris = $value;
         return $this;
     }
+
+        /**
+     *
+     * @var \DateTime @ORM\Column(name="date_update", type="date", nullable=false)
+     */
+    private $dateUpdate;
+
+    /**
+     * Set DateUpdate
+     *
+     * @param \DateTime $DateUpdate
+     *
+     * @return RtlqKungfuAdherentTao
+     */
+    public function setDateUpdate($DateUpdate) {
+        $this->DateUpdate = $DateUpdate;
+        return $this;
+    }
+
+    /**
+     * Get DateUpdate
+     *
+     * @return \DateTime
+     */
+    public function getDateUpdate() {
+        return $this->DateUpdate;
+    }
+
+
 }

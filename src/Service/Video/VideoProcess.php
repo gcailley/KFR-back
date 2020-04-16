@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Service\Video;
+
 use Symfony\Component\Process\Process;
 
 class VideoProcess extends Process
@@ -12,7 +14,7 @@ class VideoProcess extends Process
         $this->setTimeout(3600);
         $this->disableOutput();
     }
-    public function start()
+    public function execute()
     {
         return parent::start(
             function ($data) {
