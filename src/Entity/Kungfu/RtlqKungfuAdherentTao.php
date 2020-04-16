@@ -206,17 +206,17 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity
      *
      * @var \DateTime @ORM\Column(name="date_update", type="date", nullable=false)
      */
-    private $dateUpdate;
+    private $date_update;
 
     /**
      * Set DateUpdate
      *
-     * @param \DateTime $DateUpdate
+     * @param \DateTime $date_update
      *
      * @return RtlqKungfuAdherentTao
      */
-    public function setDateUpdate($DateUpdate) {
-        $this->DateUpdate = $DateUpdate;
+    public function setDateUpdate($date_update) {
+        $this->date_update = $date_update;
         return $this;
     }
 
@@ -226,7 +226,7 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity
      * @return \DateTime
      */
     public function getDateUpdate() {
-        return $this->DateUpdate;
+        return $this->date_update;
     }
 
 

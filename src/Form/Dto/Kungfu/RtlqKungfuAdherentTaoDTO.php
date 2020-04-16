@@ -131,9 +131,9 @@ class RtlqKungfuAdherentTaoDTO extends AbstractRtlqDTO {
     {
         return $this->date_update;
     }
-    public function setDateUpdate($DateUpdate)
+    public function setDateUpdate($date_update)
     {
-        $this->date_update = $DateUpdate;
+        $this->date_update = $date_update;
         return $this;
     }
 
