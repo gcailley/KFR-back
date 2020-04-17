@@ -53,4 +53,14 @@ class RtlqKungfuAdherentTaoBuilder extends AbstractRtlqBuilder
 
         return $dto;
     }
+
+    public function updateModele( RtlqKungfuAdherentTao $modele, RtlqKungfuAdherentTaoDTO $dto) {
+        $modele->setNiveau ( $dto->getNiveau () );
+        $modele->setNbRevision ( $dto->getNbRevision () );
+        $modele->setAnneeApprentissage( $dto->getAnneeApprentissage() );
+        $modele->setFavoris( $dto->getFavoris() );
+        $modele->setDateUpdate($dto->getDateUpdate());
+
+        return $modele;
+    }
 }

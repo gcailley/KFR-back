@@ -1,1 +1,1 @@
-ALTER TABLE rtlq_adherents_taos ADD date_update DATE NOT NULL;
+ALTER TABLE rtlq_adherents_taos ADD date_update DATE DEFAULT NULL;

@@ -38,6 +38,8 @@ use App\Form\Dto\Kungfu\RtlqKungfuAdherentTaoDTO;
 use App\Form\Dto\Kungfu\RtlqKungfuTaoDTO;
 use App\Form\Dto\Tresorie\RtlqTresorieDTO;
 use App\Form\Type\Association\RtlqAdherentType;
+use App\Form\Type\Kungfu\RtlqKungfuAdherentTaoType;
+use Psr\Log\LoggerInterface;
 
 /**
  * @Route("/association/adherents")
@@ -47,6 +49,7 @@ class AdherentController extends AbstractCrudApiController
     public const URI_AVATAR = '/association/adherents/avatar/';
     private $mailer;
     private $encoder;
+    protected $logger;
 
     public function __construct(
         \Swift_Mailer $mailer = null,
@@ -60,6 +63,19 @@ class AdherentController extends AbstractCrudApiController
         $this->rtlqAdherentLightBuilder = new RtlqAdherentLightBuilder();
         $this->init();
     }
+
+
+    /**
+     * @internal
+     * @required
+     */
+    public function setLogger(LoggerInterface $logger): ?LoggerInterface
+    {
+        $this->logger = $logger;
+
+        return $logger;
+    }
+
 
     public function initBuilder()
     {
@@ -597,33 +613,26 @@ class AdherentController extends AbstractCrudApiController
             throw new NotFoundHttpException("Tao $idTao not found for this user");
         }
 
-        // TODO faire Type et Builder ...
-        //
-        //
         $data = json_decode($request->getContent(), true);
-        // $em = $this->getDoctrine()->getManager();
-        // $entityDto = $this->newDto();
-        // $form = $this->createForm($this->newTypeClass(), $entityDto);
-        // $form->submit($data);
-        // //validation de l'object DTO
-        // $errors = $this->getValidator()->doPutValidateDto($entityDto, $em);
-        // if ($errors != null && sizeof($errors) != 0) {
-        // throw $this->createInvalideBean($errors);
-        // }
-        // // convertion to Modele
-        // $entityMetier = $this->getBuilder()->dtoToModele($em, $entityDto, $entityDB);
-        $taoJointure[0]->setNiveau($data['niveau']);
-        $taoJointure[0]->setNbRevision($data['nb_revision']);
-        $taoJointure[0]->setDriveId($data['drive_id']);
-        $taoJointure[0]->setFavoris($data['favoris']);
-        $taoJointure[0]->setDateUpdate($data['date_update']);
+        $adhTaoDto = new RtlqKungfuAdherentTaoDTO();
+        $adhTaoBuilder = new RtlqKungfuAdherentTaoBuilder();
+        $form = $this->createForm(RtlqKungfuAdherentTaoType::class, $adhTaoDto);
+        $form->submit($data);
+        //validation de l'object DTO
+        $errors = $this->getValidator()->doPutValidateDto($adhTaoDto);
+        if ($errors != null && sizeof($errors) != 0) {
+            throw $this->createInvalideBean($errors);
+        }
+        // convertion to Modele
+        $entityMetier =  $taoJointure[0];
+        $entityMetier = $adhTaoBuilder->updateModele($entityMetier, $adhTaoDto);
 
         $em = $this->getDoctrine()->getManager();
-        $em->merge($taoJointure[0]);
+        $em->merge($entityMetier);
         $em->flush();
 
         // conversion modele en DTO
-        $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($taoJointure[0], RtlqKungfuAdherentTaoDTO::class);
+        $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($entityMetier, RtlqKungfuAdherentTaoDTO::class);
         return $this->newResponse(($dtos), Response::HTTP_CREATED);
     }
 
@@ -654,8 +663,8 @@ class AdherentController extends AbstractCrudApiController
             $em = $this->getDoctrine()->getManager();
             $em->merge($adherent);
             $em->flush();
-        } 
-        
+        }
+
         // conversion modele en DTO
         $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($adherentTao, RtlqKungfuAdherentTaoDTO::class);
         return $this->newResponse(($dtos), Response::HTTP_CREATED);

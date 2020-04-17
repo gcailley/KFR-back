@@ -204,7 +204,7 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity
 
         /**
      *
-     * @var \DateTime @ORM\Column(name="date_update", type="date", nullable=false)
+     * @var \DateTime @ORM\Column(name="date_update", type="date", nullable=true)
      */
     private $date_update;
 
