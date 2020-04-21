@@ -165,7 +165,6 @@ class DriveController extends AbstractRtlqController
         $uid = md5(uniqid(rand(), true));
         $name = $request->request->get('filename');
         $file_path = $userDrive . DIRECTORY_SEPARATOR . $uid . '#' . $name;
-
         try {
             if ($this->startsWith($img->getClientMimeType(), "video/") ) {
                 $this->videoConverter->convertToMp4(
@@ -263,7 +262,7 @@ class DriveController extends AbstractRtlqController
         if (sizeof($list) == 0) {
             return $this->newResponse(null, Response::HTTP_ACCEPTED);
         }
-        $driveDto = $this->createDriveDto($list[0]);
+        $driveDto = $this->createDriveDto($userDrive . DIRECTORY_SEPARATOR . $list[0]);
         return $this->newResponse($driveDto, Response::HTTP_ACCEPTED);
     }
 

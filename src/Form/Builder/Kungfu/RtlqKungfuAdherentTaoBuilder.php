@@ -60,7 +60,8 @@ class RtlqKungfuAdherentTaoBuilder extends AbstractRtlqBuilder
         $modele->setAnneeApprentissage( $dto->getAnneeApprentissage() );
         $modele->setFavoris( $dto->getFavoris() );
         $modele->setDateUpdate($dto->getDateUpdate());
-
+        $modele->setDriveId($dto->getDriveId());
+        
         return $modele;
     }
 }
