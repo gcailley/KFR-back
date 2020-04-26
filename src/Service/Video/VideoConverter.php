@@ -20,7 +20,7 @@ class VideoConverter
 
     private $working_directory;
     private $video_exec;
-    private $enable = true;
+    private $enable = false;
 
 
     public function __construct(LoggerInterface $logger)
