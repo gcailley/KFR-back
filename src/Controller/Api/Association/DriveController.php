@@ -11,7 +11,8 @@ use App\Form\Type\Association\RtlqDriveType;
 use App\Service\Security\User\AuthTokenAuthenticator;
 use GuzzleHttp\json_encode;
 use App\Entity\Security\RtlqAuthToken;
-use App\Service\Video\VideoConverter;
+use App\Service\Video\VideoConverterService;
+use App\Service\Video\VideoProcess;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -24,12 +25,12 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class DriveController extends AbstractRtlqController
 {
     protected $logger;
-    protected $videoConverter;
+    protected $videoConverterService;
 
-    public function __construct(LoggerInterface $logger, VideoConverter $videoConverter)
+    public function __construct(LoggerInterface $logger, VideoConverterService $videoConverterService)
     {
         $this->logger = $logger;
-        $this->videoConverter = $videoConverter;
+        $this->videoConverterService = $videoConverterService;
     }
 
     function newTypeClass(): string
@@ -80,18 +81,16 @@ class DriveController extends AbstractRtlqController
 
     private function getAllByUserId($id)
     {
-        $userDrive = $this->getUserHomeDirectory($id) . 'drive';
-        if (!is_dir($userDrive)) {
-            $this->createPath($userDrive);
-        }
+        $userDrive = $this->getUserDrive($id);
+        $userWorkingDrive = $this->getWorkingDrive($id);
 
-        $list = $this->dirToArray($userDrive);
+        $listFilesConverted = $this->dirToArray($userWorkingDrive);
+        $listFiles = $this->dirToArray($userDrive);
 
         $json = [];
-        foreach ($list as $key => $value) {
+        foreach ($listFiles as $key => $value) {
             $filename = $userDrive . '/' . $value;
-
-            $json[] = $this->createDriveDto($filename);
+            $json[] = $this->createDriveDto($filename, in_array($value, $listFilesConverted));
         }
 
         return $this
@@ -122,7 +121,7 @@ class DriveController extends AbstractRtlqController
     }
 
 
-    private function createDriveDto($file_path): RtlqDriveDTO
+    private function createDriveDto($file_path, $converting = false): RtlqDriveDTO
     {
         $driveDto = new RtlqDriveDTO();
 
@@ -133,6 +132,7 @@ class DriveController extends AbstractRtlqController
         $driveDto->SetType(mime_content_type($file_path));
         $driveDto->SetSize($this->humanFilesize($file_path));
         $driveDto->SetThumbnail('');
+        $driveDto->SetConverting($converting);
 
         return $driveDto;
     }
@@ -157,32 +157,63 @@ class DriveController extends AbstractRtlqController
 
 
         // generating output filename
-        $baseDir = $this->getParameter("user_drive_basedir");
-        $userDrive = "${baseDir}/${idUser}/drive";
-        if (!is_dir($userDrive)) {
-            $this->createPath($userDrive);
-        }
+        $userDrive = $this->getUserDrive($idUser);
         $uid = md5(uniqid(rand(), true));
         $name = $request->request->get('filename');
-        $file_path = $userDrive . DIRECTORY_SEPARATOR . $uid . '#' . $name;
+        $filename = $uid . '#' . $name;
+        $file_path = $userDrive . DIRECTORY_SEPARATOR . $filename;
+
+        // file move without converting
+        $img->move($userDrive, $file_path);
         try {
-            if ($this->startsWith($img->getClientMimeType(), "video/") ) {
-                $this->videoConverter->convertToMp4(
-                    $img->getPathName(), 
-                    $file_path);
-            } else {
-                $img->move($userDrive, $file_path);
+            if ($this->startsWith($img->getClientMimeType(), "video/")) {
+                $workingFile = $this->getWorkingDrive($idUser) . DIRECTORY_SEPARATOR . $filename;
+                $this->videoConverterService->convertToMp4(
+                    $file_path,
+                    $workingFile
+                );
             }
             $img == null;
             $dto = $this->createDriveDto($file_path);
             return $this->newResponse($dto, Response::HTTP_ACCEPTED);
         } catch (\Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException $th) {
-
+            $this->cleanFile($file_path);
             $this->logger->error('An error occurred' . $th->getMessage());
             return $this->newResponse($th->getMessage(), Response::HTTP_REQUEST_ENTITY_TOO_LARGE);
-        } catch (\Throwable $th) {
+        } catch (Exception $th) {
+            $this->cleanFile($file_path);
             $this->logger->error('An error occurred' . $th->getMessage());
             return $this->newResponse($th->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private function getUserDrive($idUser)
+    {
+        $userHomeDrive = $this->getUserHomeDirectory($idUser);
+        $userDir = $userHomeDrive . DIRECTORY_SEPARATOR . "drive";
+        if (!is_dir($userDir)) {
+            $this->createPath($userDir);
+        }
+        return  $userDir;
+    }
+
+    private function getWorkingDrive($idUser)
+    {
+        $userHomeDrive = $this->getUserHomeDirectory($idUser);
+        $workingDir = $userHomeDrive. DIRECTORY_SEPARATOR . "converting_video";
+        if (!is_dir($workingDir)) {
+            $this->createPath($workingDir);
+        }
+        return  $workingDir;
+    }
+
+    private function cleanFile($file)
+    {
+        if (file_exists($file)) {
+            unlink($file);
+            if (file_exists($file . VideoConverterService::$EXTENSION)) {
+                unlink($file . VideoConverterService::$EXTENSION);
+            }
         }
     }
 
@@ -255,8 +286,7 @@ class DriveController extends AbstractRtlqController
         }
 
         $idUser = $tokenAuth->getUser()->getId();
-        $baseDir = $this->getParameter("user_drive_basedir");
-        $userDrive = "${baseDir}/${idUser}/drive/";
+        $userDrive = $this->getUserDrive($idUser);
 
         $list = $this->dirToArray($userDrive, $id);
         if (sizeof($list) == 0) {
@@ -294,17 +324,16 @@ class DriveController extends AbstractRtlqController
         $keyDecrypted = $this->decrypter($keyEncrypted);
         $key = \json_decode($keyDecrypted, true);
 
-        $userId = $key['userId'];
+        $idUser = $key['userId'];
         $id = $key['id'];
 
-        $baseDir = $this->getParameter("user_drive_basedir");
-        $userDrive = "${baseDir}/${userId}/drive/";
-
+        $userDrive = $this->getUserDrive($idUser);
         $list = $this->dirToArray($userDrive, $id);
+        $this->logger->info("Nombre de fichiers dans le drive : " . sizeof($list) . " with id : " . $id);
         if (sizeof($list) == 0) {
             return $this->returnNotFoundResponse();
         }
-        $file_path = $userDrive . $list[0];
+        $file_path = $userDrive . DIRECTORY_SEPARATOR . $list[0];
         $file_name = basename($file_path);
 
         // This should return the file to the browser as response

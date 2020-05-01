@@ -2,26 +2,44 @@
 
 namespace App\Service\Video;
 
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
 class VideoProcess extends Process
 {
     protected $logger;
-    public function __construct($logger, $cmd, $inputFilename, $outputFilename)
+    private $cmd;
+    private $debug = false;
+
+    public function __construct($logger, $runner, $cmd, $inputFilename, $outputFilename)
     {
-        parent::__construct([$cmd, "-i", $inputFilename, "-y", $outputFilename]);
+        parent::__construct(['php', $runner, $cmd, $inputFilename, $outputFilename]);
+        $this->cmd = "php \"$runner\" \"$cmd\" \"$inputFilename\" \"$outputFilename\"";
+
+        $this->inputFilename = $inputFilename;
         $this->logger = $logger;
-        $this->setTimeout(3600);
-        $this->disableOutput();
+
+        $this->logger->info("input: " . $this->inputFilename);
+        //$this->setTimeout(3600);
     }
     public function execute()
     {
-        return parent::start(
-            function ($data) {
-               $this->logger->error(json_encode($data));
-            },
 
-        );
+        $this->logger->info("Running : $this->cmd ");
+        if ($this->debug) {
+            $stream = fopen('php://temporary', 'w+');
+            $this->setInput($stream);
+        } else {
+            $this->disableOutput();
+        }
+
+        $status = $this->start();
+
+        if ($this->debug) {
+            fclose($stream);
+            $this->wait();
+            $this->logger->info($this->getOutput());
+        }
     }
 
     public function __destruct()

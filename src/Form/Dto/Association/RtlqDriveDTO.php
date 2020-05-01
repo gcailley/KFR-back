@@ -82,4 +82,15 @@ class RtlqDriveDTO extends AbstractRtlqDTO
         return $this;
     }
 
+    protected $converting;
+    public function getConverting()
+    {
+        return $this->converting;
+    }
+
+    public function setConverting($value)
+    {
+        $this->converting = $value;
+        return $this;
+    }
 }

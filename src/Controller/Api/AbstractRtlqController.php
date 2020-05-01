@@ -96,7 +96,7 @@ abstract class AbstractRtlqController extends AbstractController
         return $original_plaintext;
     }
 
-    protected function dirToArray($dir, $pattern = null)
+    protected function dirToArray($dir, $pattern = null, $found = true)
     {
 
         $result = array();
@@ -107,8 +107,14 @@ abstract class AbstractRtlqController extends AbstractController
                 if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) {
                     $result[$value] = $this->dirToArray($dir . DIRECTORY_SEPARATOR . $value, $pattern);
                 } else {
-                    if (null == $pattern || ($pattern != null && strpos($value, $pattern) !== false)) {
-                        $result[] = $value;
+                    if ($found) {
+                        if (null == $pattern || (null != $pattern && false !== strpos($value, $pattern))) {
+                            $result[] = $value;
+                        }
+                    } else {
+                        if (null == $pattern || (null != $pattern && false === strpos($value, $pattern))) {
+                            $result[] = $value;
+                        }
                     }
                 }
             }

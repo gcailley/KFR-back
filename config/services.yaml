@@ -43,6 +43,7 @@ parameters:
 
     ffmpeg:
         cmd: '%env(FFMPEG_CMD)%'
+        runner: '%env(FFMPEG_RUNNER_CMD)%'
 
 services:
     # default configuration for services in *this* file
