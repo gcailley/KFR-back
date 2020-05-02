@@ -32,6 +32,7 @@ class RtlqKungfuTaoType extends AbstractRtlqType
         ->add ( 'niveau_id', NumberType::class )
         ->add ( 'niveau_name', TextType::class )
         ->add ( 'combine', CheckBoxType::class )
+        ->add ( 'nb_moves', NumberType::class )
         ->add ( 'actif', CheckBoxType::class );
     }
     

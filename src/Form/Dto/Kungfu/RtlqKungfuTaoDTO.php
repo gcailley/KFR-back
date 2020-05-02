@@ -140,4 +140,13 @@ class RtlqKungfuTaoDTO extends AbstractRtlqDTO {
         $this->actif = $value;
         return $this;
     }
+
+    protected $nb_moves;
+    public function getNbMoves() {
+        return $this->nb_moves;
+    }
+    public function setNbMoves($value) {
+        $this->nb_moves = $value;
+        return $this;
+    }
 }

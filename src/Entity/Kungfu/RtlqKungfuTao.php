@@ -227,4 +227,18 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
         return false;
     }
 
+     /**
+     *
+     * @var string @ORM\Column(name="nb_moves", type="integer", nullable=true)
+     */
+    protected $nb_moves = false;
+    public function getNbMoves() {
+        return $this->nb_moves;
+    }
+    public function setNbMoves($value) {
+        $this->nb_moves = $value;
+        return $this;
+    }
+
+
 }

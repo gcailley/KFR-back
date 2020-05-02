@@ -1,0 +1,1 @@
+ ALTER TABLE rtlq_tao ADD nb_moves INT DEFAULT NULL;

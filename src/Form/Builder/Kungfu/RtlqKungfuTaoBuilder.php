@@ -21,6 +21,7 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         $modele->setArme($postModele->getArme());
         $modele->setActif($postModele->getActif());
         $modele->setCombine($postModele->getCombine());
+        $modele->setNbMoves($postModele->getNbMoves());
 
         $modele->setStyle($em->getReference(RtlqKungfuStyle::class, $postModele->getStyleId()));
         $modele->setNiveau($em->getReference(RtlqKungfuNiveau::class, $postModele->getNiveauId()));
@@ -46,6 +47,7 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         $dto->setNiveauName($modele->getNiveauName());
         $dto->setActif($modele->getActif());
         $dto->setCombine($modele->getCombine());
+        $dto->setNbMoves($modele->getNbMoves());
 
         return $dto;
     }
