@@ -94,6 +94,17 @@ class RtlqKungfuAdherentTaoDTO extends AbstractRtlqDTO {
         return $this->nom_chinois;
     }
     
+    protected $nom;
+    public function setNom($value)
+    {
+        $this->nom = $value;
+        return $this;
+    }
+
+    public  function getNom() {
+        return $this->nom;
+    }
+
     protected $style_name;
     public function setStyleName($value)
     {

@@ -47,6 +47,7 @@ class RtlqKungfuAdherentTaoBuilder extends AbstractRtlqBuilder
         
         $dto->setTaoId( $modele->getTaoId() );
         $dto->setPinyin( $modele->getTao()->getPinyin() );
+        $dto->setNom( $modele->getTao()->getNom() );
         $dto->setNomChinois( $modele->getTao()->getNomChinois() );
         $dto->setStyleName( $modele->getTao()->getStyleName() );
         $dto->setTraduction( $modele->getTao()->getTraduction() );
