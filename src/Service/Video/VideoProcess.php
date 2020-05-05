@@ -27,6 +27,7 @@ class VideoProcess extends Process
 
         $this->logger->info("Running : $this->cmd ");
         if ($this->debug) {
+            $this->logger->info("Debug is ON");
             $stream = fopen('php://temporary', 'w+');
             $this->setInput($stream);
         } else {
