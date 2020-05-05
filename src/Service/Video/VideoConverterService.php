@@ -20,6 +20,8 @@ class VideoConverterService
     private $working_directory;
     private $video_exec;
     private $video_runner;
+    private $php_cmd;
+    private $debug;
     private $enable = true;
 
 
@@ -54,6 +56,11 @@ class VideoConverterService
         if ($this->video_runner == null) {
             throw new UnsetKeyException($this->key_video_exec . " not initialized.");
         }
+        $this->debug = ($this->getParameter($this->key_video_exec)["ffmpeg_runner_debug"] == 'true') ? true : false;
+        if ($this->debug == null) {
+            throw new UnsetKeyException($this->key_video_exec . " not initialized.");
+        }
+
         $this->php_cmd = $this->getParameter($this->key_video_exec)["php_cmd"];
         if ($this->php_cmd == null) {
             throw new UnsetKeyException($this->key_video_exec . " not initialized.");
@@ -97,6 +104,7 @@ class VideoConverterService
         if ($this->enable) {
             $this->logger->info("Converting  ${outputFilename}");
             $process = new VideoProcess($this->logger, $this->php_cmd, $this->video_runner,  $this->video_exec, $inputFilename, $outputFilename);
+            $process->setDebugMode($this->debug);
             $process->execute();
 
             $pid = $process->getPid();

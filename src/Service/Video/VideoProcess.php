@@ -22,6 +22,11 @@ class VideoProcess extends Process
         $this->logger->info("input: " . $this->inputFilename);
         //$this->setTimeout(3600);
     }
+
+    public function setDebugMode($debug) {
+        $this->debug = $debug;
+    }
+
     public function execute()
     {
 
