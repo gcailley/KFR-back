@@ -15,7 +15,7 @@ class VideoConverterService
      * @var ContainerInterface
      */
     protected $container;
-    private $key_video_exec = "ffmpeg";
+    private $key_video_exec = "conversion_video";
     
     private $working_directory;
     private $video_exec;
@@ -46,12 +46,16 @@ class VideoConverterService
 
     private function init()
     {
-        $this->video_exec = $this->getParameter($this->key_video_exec)["cmd"];
+        $this->video_exec = $this->getParameter($this->key_video_exec)["ffmpeg_cmd"];
         if ($this->video_exec == null) {
             throw new UnsetKeyException($this->key_video_exec . " not initialized.");
         }
-        $this->video_runner = $this->getParameter($this->key_video_exec)["runner"];
+        $this->video_runner = $this->getParameter($this->key_video_exec)["ffmpeg_runner"];
         if ($this->video_runner == null) {
+            throw new UnsetKeyException($this->key_video_exec . " not initialized.");
+        }
+        $this->php_cmd = $this->getParameter($this->key_video_exec)["php_cmd"];
+        if ($this->php_cmd == null) {
             throw new UnsetKeyException($this->key_video_exec . " not initialized.");
         }
         $this->initWorkingDirectory();
@@ -92,7 +96,7 @@ class VideoConverterService
         
         if ($this->enable) {
             $this->logger->info("Converting  ${outputFilename}");
-            $process = new VideoProcess($this->logger, $this->video_runner,  $this->video_exec, $inputFilename, $outputFilename);
+            $process = new VideoProcess($this->logger, $this->php_cmd, $this->video_runner,  $this->video_exec, $inputFilename, $outputFilename);
             $process->execute();
 
             $pid = $process->getPid();
