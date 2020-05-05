@@ -8,11 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\Dto\Association\RtlqDriveDTO;
 use App\Form\Type\Association\RtlqDriveType;
-use App\Service\Security\User\AuthTokenAuthenticator;
 use GuzzleHttp\json_encode;
-use App\Entity\Security\RtlqAuthToken;
 use App\Service\Video\VideoConverterService;
-use App\Service\Video\VideoProcess;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -211,9 +208,6 @@ class DriveController extends AbstractRtlqController
     {
         if (file_exists($file)) {
             unlink($file);
-            if (file_exists($file . VideoConverterService::$EXTENSION)) {
-                unlink($file . VideoConverterService::$EXTENSION);
-            }
         }
     }
 
