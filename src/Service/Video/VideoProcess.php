@@ -9,7 +9,7 @@ class VideoProcess extends Process
 {
     protected $logger;
     private $cmd;
-    private $debug = false;
+    private $debug = true;
 
     public function __construct($logger, $runner, $cmd, $inputFilename, $outputFilename)
     {
