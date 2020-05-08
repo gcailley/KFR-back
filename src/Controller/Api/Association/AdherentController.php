@@ -567,8 +567,6 @@ class AdherentController extends AbstractCrudApiController
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
-
-
     // ********************************* TOAS **********************************************//
 
     /**
@@ -951,6 +949,19 @@ class AdherentController extends AbstractCrudApiController
             return $this->returnNotFoundResponse();
         }
         $idUser = $tokenAuth->getUser()->getId();
+
+        return $this->updateTaoToUser($idUser, $idTao, $request);
+    }
+    /**
+     * @Route("/by-iduser-{idUser}/mytaos/{idTao}", methods={"PUT"})
+     */
+    public function updateTaoByIdUser($idUser, $idTao, Request $request)
+    {
+        // checkng user
+        $entity = $this->getDoctrine()->getRepository(RtlqAdherent::class)->find($idUser);
+        if (!is_object($entity)) {
+            return $this->returnNotFoundResponse();
+        }
 
         return $this->updateTaoToUser($idUser, $idTao, $request);
     }

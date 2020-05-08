@@ -37,6 +37,7 @@ class VideoProcess extends Process
             $this->setInput($stream);
         } else {
             $this->disableOutput();
+            $this->setTimeout(3600);
         }
 
         $status = $this->start();

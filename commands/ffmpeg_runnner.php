@@ -11,14 +11,13 @@ print($ffmpegCmd );
 print($inputFilename  );
 print($outputFilename  );
 
-$cmd="${ffmpegCmd} -i ${inputFilename} -y ${outputFilename}";
+$cmd="${ffmpegCmd} -i ${inputFilename} -y ${outputFilename} ";
 print($cmd );
 print(exec($cmd));
 
 
-
 if (file_exists($rawOutputFilename) ) {	
-    print($rawOutputFilename . " converted");
+    print($rawOutputFilename . " converted. ");
 
     if (file_exists($rawInputFilename)) {
         print("try to delete " + $rawInputFilename);
@@ -28,16 +27,16 @@ if (file_exists($rawOutputFilename) ) {
             print($inputFilename . " NOT deleted. ");
         }
     } else {
-        print($rawInputFilename . " does NOT exist.");
+        print($rawInputFilename . " does NOT exist. ");
     }
 
     if (rename($rawOutputFilename, $rawInputFilename)) {
-        print($rawOutputFilename . " renamed.");
+        print($rawOutputFilename . " renamed. ");
     } else {
-        print($rawOutputFilename . " NOT renamed.");
+        print($rawOutputFilename . " NOT renamed. ");
     }
 
 } else {	
-    print($rawOutputFilename . " not converted.");}
+    print($rawOutputFilename . " not converted. ");}
     print("##########################################");
 ?>

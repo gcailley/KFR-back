@@ -3,6 +3,7 @@
 namespace App\Controller\Api\Association;
 
 use App\Controller\Api\AbstractRtlqController;
+use App\Entity\Association\RtlqAdherent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -76,10 +77,10 @@ class DriveController extends AbstractRtlqController
         }
     }
 
-    private function getAllByUserId($id)
+    private function _getAllByUser($user)
     {
-        $userDrive = $this->getUserDrive($id);
-        $userWorkingDrive = $this->getWorkingDrive($id);
+        $userDrive = $this->getUserDrive($user->getId());
+        $userWorkingDrive = $this->getWorkingDrive($user->getId());
 
         $listFilesConverted = $this->dirToArray($userWorkingDrive);
         $listFiles = $this->dirToArray($userDrive);
@@ -106,15 +107,24 @@ class DriveController extends AbstractRtlqController
     /**
      * @Route("/by-token", methods={"GET"})
      */
-    public function getUserByToken(Request $request)
+    public function getDriveUserByToken(Request $request)
     {
-        $tokenAuth = $this->extractUserByToken($request);
-        if (!is_object($tokenAuth)) {
-            return $this->returnNotFoundResponse();
-        }
+        $tokenAuth = $this->getTokenAuth($request);
 
         //get user information based on the id associate from the token
-        return $this->getAllByUserId($tokenAuth->getUser()->getId());
+        return $this->_getAllByUser($tokenAuth->getUser());
+    }
+
+    /**
+     * @Route("/by-iduser-{idUser}", methods={"GET"})
+     */
+    public function getDriveUserByIdUser($idUser, Request $request)
+    {
+        // check user existance
+        $entity = $this->getEntityById(RtlqAdherent::class, $idUser);
+
+        //get user information based on the id associate from the token
+        return $this->_getAllByUser($entity);
     }
 
 
@@ -139,25 +149,39 @@ class DriveController extends AbstractRtlqController
      */
     public function addDriveByToken(Request $request)
     {
-        // checkng user
-        $tokenAuth = $this->extractUserByToken($request);
-        if (!is_object($tokenAuth)) {
-            return $this->returnNotFoundResponse();
-        }
+        // get user token
+        $tokenAuth  = $this->getTokenAuth($request);
         $idUser = $tokenAuth->getUser()->getId();
+
+        return $this->_addDriveByIdUser($idUser, $request);
+    }
+
+    /**
+     * @Route("/by-iduser-{idUser}", methods={"POST"})
+     */
+    public function addDriveUserByIdUser($idUser, Request $request)
+    {
+        // check user existance
+        $entity = $this->getEntityById(RtlqAdherent::class, $idUser);
+        return $this->_addDriveByIdUser($idUser, $request);
+    }
+
+
+    private function _addDriveByIdUser($idUser, $request)
+    {
 
         // checking input file
         $img = $request->files->get('source');
-        if ($img == null) {
-            return $this->newResponse("source empty.", Response::HTTP_BAD_REQUEST);
+        $this->logger->error($img === null) ;
+        if ($img === null) {
+            return $this->newResponse("source empty.", Response::HTTP_REQUEST_ENTITY_TOO_LARGE);
         }
-
 
         // generating output filename
         $userDrive = $this->getUserDrive($idUser);
         $uid = md5(uniqid(rand(), true));
         $name = $request->request->get('filename');
-        $filename = $uid . '#' . $name;
+        $filename = $uid . '#' . str_replace(" ","", $name);
         $file_path = $userDrive . DIRECTORY_SEPARATOR . $filename;
 
         // file move without converting
@@ -197,7 +221,7 @@ class DriveController extends AbstractRtlqController
     private function getWorkingDrive($idUser)
     {
         $userHomeDrive = $this->getUserHomeDirectory($idUser);
-        $workingDir = $userHomeDrive. DIRECTORY_SEPARATOR . "converting_video";
+        $workingDir = $userHomeDrive . DIRECTORY_SEPARATOR . "converting_video";
         if (!is_dir($workingDir)) {
             $this->createPath($workingDir);
         }
@@ -216,12 +240,23 @@ class DriveController extends AbstractRtlqController
      */
     public function deleteDriveByToken(Request $request, $id)
     {
-        $tokenAuth = $this->extractUserByToken($request);
-        if (!is_object($tokenAuth)) {
-            return $this->returnNotFoundResponse();
-        }
+        // get user token
+        $tokenAuth  = $this->getTokenAuth($request);
+        return $this->_deleteDriveByUserAndId($tokenAuth->getUser(), $id);
 
-        $idUser = $tokenAuth->getUser()->getId();
+    }
+    /**
+     * @Route("/by-iduser-{idUser}/{id}", methods={"DELETE"}, requirements={"id"="^(\w)*(\.\w+)?$"})
+     */
+    public function deleteDriveByIdUser(Request $request, $idUser, $id)
+    {
+        // check user existance
+        $entity = $this->getEntityById(RtlqAdherent::class, $idUser);
+        return $this->_deleteDriveByUserAndId($entity, $id);
+
+    }
+    private function _deleteDriveByUserAndId($user, $id) {
+        $idUser = $user->getId();
         $baseDir = $this->getParameter("user_drive_basedir");
         $userDrive = "${baseDir}/${idUser}/drive/";
 
@@ -235,16 +270,13 @@ class DriveController extends AbstractRtlqController
         return $this->newResponse(null, Response::HTTP_ACCEPTED);
     }
 
-
     /**
      * @Route("/by-token/{id}", methods={"PUT"}, requirements={"id"="^(\w)*$"})
      */
     public function renameDriveByToken(Request $request, $id)
     {
-        $tokenAuth = $this->extractUserByToken($request);
-        if (!is_object($tokenAuth)) {
-            return $this->returnNotFoundResponse();
-        }
+        // get user token
+        $tokenAuth  = $this->getTokenAuth($request);
 
         $data = json_decode($request->getContent(), true);
         $entityDto = $this->newDto();
@@ -274,13 +306,25 @@ class DriveController extends AbstractRtlqController
      */
     public function checkDriveByToken(Request $request, $id)
     {
-        $tokenAuth = $this->extractUserByToken($request);
-        if (!is_object($tokenAuth)) {
-            return $this->returnNotFoundResponse();
-        }
+        // get user token
+        $tokenAuth  = $this->getTokenAuth($request);
 
-        $idUser = $tokenAuth->getUser()->getId();
-        $userDrive = $this->getUserDrive($idUser);
+        return $this->_checkDriveByUserAndId($tokenAuth->getUser(), $id);
+    }
+    /**
+     * @Route("/by-iduser-{idUser}/{id}", methods={"GET"}, requirements={"id"="^(\w)*$"})
+     */
+    public function checkDriveByIdUser(Request $request, $idUser, $id)
+    {
+        // check user existance
+        $entity = $this->getEntityById(RtlqAdherent::class, $idUser);
+
+        return $this->_checkDriveByUserAndId($entity, $id);
+    }
+
+    private function _checkDriveByUserAndId($user, $id)
+    {
+        $userDrive = $this->getUserDrive($user->getId());
 
         $list = $this->dirToArray($userDrive, $id);
         if (sizeof($list) == 0) {
@@ -297,12 +341,26 @@ class DriveController extends AbstractRtlqController
      */
     public function generateDriveByToken(Request $request, $id)
     {
-        $tokenAuth = $this->extractUserByToken($request);
-        if (!is_object($tokenAuth)) {
-            return $this->returnNotFoundResponse();
-        }
+        // get user token
+        $tokenAuth  = $this->getTokenAuth($request);
+        return $this->_generateDriveByUser($tokenAuth->getUser(), $id);
+    }
 
-        $plaintext = json_encode(array('userId' => $tokenAuth->getUser()->getId(), 'id' => $id));
+
+    /**
+     * @Route("/by-iduser-{idUser}/{id}/key", methods={"GET"}, requirements={"id"="^(\w)*$"})
+     */
+    public function generateDriveByIdUser(Request $request, $idUser, $id)
+    {
+        // check user existance
+        $entity = $this->getEntityById(RtlqAdherent::class, $idUser);
+
+        return $this->_generateDriveByUser($entity, $id);
+    }
+
+    private function _generateDriveByUser($user, $id)
+    {
+        $plaintext = json_encode(array('userId' => $user->getId(), 'id' => $id));
         $ciphertext = $this->crypter($plaintext);
 
         return $this->newResponse($ciphertext, Response::HTTP_ACCEPTED);
