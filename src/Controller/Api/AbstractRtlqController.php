@@ -2,6 +2,7 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\IRtlqEntity;
 use App\Entity\Security\RtlqAuthToken;
 use GuzzleHttp\json_encode;
 use App\Form\Validator\RtlqValidator;
@@ -137,5 +138,24 @@ abstract class AbstractRtlqController extends AbstractController
     {
         $len = strlen($startString);
         return (substr($string, 0, $len) === $startString);
+    }
+
+    function  getEntityById($clazz, $id): IRtlqEntity
+    {
+        // checkng user
+        $entity = $this->getDoctrine()->getRepository($clazz)->find($id);
+        if (!is_object($entity)) {
+            return $this->returnNotFoundResponse();
+        }
+        return $entity;
+    }
+
+    function getTokenAuth($request)
+    {
+        $tokenAuth = $this->extractUserByToken($request);
+        if (!is_object($tokenAuth)) {
+            return $this->returnNotFoundResponse();
+        }
+        return $tokenAuth;
     }
 }

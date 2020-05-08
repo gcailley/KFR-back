@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-abstract class AbstractRtlqEntity {
+abstract class AbstractRtlqEntity implements IRtlqEntity{
 
     abstract function getId();
 
@@ -20,7 +20,7 @@ abstract class AbstractRtlqEntity {
         return null;
     }
 
-    public function isEquals(AbstractRtlqEntity $entity) {
+    public function isEquals(IRtlqEntity $entity) {
         if ($entity != null && $entity->getId() == $this->getId()) {
             return true;
         }
