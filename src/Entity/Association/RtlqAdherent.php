@@ -5,6 +5,7 @@ namespace App\Entity\Association;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\AbstractRtlqEntity;
+use App\Entity\Cotisation\RtlqCotisation;
 use App\Entity\Kungfu\RtlqKungfuAdherentTao;
 use App\Entity\Saison\RtlqSaison;
 use App\Entity\Tresorie\RtlqTresorie;
@@ -18,7 +19,8 @@ use App\Entity\Tresorie\RtlqTresorie;
  * indexes={@ORM\Index(name="id", columns={"id"})})
  * @ORM\Entity(repositoryClass="App\Repository\Association\AdherentRepository")
  */
-class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
+class RtlqAdherent extends AbstractRtlqEntity implements UserInterface
+{
 
     /**
      *
@@ -27,10 +29,10 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-	
+
     /**
-    * @ORM\Column(type="string", length=100, unique=true, nullable=false)
-    */
+     * @ORM\Column(type="string", length=100, unique=true, nullable=false)
+     */
     private $username;
 
     /**
@@ -38,7 +40,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @var string @ORM\Column(name="email", type="string", length=100, nullable=false)
      */
     private $email;
-    
+
     /**
      *
      * @var string
@@ -57,7 +59,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @var string @ORM\Column(name="nom", type="string", length=100, nullable=false)
      */
     private $nom;
-    
+
     /**
      *
      * @var string @ORM\Column(name="prenom", type="string", length=100, nullable=false)
@@ -75,7 +77,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @var boolean @ORM\Column(name="actif", type="boolean", nullable=false)
      */
     private $actif;
-     
+
     /**
      *
      * @var boolean @ORM\Column(name="public", type="boolean", nullable=false)
@@ -93,7 +95,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @var string @ORM\Column(name="avatar", type="blob", nullable=true)
      */
     private $avatar;
-    
+
     /**
      *
      * @var string @ORM\Column(name="avatar_name", type="string", nullable=true)
@@ -130,7 +132,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @var \DateTime @ORM\Column(name="date_creation", type="date", nullable=false)
      */
     private $dateCreation;
-    
+
     /**
      *
      * @var \DateTime @ORM\Column(name="date_last_auth", type="date", nullable=true)
@@ -142,7 +144,7 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * @var string @ORM\Column(name="licence_number", type="string", length=100, nullable=true)
      */
     private $licenceNumber;
-    
+
     /**
      *
      * @var string @ORM\Column(name="licence_etat", type="string", length=100, nullable=true)
@@ -156,45 +158,97 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
     private $groupes;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cotisation\RtlqCotisation")
-     * @ORM\JoinColumn(name="cotisation_id", referencedColumnName="id")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Cotisation\RtlqCotisation", mappedBy="adherents")
      */
-    private $cotisation;
-    
+    private $cotisations;
+
+    /**
+     * Add groupe
+     *
+     * @param RtlqCotisation $cotisation
+     *
+     * @return RtlqAdherent
+     */
+    public function addCotisation(RtlqCotisation $cotisation)
+    {
+        //before adding the cotisation we should check if a cotisation is already attach to a current season.
+        // if so we can switch the cotisations
+        $cotisationSaisonCourante = $this->getCotisationSaisonCourante();
+        if (null != $cotisationSaisonCourante) {
+            $cotisationSaisonCourante->removeAdherent($this);
+            $this->cotisations->removeElement($cotisationSaisonCourante);
+        }
+
+        $cotisation->addAdherent($this);
+        $this->cotisations[] = $cotisation;
+
+        return $this;
+    }
+
+    /**
+     * Remove cotisation
+     *
+     * @param RtlqCotisation $cotisation
+     */
+    public function removeCotisation(RtlqCotisation $cotisation)
+    {
+        $this->cotisations->removeElement($cotisation);
+    }
+    /**
+     * Remove All cotisations
+     *
+     */
+    public function removeAllCotisations()
+    {
+        $this->cotisations = [];
+    }
+    /**
+     * Get cotisations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCotisations()
+    {
+        return $this->cotisations;
+    }
+
+    public function getCotisationSaisonCourante()
+    {
+        foreach ($this->cotisations as $cotisation) {
+            if ($cotisation->isSaisonCourante()) {
+                return $cotisation;
+            }
+        } ;
+    }
+
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tresorie\RtlqTresorie", mappedBy="adherent", cascade={"persist"})
      */
     private $tresories;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Saison\RtlqSaison", mappedBy="adherents", fetch="EXTRA_LAZY")
-     */
-    private $saisons;
-
-    /**
      *
      * @var string @ORM\Column(name="token_pwd", type="string", length=100, nullable=true)
      */
     private $tokenPwd;
-    
 
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->cotisation = null;
+        $this->cotisations = new \Doctrine\Common\Collections\ArrayCollection();
         $this->tresories = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->saisons = new \Doctrine\Common\Collections\ArrayCollection();
         $this->taos = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    // TODO licence as object
-    // TODO adherentForum as object
-
-    public function isInSaisonCourante() {
-      foreach ($this->saisons as $key => $value) {
-          if ($value->getActive()) {
-            return true;
-         }
-      }
+    public function isInSaisonCourante()
+    {
+        foreach ($this->cotisations as $cotisation) {
+            if ($cotisation->isSaisonCourante()) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -203,7 +257,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -214,7 +269,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setEmail($email) {
+    public function setEmail($email)
+    {
         $this->email = $email;
 
         return $this;
@@ -225,7 +281,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return string
      */
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
@@ -236,7 +293,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setPassword($value) {
+    public function setPassword($value)
+    {
         $this->password = $value;
 
         return $this;
@@ -254,7 +312,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setTelephone($telephone) {
+    public function setTelephone($telephone)
+    {
         $this->telephone = $telephone;
 
         return $this;
@@ -265,7 +324,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return string
      */
-    public function getTelephone() {
+    public function getTelephone()
+    {
         return $this->telephone;
     }
 
@@ -276,7 +336,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setNom($nom) {
+    public function setNom($nom)
+    {
         $this->nom = $nom;
 
         return $this;
@@ -287,7 +348,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return string
      */
-    public function getNom() {
+    public function getNom()
+    {
         return $this->nom;
     }
 
@@ -298,7 +360,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setPrenom($prenom) {
+    public function setPrenom($prenom)
+    {
         $this->prenom = $prenom;
 
         return $this;
@@ -309,15 +372,17 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return string
      */
-    public function getPrenom() {
+    public function getPrenom()
+    {
         return $this->prenom;
     }
 
-    public function getPrenomNom() {
+    public function getPrenomNom()
+    {
         return sprintf("%s %s", $this->prenom,  $this->nom);
     }
 
-    
+
     /**
      * Set dateNaissance
      *
@@ -325,7 +390,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setDateNaissance($dateNaissance) {
+    public function setDateNaissance($dateNaissance)
+    {
         $this->dateNaissance = $dateNaissance;
 
         return $this;
@@ -336,7 +402,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return \DateTime
      */
-    public function getDateNaissance() {
+    public function getDateNaissance()
+    {
         return $this->dateNaissance;
     }
 
@@ -347,7 +414,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setActif($actif) {
+    public function setActif($actif)
+    {
         $this->actif = $actif;
 
         return $this;
@@ -358,7 +426,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return boolean
      */
-    public function getActif() {
+    public function getActif()
+    {
         return $this->actif;
     }
 
@@ -369,7 +438,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setPublic($public) {
+    public function setPublic($public)
+    {
         $this->public = $public;
 
         return $this;
@@ -380,7 +450,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return boolean
      */
-    public function getPublic() {
+    public function getPublic()
+    {
         return $this->public;
     }
 
@@ -391,7 +462,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setAdresse($adresse) {
+    public function setAdresse($adresse)
+    {
         $this->adresse = $adresse;
 
         return $this;
@@ -402,7 +474,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return string
      */
-    public function getAdresse() {
+    public function getAdresse()
+    {
         return $this->adresse;
     }
 
@@ -413,7 +486,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setAvatar($avatar) {
+    public function setAvatar($avatar)
+    {
         $this->avatar = $avatar;
 
         return $this;
@@ -424,7 +498,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return blob
      */
-    public function getAvatar() {
+    public function getAvatar()
+    {
         return $this->avatar;
     }
 
@@ -435,7 +510,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setAvatarName($avatar_name) {
+    public function setAvatarName($avatar_name)
+    {
         $this->avatar_name = $avatar_name;
 
         return $this;
@@ -446,7 +522,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return string
      */
-    public function getAvatarName() {
+    public function getAvatarName()
+    {
         return $this->avatar_name;
     }
 
@@ -457,7 +534,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setCodePostal($codePostal) {
+    public function setCodePostal($codePostal)
+    {
         $this->codePostal = $codePostal;
 
         return $this;
@@ -468,7 +546,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return string
      */
-    public function getCodePostal() {
+    public function getCodePostal()
+    {
         return $this->codePostal;
     }
 
@@ -479,7 +558,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setVille($ville) {
+    public function setVille($ville)
+    {
         $this->ville = $ville;
 
         return $this;
@@ -490,7 +570,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return string
      */
-    public function getVille() {
+    public function getVille()
+    {
         return $this->ville;
     }
 
@@ -501,7 +582,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function setDateCreation($dateCreation) {
+    public function setDateCreation($dateCreation)
+    {
         $this->dateCreation = $dateCreation;
 
         return $this;
@@ -512,7 +594,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return \DateTime
      */
-    public function getDateCreation() {
+    public function getDateCreation()
+    {
         return $this->dateCreation;
     }
 
@@ -530,7 +613,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqKungfuAdherentTao
      */
-    public function addTao(RtlqKungfuAdherentTao $tao) {
+    public function addTao(RtlqKungfuAdherentTao $tao)
+    {
         $tao->setAdherent($this);
         $this->taos[] = $tao;
 
@@ -542,7 +626,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @param \App\Entity\KungFu\RtlqKungfuAdherentTao $tao
      */
-    public function removeTao(RtlqKungfuAdherentTao   $tao) {
+    public function removeTao(RtlqKungfuAdherentTao   $tao)
+    {
         $tao->removeAdherent();
         $this->taos->removeElement($tao);
     }
@@ -551,15 +636,17 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      * Remove All taos
      *
      */
-    public function removeAllTaos() {
-        $this->taos= [];
+    public function removeAllTaos()
+    {
+        $this->taos = [];
     }
     /**
      * Get taos
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getTaos() {
+    public function getTaos()
+    {
         return $this->taos;
     }
 
@@ -572,7 +659,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqAdherent
      */
-    public function addGroupe(\App\Entity\Association\RtlqGroupe $groupe) {
+    public function addGroupe(\App\Entity\Association\RtlqGroupe $groupe)
+    {
         $groupe->addAdherent($this);
         $this->groupes[] = $groupe;
 
@@ -584,63 +672,63 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @param \App\Entity\Association\RtlqGroupe $groupe
      */
-    public function removeGroupe(\App\Entity\Association\RtlqGroupe $groupe) {
+    public function removeGroupe(\App\Entity\Association\RtlqGroupe $groupe)
+    {
         $this->groupes->removeElement($groupe);
     }
     /**
      * Remove All groupes
      *
      */
-    public function removeAllGroupes() {
-        $this->groupes= [];
+    public function removeAllGroupes()
+    {
+        $this->groupes = [];
     }
     /**
      * Get groupes
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getGroupes() {
+    public function getGroupes()
+    {
         return $this->groupes;
     }
 
-    public function getCotisation() {
-        return $this->cotisation;
-    }
 
-    public function setCotisation($cotisation) {
-        $this->cotisation = $cotisation;
-        return $this;
-    }
-    public function removeCotisation() {
-        $this->cotisation = null;
-    }
 
-    public function setForumUid($value) {
+    public function setForumUid($value)
+    {
         $this->forumUid = $value;
         return $this;
     }
-    public function getForumUid() {
+    public function getForumUid()
+    {
         return $this->forumUid;
     }
 
-    public function setForumUsername($value) {
+    public function setForumUsername($value)
+    {
         $this->forumUsername = $value;
         return $this;
     }
-    public function getForumUsername() {
+    public function getForumUsername()
+    {
         return $this->forumUsername;
     }
 
-    public function getDateLastAuth() {
+    public function getDateLastAuth()
+    {
         return $this->dateLastAuth;
     }
 
-    public function setDateLastAuth(\DateTime $dateLastAuth) {
+    public function setDateLastAuth(\DateTime $dateLastAuth)
+    {
         $this->dateLastAuth = $dateLastAuth;
         return $this;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->id = $id;
         return $this;
     }
@@ -652,7 +740,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return boolean
      */
-     public function hasTresories() {
+    public function hasTresories()
+    {
         return sizeof($this->tresories) > 0;
     }
 
@@ -663,7 +752,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @return RtlqTresorie
      */
-    public function addTresorie(RtlqTresorie $tresorie) {
+    public function addTresorie(RtlqTresorie $tresorie)
+    {
         $this->tresories[] = $tresorie;
 
         return $this;
@@ -674,7 +764,8 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @param \App\Entity\Tresorie\RtlqTresorie $tresorie
      */
-    public function removeTresorie(RtlqTresorie $tresorie) {
+    public function removeTresorie(RtlqTresorie $tresorie)
+    {
         $this->tresories->removeElement($tresorie);
         $tresorie->setAdherent(null);
     }
@@ -684,37 +775,43 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
      *
      * @param \App\Entity\Tresorie\RtlqTresorie $tresorie
      */
-    public function removeAllTresories() {
+    public function removeAllTresories()
+    {
         foreach ($this->tresories as $tresorie) {
             $this->removeTresorie($tresorie);
         }
     }
 
-    public function getTresories() {
+    public function getTresories()
+    {
         return $this->tresories;
     }
 
-    public function getLicenceNumber() {
+    public function getLicenceNumber()
+    {
         return $this->licenceNumber;
     }
 
-    public function getLicenceEtat() {
+    public function getLicenceEtat()
+    {
         return $this->licenceEtat;
     }
 
-    public function setLicenceNumber($licenceNumber) {
+    public function setLicenceNumber($licenceNumber)
+    {
         $this->licenceNumber = $licenceNumber;
         return $this;
     }
 
-    public function setLicenceEtat($licenceEtat) {
+    public function setLicenceEtat($licenceEtat)
+    {
         $this->licenceEtat = $licenceEtat;
         return $this;
     }
 
     public function setUsername($value)
     {
-        $this->username=$value;
+        $this->username = $value;
         return $this;
     }
 
@@ -725,14 +822,14 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
 
     public function setTokenPwd($value)
     {
-        $this->tokenPwd=$value;
+        $this->tokenPwd = $value;
         return $this;
     }
     public function getTokenPwd()
     {
         return $this->tokenPwd;
     }
-    
+
 
     public function getSalt()
     {
@@ -742,51 +839,36 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface {
     public function getRoles()
     {
         $roles = array('ANONYMOUS');
-         foreach ($this->groupes as $groupe) {
-             $roles[] = $groupe->getRole();
-         };
-         return $roles;
+        foreach ($this->groupes as $groupe) {
+            $roles[] = $groupe->getRole();
+        };
+        return $roles;
     }
 
 
-    
-    public function addSaison(RtlqSaison $saison) {
-        $saison->addAdherent($this);
-        $this->saisons[] = $saison;
-        return $this;
-    }
-    public function removeSaison(RtlqSaison $saison) {
-        $this->saisons->removeElement($saison);
-    }
-    public function removeAllSaisons() {
-        $this->saisons= [];
-    }
-    public function getSaisons() {
-        return $this->saisons;
-    }
 
     public function eraseCredentials()
     {
     }
     /** @see \Serializable::serialize() */
-        public function serialize()
-        {
-            return serialize(array(
-                $this->id,
-                $this->username,
-                $this->password,
-                $this->actif,
-            ));
-        }
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->actif,
+        ));
+    }
 
-        /** @see \Serializable::unserialize() */
-        public function unserialize($serialized)
-        {
-            list (
-                $this->id,
-                $this->username,
-                $this->password,
-                $this->actif,
-            ) = unserialize($serialized);
-        }
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized)
+    {
+        list(
+            $this->id,
+            $this->username,
+            $this->password,
+            $this->actif,
+        ) = unserialize($serialized);
+    }
 }

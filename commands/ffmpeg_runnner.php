@@ -11,10 +11,13 @@ print($ffmpegCmd );
 print($inputFilename  );
 print($outputFilename  );
 
-$cmd="${ffmpegCmd} -i ${inputFilename} -y ${outputFilename} ";
+$cmd="${ffmpegCmd} -i ${inputFilename} -y ${outputFilename}";
 print($cmd );
-print(exec($cmd));
 
+exec($cmd);
+
+print("status ! $status" );
+var_dump($output);
 
 if (file_exists($rawOutputFilename) ) {	
     print($rawOutputFilename . " converted. ");

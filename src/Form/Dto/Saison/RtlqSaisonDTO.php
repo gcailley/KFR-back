@@ -10,12 +10,10 @@ class RtlqSaisonDTO extends AbstractRtlqDTO {
 	protected $date_debut;
 	protected $date_fin;
 	protected $active;
-	protected $adherents;
     protected $nb_adherents = 0;
 
     
     public function __construct() {
-    	$this->adherents = [];
     }
 
 	
@@ -110,24 +108,10 @@ class RtlqSaisonDTO extends AbstractRtlqDTO {
 		return $this->active;
 	}
 	
-	public function getAdherents() {
-        return $this->adherents;
-    }
-    
-    public function addAdherent($adherent) {
-        $this->adherents[] = $adherent;
-        $this->nb_adherents = sizeof($this->adherents);
-        return $this;
-    }
-	public function setAdherents($adherents) {
-		$this->adherents = $adherents;
-		return $this;
-    }
 
 
 	public function setNbAdherents($nbAdherents) {
 		$this->nb_adherents = $nbAdherents;
-		$this->nb_adherents = sizeof($this->adherents);
 		return $this;
 	}
 	

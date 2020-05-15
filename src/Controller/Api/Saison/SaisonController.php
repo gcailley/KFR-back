@@ -81,10 +81,6 @@ class SaisonController extends AbstractCrudApiController
         $entities = $this->getDoctrine()
             ->getRepository($this->newModeleClass())
             ->findBy(array("active"=>true), null, 1 , null);
-        //clean user information
-        foreach($entities as $entitie) {
-            $entitie->removeAllAdherents();
-        }
         return $this->returnNewResponse($entities, Response::HTTP_ACCEPTED);
     }
 

@@ -43,6 +43,7 @@ class RtlqAdherentType extends AbstractRtlqType
             ->add('groupes', CollectionType::class, array('entry_type' => NumberType::class))
             ->add('taos', CollectionType::class, array('entry_type' => NumberType::class))
             ->add('cotisation_id', NumberType::class )
+            ->add('cotisations', CollectionType::class, array('entry_type' => NumberType::class))
             ->add('tresories', CollectionType::class, array('entry_type' => NumberType::class))
             ->add('saisons', CollectionType::class, array('entry_type' => NumberType::class));
     }

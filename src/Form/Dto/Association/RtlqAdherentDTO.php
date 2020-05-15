@@ -11,6 +11,15 @@ use App\Form\Dto\AbstractRtlqDTO;
 class RtlqAdherentDTO extends AbstractRtlqDTO
 {
 
+
+    public function __construct()
+    {
+        $this->groupes = array();
+        $this->taos = array();
+        $this->tresories = array();
+        $this->cotisations = array();
+    }
+
     protected $email;
     protected $pwd;
     protected $telephone;
@@ -36,18 +45,23 @@ class RtlqAdherentDTO extends AbstractRtlqDTO
     protected $taos;
     protected $cotisation_id;
     protected $cotisation_name;
+    protected $cotisations;
+    public function addCotisation($cotisation)
+    {
+        $this->cotisations[] = $cotisation;
+        return $this;
+    }
+    public function getCotisations()
+    {
+        return $this->cotisations;
+    }
+
     protected $tresories;
     protected $montant_total_encaisse = 0;
     protected $montant_total_previsionnel = 0;
     protected $montant_total_en_retard = 0;
     protected $saison_courante = false;
 
-    public function __construct()
-    {
-        $this->groupes = array();
-        $this->taos = array();
-        $this->tresories = array();
-    }
 
     public function addTao($tao)
     {

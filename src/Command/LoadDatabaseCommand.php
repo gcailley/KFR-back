@@ -96,7 +96,7 @@ class LoadDatabaseCommand extends Command
 
         $cdir = scandir($dir);
         foreach ($cdir as $key => $value) {
-            if (!in_array($value, ['.', '..'])) {
+            if (!in_array($value, ['.', '..']) && preg_match("/.*\.sql/i", $value)) {
                 $result[] = $dir . '/' . $value;
             }
         }

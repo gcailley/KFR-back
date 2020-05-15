@@ -17,7 +17,7 @@ use App\Entity\Tresorie\RtlqTresorieEtat;
 
 class RtlqAdherentBuilder extends AbstractRtlqBuilder
 {
-    
+
 
     private $encoder;
 
@@ -64,21 +64,21 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
 
 
         foreach ($postModele->getGroupes() as $groupeId) {
-            $modele->addGroupe($em->getReference(RtlqGroupe::class, $groupeId()));
+            $modele->addGroupe($em->getReference(RtlqGroupe::class, $groupeId));
         }
         foreach ($postModele->getTaos() as $taoId) {
-            $modele->addTao($em->getReference(RtlqKungfuAdherentTao::class, $taoId()));
-        }
-
-        if ($postModele->getCotisationId() != null) {
-            $modele->setCotisation($em->getReference(RtlqCotisation::class, $postModele->getCotisationId()));
+            $modele->addTao($em->getReference(RtlqKungfuAdherentTao::class, $taoId));
         }
 
         foreach ($postModele->getTresories() as $tresorieId) {
-            $modele->addTresorie($em->getReference(RtlqTresorie::class, $tresorieId()));
+            $modele->addTresorie($em->getReference(RtlqTresorie::class, $tresorieId));
         }
-        foreach ($postModele->getSaisons() as $saisonId) {
-            $modele->addSaison($em->getReference(RtlqSaison::class, $saisonId()));
+
+        foreach ($postModele->getCotisations() as $cotisationId) {
+            $modele->addCotisation($em->getReference(RtlqCotisation::class, $cotisationId));
+        }
+        if ($postModele->getCotisationId() != null) {
+            $modele->addCotisation($em->getReference(RtlqCotisation::class, $postModele->getCotisationId()));
         }
 
         if ($postModele->getPwd() != null) {
@@ -151,7 +151,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
             } else {
                 $dto->setAvatarUri(AdherentController::URI_AVATAR . '_default_.jpeg');
             }
-        
+
             if (!$dto->getPublique()) {
                 $dto->setTelephone("#####################");
                 $dto->setAdresse("#####################");
@@ -178,15 +178,13 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
             }
         }
 
-        if ($modele->getSaisons() != null) {
-            foreach ($modele->getSaisons() as $saison) {
-                $dto->addSaison($saison->getId());
-            }
+        foreach ($modele->getCotisations() as $cotisations) {
+            $dto->addCotisation($cotisations->getId());
         }
-
-        if ($modele->getCotisation() != null) {
-            $dto->setCotisationId($modele->getCotisation()->getId());
-            $dto->setCotisationName($modele->getCotisation()->getName());
+        $cotisationSaisonCourante = $modele->getCotisationSaisonCourante();
+        if (null != $cotisationSaisonCourante) {
+            $dto->setCotisationId($cotisationSaisonCourante->getId());
+            $dto->setCotisationName($cotisationSaisonCourante->getName());
         }
 
 

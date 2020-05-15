@@ -9,8 +9,6 @@ use App\Form\Dto\Association\RtlqAdherentDTO;
 
 class RtlqSaisonBuilder extends AbstractRtlqBuilder
 {
-    private $rtlqAdherentBuilder;
-    private $withAdherents = false;
 
     public function __construct()
     {
@@ -23,13 +21,6 @@ class RtlqSaisonBuilder extends AbstractRtlqBuilder
         $modele->setDateDebut($postModele->getDateDebut());
         $modele->setDateFin($postModele->getDateFin());
         $modele->setActive($postModele->getActive());
-
-        $modele->removeAllAdherents();
-        foreach ($postModele->getAdherents() as $adherentDto) {
-            // TODO changer le nom qui est en dur
-            $modelAdh = $em->getReference(RtlqAdherent::class, $adherentDto['id']);
-            $modele->addAdherent($modelAdh);
-        }
 
         return $modele;
     }
@@ -44,12 +35,13 @@ class RtlqSaisonBuilder extends AbstractRtlqBuilder
         $dto->setDateFin($this->dateToString($modele->getDateFin()));
         $dto->setActive($modele->getActive());
 
-        if ($this->withAdherents) {
-            foreach ($modele->getAdherents() as $adherent) {
-                $adherentDto = $this->rtlqAdherentBuilder->modeleToDtoLight($adherent, RtlqAdherentDTO::class);
-                $dto->addAdherent($adherentDto);
-            }
+
+        $nb_adherents = 0;
+        foreach ($modele->getCotisations() as $cotisation) {
+            $nb_adherents += sizeof($cotisation->getAdherents());
         }
+
+        $dto->setNbAdherents($nb_adherents);
 
         return $dto;
     }

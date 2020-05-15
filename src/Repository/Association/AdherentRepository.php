@@ -43,11 +43,11 @@ class AdherentRepository extends EntityRepository implements UserLoaderInterface
 
     public function countByKpi($name)
     {
-
         if (AdherentRepository::KPI_USER_ACTIF == $name) {
             return $this->createQueryBuilder('u')
                 ->select('count(u)')
-                ->innerJoin('u.saisons', 's')
+                ->innerJoin('u.cotisations', 'c')
+                ->innerJoin('c.saison', 's')
                 ->where('u.actif = :uactif AND s.active = :sactive')
                 ->setParameter('uactif', true)
                 ->setParameter('sactive', true)
@@ -57,7 +57,6 @@ class AdherentRepository extends EntityRepository implements UserLoaderInterface
 
         return -1;
     }
-
 
     /**
      * extract d'information sur les stats users
@@ -81,8 +80,8 @@ class AdherentRepository extends EntityRepository implements UserLoaderInterface
 
         return $this->createQueryBuilder('u')
             ->select('c.type as Cotisation, COUNT(u.id) as nbAdherents')
-            ->where('u.actif = 1 AND u.cotisation = c AND c.active = 1')
-            ->innerJoin('u.cotisation', 'c')
+            ->innerJoin('u.cotisations', 'c')
+            ->where('u.actif = 1 AND c.active = 1')
             ->groupby('c.type')
             ->getQuery()
             ->getResult();
