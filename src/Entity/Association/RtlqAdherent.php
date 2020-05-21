@@ -221,6 +221,21 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface
         } ;
     }
 
+    
+    public function removeCotisationSaisonCourante()
+    {
+        $cotisationsToRemove = [];
+        foreach ($this->cotisations as $cotisation) {
+            if ($cotisation->isSaisonCourante()) {
+                $cotisationsToRemove[] = $cotisation;
+            }
+        } ;
+
+        foreach($cotisationsToRemove as $c) {
+            $this->removeCotisation($c);
+            $c->removeAdherent($this);
+        }
+    }
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Tresorie\RtlqTresorie", mappedBy="adherent", cascade={"persist"})

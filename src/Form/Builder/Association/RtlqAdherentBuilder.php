@@ -37,52 +37,54 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         }
     }
 
-    public function dtoToModele($em, $postModele, $modele)
+    public function dtoToModele($em, $dto, $modele)
     {
 
-        $modele->setUsername($postModele->getUsername());
-        $modele->setEmail($postModele->getEmail());
-        $modele->setTelephone($postModele->getTelephone());
-        $modele->setNom($postModele->getNom());
-        $modele->setPrenom($postModele->getPrenom());
-        $modele->setDateNaissance($postModele->getDateNaissance());
-        $modele->setActif($postModele->getActif());
-        $modele->setPublic($postModele->getPublique());
-        $modele->setAdresse($postModele->getAdresse());
-        $modele->setCodePostal($postModele->getCodePostal());
-        $modele->setVille($postModele->getVille());
-        $modele->setAvatar($postModele->getAvatar());
-        $modele->setAvatarName($postModele->getAvatarUri());
-        $modele->setDateCreation($postModele->getDateCreation());
-        if ($postModele->getDateLastAuth() != null) {
-            $modele->setDateLastAuth($postModele->getDateLastAuth());
+        $modele->setUsername($dto->getUsername());
+        $modele->setEmail($dto->getEmail());
+        $modele->setTelephone($dto->getTelephone());
+        $modele->setNom($dto->getNom());
+        $modele->setPrenom($dto->getPrenom());
+        $modele->setDateNaissance($dto->getDateNaissance());
+        $modele->setActif($dto->getActif());
+        $modele->setPublic($dto->getPublique());
+        $modele->setAdresse($dto->getAdresse());
+        $modele->setCodePostal($dto->getCodePostal());
+        $modele->setVille($dto->getVille());
+        $modele->setAvatar($dto->getAvatar());
+        $modele->setAvatarName($dto->getAvatarUri());
+        $modele->setDateCreation($dto->getDateCreation());
+        if ($dto->getDateLastAuth() != null) {
+            $modele->setDateLastAuth($dto->getDateLastAuth());
         }
-        $modele->setLicenceNumber($postModele->getLicenceNumber());
-        $modele->setLicenceEtat($postModele->getLicenceEtat());
-        $modele->setForumUid($postModele->getForumUid());
-        $modele->setForumUsername($postModele->getForumUsername());
+        $modele->setLicenceNumber($dto->getLicenceNumber());
+        $modele->setLicenceEtat($dto->getLicenceEtat());
+        $modele->setForumUid($dto->getForumUid());
+        $modele->setForumUsername($dto->getForumUsername());
 
 
-        foreach ($postModele->getGroupes() as $groupeId) {
+        foreach ($dto->getGroupes() as $groupeId) {
             $modele->addGroupe($em->getReference(RtlqGroupe::class, $groupeId));
         }
-        foreach ($postModele->getTaos() as $taoId) {
+        foreach ($dto->getTaos() as $taoId) {
             $modele->addTao($em->getReference(RtlqKungfuAdherentTao::class, $taoId));
         }
 
-        foreach ($postModele->getTresories() as $tresorieId) {
-            $modele->addTresorie($em->getReference(RtlqTresorie::class, $tresorieId));
+        foreach ($dto->getTresories() as $tresorieId) {
+            $modele->addTresorie($em    ->getReference(RtlqTresorie::class, $tresorieId));
         }
 
-        foreach ($postModele->getCotisations() as $cotisationId) {
+        foreach ($dto->getCotisations() as $cotisationId) {
             $modele->addCotisation($em->getReference(RtlqCotisation::class, $cotisationId));
         }
-        if ($postModele->getCotisationId() != null) {
-            $modele->addCotisation($em->getReference(RtlqCotisation::class, $postModele->getCotisationId()));
+        if ($dto->getCotisationId() != null) {
+            $modele->addCotisation($em->getReference(RtlqCotisation::class, $dto->getCotisationId()));
+        } else {
+            $modele->removeCotisationSaisonCourante();
         }
 
-        if ($postModele->getPwd() != null) {
-            $encoded = $this->encodePassword($modele, $postModele->getPwd());
+        if ($dto->getPwd() != null) {
+            $encoded = $this->encodePassword($modele, $dto->getPwd());
             $modele->setPassword($encoded);
         }
 
