@@ -50,6 +50,47 @@ class RtlqGroupe extends AbstractRtlqEntity {
      */
     private $adherents;
 
+    /**
+     * Add adherent
+     *
+     * @param RtlqAdherent $adherent
+     *
+     * @return RtlqGroupe
+     */
+    public function addAdherent(RtlqAdherent $adherent) {
+        foreach ($this->adherents as $value) {
+            if ($value->getId() == $adherent->getId()) {
+                return $this;
+            }
+        }
+
+        $this->adherents[] = $adherent;
+        return $this;
+    }
+
+    /**
+     * Remove adherent
+     *
+     * @param RtlqAdherent $adherent
+     */
+    public function removeAdherent(RtlqAdherent $adherent) {
+        $this->adherents->removeElement($adherent);
+    }
+
+    /**
+     * Get adherents
+     *
+     * @return Collection
+     */
+    public function getAdherents() {
+        return $this->adherents;
+    }
+    
+    public function removeAllAdherents() {
+        $this->adherents=[];
+    }
+
+    
     public function __construct() {
         $this->adherents = new ArrayCollection();
     }
@@ -113,45 +154,5 @@ class RtlqGroupe extends AbstractRtlqEntity {
         return $this->role;
     }
 
-
-    /**
-     * Add adherent
-     *
-     * @param RtlqAdherent $adherent
-     *
-     * @return RtlqGroupe
-     */
-    public function addAdherent(RtlqAdherent $adherent) {
-        foreach ($this->adherents as $value) {
-            if ($value->getId() == $adherent->getId()) {
-                return $this;
-            }
-        }
-
-        $this->adherents[] = $adherent;
-        return $this;
-    }
-
-    /**
-     * Remove adherent
-     *
-     * @param RtlqAdherent $adherent
-     */
-    public function removeAdherent(RtlqAdherent $adherent) {
-        $this->adherents->removeElement($adherent);
-    }
-
-    /**
-     * Get adherents
-     *
-     * @return Collection
-     */
-    public function getAdherents() {
-        return $this->adherents;
-    }
-    
-    public function removeAllAdherents() {
-        $this->adherents=[];
-    }
 
 }

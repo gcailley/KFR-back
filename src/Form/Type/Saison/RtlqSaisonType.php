@@ -23,12 +23,13 @@ class RtlqSaisonType extends AbstractRtlqType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add ( 'nom', TextType::class )
-            ->add ( 'active', CheckboxType::class )
-            ->add ( 'date_debut', DateType::class, $this->getDateFormatTZ())
-            ->add ( 'date_fin', DateType::class, $this->getDateFormatTZ())
-            ->add ('nb_adherents', NumberType::class)
-            ->add ('adherents', CollectionType::class, array(
+            ->add('id', NumberType::class)
+            ->add('nom', TextType::class)
+            ->add('active', CheckboxType::class)
+            ->add('date_debut', DateType::class, $this->getDateFormatTZ())
+            ->add('date_fin', DateType::class, $this->getDateFormatTZ())
+            ->add('nb_adherents', NumberType::class)
+            ->add('adherents', CollectionType::class, array(
                 'entry_type'   => RtlqAdherentType::class,
                 //'allow_extra_fields' => true,
                 'allow_add'     => true,

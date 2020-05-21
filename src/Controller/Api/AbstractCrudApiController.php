@@ -22,14 +22,14 @@ abstract class AbstractCrudApiController extends AbstractApiController
      */
     public function getByIdAction(Request $request, $id)
     {
-        $tresorie = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
+        $modele = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
 
-        if (!is_object($tresorie)) {
+        if (!is_object($modele)) {
             throw $this->createNotFoundException();
         }
-        $dto_tresorie = $this->getBuilder()->modeleToDto($tresorie, $this->newDtoClass());
 
-        return  $this->newResponse($dto_tresorie, Response::HTTP_ACCEPTED);
+        $dto = $this->getBuilder()->modeleToDto($modele, $this->newDtoClass());
+        return  $this->newResponse($dto, Response::HTTP_ACCEPTED);
     }
 
     /** 

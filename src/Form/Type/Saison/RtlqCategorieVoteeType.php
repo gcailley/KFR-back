@@ -15,14 +15,18 @@ use Doctrine\ORM\EntityRepository;
 use App\Form\Type\AbstractRtlqType;
 
 
-class RtlqCategorieVoteeType extends AbstractRtlqType {
-	public function buildForm(FormBuilderInterface $builder, array $options) {
+class RtlqCategorieVoteeType extends AbstractRtlqType
+{
+	public function buildForm(FormBuilderInterface $builder, array $options)
+	{
 		$builder
-			->add ( 'montant', MoneyType::class )
-			->add ( 'saison_id', TextType::class )
-			->add ( 'categorie_id', TextType::class );
+			->add('id', NumberType::class)
+			->add('montant', MoneyType::class)
+			->add('saison_id', TextType::class)
+			->add('categorie_id', TextType::class);
 	}
-	public function getName() {
+	public function getName()
+	{
 		return 'categorievotee';
 	}
 }

@@ -25,16 +25,21 @@ class RtlqSaisonBuilder extends AbstractRtlqBuilder
         return $modele;
     }
 
-    public function modeleToDto($modele, $dtoClass)
+    public function modeleToDtoLight($modele, $dtoClass)
     {
         $dto = $this->getNewDto($dtoClass);
-
         $dto->setId($modele->getId());
         $dto->setNom($modele->getNom());
-        $dto->setDateDebut($this->dateToString($modele->getDateDebut()));
-        $dto->setDateFin($this->dateToString($modele->getDateFin()));
         $dto->setActive($modele->getActive());
 
+        return $dto;
+    }
+    public function modeleToDto($modele, $dtoClass)
+    {
+        
+        $dto = $this->modeleToDtoLight($modele, $dtoClass);
+        $dto->setDateDebut($this->dateToString($modele->getDateDebut()));
+        $dto->setDateFin($this->dateToString($modele->getDateFin()));
 
         $nb_adherents = 0;
         foreach ($modele->getCotisations() as $cotisation) {

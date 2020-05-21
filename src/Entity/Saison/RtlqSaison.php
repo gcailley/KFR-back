@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\AbstractRtlqEntity;
 use App\Entity\Association\RtlqAdherent;
+use App\Entity\Association\RtlqBureau;
 
 /**
  * RtlqSaison.
@@ -21,6 +22,7 @@ class RtlqSaison extends AbstractRtlqEntity
     public function __construct()
     {
         $this->cotisations = new ArrayCollection();
+        $this->bureaux = new ArrayCollection();
     }
 
     /**
@@ -38,6 +40,31 @@ class RtlqSaison extends AbstractRtlqEntity
      * @ORM\Column(name="nom", type="string", length=100, nullable=false)
      */
     private $nom;
+
+    /**
+     * Set nom.
+     *
+     * @param string $nom
+     *
+     * @return RtlqSaison
+     */
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * Get nom.
+     *
+     * @return string
+     */
+    public function getNom()
+    {
+        return $this->nom;
+    }
+
 
     /**
      * @var \DateTime
@@ -67,6 +94,56 @@ class RtlqSaison extends AbstractRtlqEntity
      */
     private $cotisations;
 
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Association\RtlqBureau", mappedBy="saisons")
+     */
+    private $bureaux;
+    /**
+     * Add bureau
+     *
+     * @param RtlqBureau $bureau
+     *
+     * @return RtlqSaison
+     */
+    public function addBureau(RtlqBureau $bureau)
+    {
+        $bureau->addSaison($this);
+        $this->bureaux[] = $bureau;
+
+        return $this;
+    }
+
+    /**
+     * Remove bureau
+     *
+     * @param RtlqBureau $bureau
+     */
+    public function removeBureau(RtlqBureau $bureau)
+    {
+        $this->bureaux->removeElement($bureau);
+    }
+    /**
+     * Remove All bureaux
+     *
+     */
+    public function removeAllBureaux()
+    {
+        $this->bureaux = [];
+    }
+    /**
+     * Get bureaux
+     *
+     * @return Collection
+     */
+     public function getBureaux()
+    {
+        return $this->bureaux;
+    }
+
+
+
+
     /**
      * Get id.
      *
@@ -87,30 +164,6 @@ class RtlqSaison extends AbstractRtlqEntity
         $this->id = $id;
 
         return $this;
-    }
-
-    /**
-     * Set nom.
-     *
-     * @param string $nom
-     *
-     * @return RtlqSaison
-     */
-    public function setNom($nom)
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    /**
-     * Get nom.
-     *
-     * @return string
-     */
-    public function getNom()
-    {
-        return $this->nom;
     }
 
     /**
