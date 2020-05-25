@@ -13,7 +13,6 @@ class RtlqPhotoDTO extends AbstractRtlqDTO
     
     protected $title;
     protected $description;
-    protected $source;
     protected $repertoire_id;
     protected $repertoire_name;
     
@@ -31,10 +30,6 @@ class RtlqPhotoDTO extends AbstractRtlqDTO
         return $this->description;
     }
     
-    public function getSource()
-    {
-        return $this->source;
-    }
     public function getRepertoireId()
     {
         return $this->repertoire_id;
@@ -53,12 +48,6 @@ class RtlqPhotoDTO extends AbstractRtlqDTO
     public function setDescription($description)
     {
         $this->description = $description;
-        return $this;
-    }
-
-    public function setSource($value)
-    {
-        $this->source = $value;
         return $this;
     }
 

@@ -106,7 +106,7 @@ class RtlqMateriel extends AbstractRtlqEntity{
 
     /**
      *
-     * @var string @ORM\Column(name="date_achat", type="datetime", nullable=false)
+     * @var string @ORM\Column(name="date_achat", type="date", nullable=false)
      */
     private $dateAchat;
     public function setDateAchat($value)
