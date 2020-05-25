@@ -5,19 +5,22 @@ $rawInputFilename = $argv[2];
 $inputFilename = str_replace(' ',"\\ ", $argv[2]);
 $rawOutputFilename = $argv[3];
 $outputFilename = str_replace(' ',"\\ ", $argv[3]);
+$debug = $argv[4];
 print("########################################## ");
 
 print($ffmpegCmd );
 print($inputFilename  );
 print($outputFilename  );
 
-$cmd="${ffmpegCmd} -i ${inputFilename} -y ${outputFilename}";
+$cmd="${ffmpegCmd} -i ${inputFilename} -y ${outputFilename} 2>&1";
+if ('TRUE' === $debug) {
+    $cmd="$cmd | tee -a ${outputFilename}.log 2>/dev/null >/dev/null";
+} 
 print($cmd );
 
-exec($cmd);
+$status = shell_exec($cmd);
+print("status => $status" );
 
-print("status ! $status" );
-var_dump($output);
 
 if (file_exists($rawOutputFilename) ) {	
     print($rawOutputFilename . " converted. ");

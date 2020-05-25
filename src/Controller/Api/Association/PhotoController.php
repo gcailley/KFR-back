@@ -75,6 +75,7 @@ class PhotoController extends AbstractCrudApiController
         }
 
         $thumbnail = $request->query->get('thumbnail');
+        $minetype = $modele->getSourceMimeType();
         if ($thumbnail === 'true') {
             $photosDir = $this->getDirectory("thumbnails_drive_basedir");
             $filename = $modele->getThumbnailName();
@@ -82,7 +83,6 @@ class PhotoController extends AbstractCrudApiController
         } else {
             $photosDir = $this->getDirectory("photos_drive_basedir");
             $filename = $modele->getSourceName();
-            $minetype = $modele->getSourceMimeType();
             $filesize = $modele->getSourceFileSize();
         }
 

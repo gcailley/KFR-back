@@ -105,8 +105,7 @@ class VideoConverterService
 
         if ($this->enable) {
             $this->logger->info("Converting  ${outputFilename}");
-            $process = new VideoProcess($this->logger, $this->php_cmd, $this->video_runner,  $this->video_exec, $inputFilename, $outputFilename);
-            $process->setDebugMode($this->debug);
+            $process = new VideoProcess($this->logger, $this->php_cmd, $this->video_runner,  $this->video_exec, $inputFilename, $outputFilename, $this->debug ? 'TRUE' : 'FALSE');
             $process->execute();
 
             $pid = $process->getPid();
