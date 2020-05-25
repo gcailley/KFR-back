@@ -12,7 +12,13 @@ class VideoProcess
 
     public function __construct($logger, $phpExec, $runner, $cmd, $inputFilename, $outputFilename, $debug)
     {
-        $this->cmd = "$phpExec \"$runner\" \"$cmd\" \"$inputFilename\" \"$outputFilename\" $debug &";
+        
+        if ($debug) {
+            $this->cmd = "$phpExec \"$runner\" \"$cmd\" \"$inputFilename\" \"$outputFilename\" &> ${outputFilename}.log";
+        } else {
+            $this->cmd = "$phpExec \"$runner\" \"$cmd\" \"$inputFilename\" \"$outputFilename\" &";
+        }
+        
         $this->inputFilename = $inputFilename;
         $this->logger = $logger;
 
