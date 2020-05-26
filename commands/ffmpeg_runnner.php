@@ -7,16 +7,15 @@ $rawOutputFilename = $argv[3];
 $outputFilename = str_replace(' ',"\\ ", $argv[3]);
 print("########################################## ");
 
-print($ffmpegCmd );
-print($inputFilename  );
-print($outputFilename  );
+print($ffmpegCmd . '\n' );
+print($inputFilename . '\n');
+print($outputFilename . '\n');
 
-$cmd="${ffmpegCmd} -i ${inputFilename} -y ${outputFilename} 2>&1";
-print($cmd );
+$cmd="${ffmpegCmd} -i ${inputFilename} -y ${outputFilename}";
+print($cmd . '\n' );
 
-$status = shell_exec($cmd);
+$status = exec($cmd);
 print("status => $status" );
-
 
 if (file_exists($rawOutputFilename) ) {	
     print($rawOutputFilename . " converted. ");

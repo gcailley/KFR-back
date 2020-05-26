@@ -20,7 +20,6 @@ class VideoConverterService
     private $working_directory;
     private $video_exec;
     private $video_runner;
-    private $php_cmd;
     private $debug;
     private $enable = true;
 
@@ -62,11 +61,6 @@ class VideoConverterService
         } else {
             $this->logger->info('Debug Mode is OFF');
         }
-
-        $this->php_cmd = $this->getParameter($this->key_video_exec)["php_cmd"];
-        if ($this->php_cmd == null) {
-            throw new UnsetKeyException($this->key_video_exec . " not initialized.");
-        }
         $this->initWorkingDirectory();
     }
 
@@ -105,7 +99,7 @@ class VideoConverterService
 
         if ($this->enable) {
             $this->logger->info("Converting  ${outputFilename}");
-            $process = new VideoProcess($this->logger, $this->php_cmd, $this->video_runner,  $this->video_exec, $inputFilename, $outputFilename, $this->debug ? 'TRUE' : 'FALSE');
+            $process = new VideoProcess($this->logger, $this->video_runner,  $this->video_exec, $inputFilename, $outputFilename, $this->debug);
             $process->execute();
         } else {
             $this->logger->info("Converter disabled");

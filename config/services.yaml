@@ -45,7 +45,6 @@ parameters:
         ffmpeg_cmd: '%env(FFMPEG_CMD)%'
         ffmpeg_runner: '%env(FFMPEG_RUNNER_CMD)%'
         ffmpeg_runner_debug: '%env(FFMPEG_RUNNER_DEBUG)%'
-        php_cmd: '%env(PHP_CMD)%'
 
 services:
     # default configuration for services in *this* file
