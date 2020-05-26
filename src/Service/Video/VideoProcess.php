@@ -13,16 +13,17 @@ class VideoProcess
     public function __construct($logger, $runner, $cmd, $inputFilename, $outputFilename, $debug)
     {
         
-        if ('true' === $debug) {
-            $this->cmd = "\"$runner\" \"$cmd\" \"$inputFilename\" \"$outputFilename\" & > ${outputFilename}.log";
+        if ('true' === $debug || '1' == $debug || 1 == $debug) {
+            $this->cmd = "$runner $cmd $inputFilename $outputFilename &> ${outputFilename}.log";
         } else {
-            $this->cmd = "\"$runner\" \"$cmd\" \"$inputFilename\" \"$outputFilename\" &";
+            $this->cmd = "$runner $cmd $inputFilename $outputFilename > /dev/null 2>&1";
         }
         
         $this->inputFilename = $inputFilename;
         $this->logger = $logger;
 
-        $this->logger->info("input: " . $this->inputFilename);
+        $this->logger->info("Mode: " . $debug);
+        $this->logger->info("Input: " . $this->inputFilename);
     }
 
     public function execute()
