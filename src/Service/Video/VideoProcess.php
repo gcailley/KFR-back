@@ -14,15 +14,16 @@ class VideoProcess
     {
         
         if ('true' === $debug) {
-            $this->cmd = "\"$runner\" \"$cmd\" \"$inputFilename\" \"$outputFilename\" & > ${outputFilename}.log";
+            $this->cmd = "\"$runner\" \"$cmd\" \"$inputFilename\" \"$outputFilename\" > ${outputFilename}.log 2>&1 &";
         } else {
-            $this->cmd = "\"$runner\" \"$cmd\" \"$inputFilename\" \"$outputFilename\" &";
+            $this->cmd = "\"$runner\" \"$cmd\" \"$inputFilename\" \"$outputFilename\" > /dev/null 2>&1 & echo $!";
         }
         
         $this->inputFilename = $inputFilename;
         $this->logger = $logger;
 
-        $this->logger->info("input: " . $this->inputFilename);
+        $this->logger->info("Mode: " . $debug);
+        $this->logger->info("Input: " . $this->inputFilename);
     }
 
     public function execute()
