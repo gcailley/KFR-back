@@ -27,12 +27,13 @@ modeSucess(){
     fi
 }
 
+
+################################
+######## GET PARAMETERS ########
+################################
 ffmpegCmd=$1;
-
 inputFilename=$2
-
 outputFilename=$3
-
 
 echo "########################################## "
 echo $ffmpegCmd 
