@@ -1,4 +1,4 @@
-
+#
 modeError(){
     local output=$1
     echo "ERR - Conversion has failed" 
@@ -15,7 +15,7 @@ modeSucess(){
     local output=$2
 
     echo "INF - Conversion has successed" 
-	touch "${outputFilename}.success"
+	touch "${output}.success"
     if [ -e "$output" ]; then
         echo "INF - Remove $input"
         unlink $input
@@ -24,7 +24,6 @@ modeSucess(){
         echo "INF - Move $input => $output"
         mv $output $input
         echo "      STATUS : $?"
-
     fi
 }
 
