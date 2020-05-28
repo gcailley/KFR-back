@@ -1,4 +1,3 @@
-#!/bin/bash
 modeError(){
     echo "ERR - Conversion has failed"
     local output=$1
