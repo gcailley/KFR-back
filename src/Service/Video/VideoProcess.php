@@ -34,6 +34,7 @@ class VideoProcess
     public function execute()
     {
         if ($this->debug) {
+            $this->logger->info("Running : $this->cmd ");
             $this->process->disableOutput();
             $this->process->run();
         } else {
