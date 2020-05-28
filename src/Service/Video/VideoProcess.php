@@ -17,7 +17,6 @@ class VideoProcess
 
         if ('true' === $debug || '1' == $debug || 1 == $debug) {
             $this->cmd = "$runner $cmd $inputFilename $outputFilename &> ${outputFilename}.log";
-            $this->process = new Process([$runner, $cmd, $inputFilename, $outputFilename]);
             $this->debug = true;
         } else {
             $this->cmd = "$runner $cmd $inputFilename $outputFilename > /dev/null 2>&1";
@@ -33,13 +32,7 @@ class VideoProcess
 
     public function execute()
     {
-        if ($this->debug) {
-            $this->logger->info("Running : $this->cmd ");
-            $this->process->disableOutput();
-            $this->process->run();
-        } else {
-            $this->logger->info("Running : $this->cmd ");
-            exec($this->cmd);
-        }
+        $this->logger->info("Running : $this->cmd ");
+        exec($this->cmd);
     }
 }

@@ -1,60 +1,65 @@
+
 modeError(){
     local output=$1
-    local log=$2
-
-    echo "ERR - Conversion has failed"  >> $log
+    echo "ERR - Conversion has failed" 
+	touch "${outputFilename}.failure"
     if [ -e "$output" ]; then
-        echo "INF - Remove $output" >> $log
+        echo "INF - Remove $output"
         unlink $output
-        echo "      STATUS : $?" >> $log
+        echo "      STATUS : $?"
     fi
 }
 
 modeSucess(){
     local input=$1
     local output=$2
-    local log = $3
 
-    echo "INF - Conversion has successed"  >> $log
+    echo "INF - Conversion has successed" 
+	touch "${outputFilename}.success"
     if [ -e "$output" ]; then
-        echo "INF - Remove $input" >> $log
+        echo "INF - Remove $input"
         unlink $input
-        echo "      STATUS : $?" >> $log
+        echo "      STATUS : $?"
 
-        echo "INF - Move $input => $output" >> $log
+        echo "INF - Move $input => $output"
         mv $output $input
-        echo "      STATUS : $?" >> $log
+        echo "      STATUS : $?"
 
     fi
 }
 
 ffmpegCmd=$1;
-inputFilename=$2;outputFilename=$3;outputFilenameLog="$3.log";
 
-echo "########################################## " > $outputFilenameLog
-echo $ffmpegCmd >> $outputFilenameLog
-echo $inputFilename >> $outputFilenameLog
-echo $outputFilename >> $outputFilenameLog
-echo $outputFilenameLog >> $outputFilenameLog
+inputFilename=$2
+
+outputFilename=$3
+
+
+echo "########################################## "
+echo $ffmpegCmd 
+echo $inputFilename 
+echo $outputFilename 
+echo $outputFilenameLog 
 if [ -e "$outputFilename" ]; then
-    echo "INF - Remove $outputFilename" >> $outputFilenameLog
+    echo "INF - Remove $outputFilename" 
     unlink $outputFilename
-    echo "      STATUS : $?" >> $outputFilenameLog
+    echo "      STATUS : $?" 
 fi
 
-cmd="${ffmpegCmd} -i ${inputFilename} ${outputFilename} > ${outputFilename}.ffmpeg.log 2>&1"
-echo "INF - $cmd"  >> $outputFilenameLog
+cmd="${ffmpegCmd} -fflags +genpts -i ${inputFilename} -r 24 ${outputFilename}"
+echo "INF - $cmd"  
 
-$($cmd)
+echo $($cmd)
 status=$?
 
-echo "INF - $status"  >> $outputFilenameLog
+echo "INF - $status"  
 
-if [ "$status" != "0" ]
-then
-	modeError $outputFilename  $outputFilenameLog
-    exit 1
-else
-	modeSucess $inputFilename $outputFilename $outputFilenameLog
+outputFilenameSize=$(stat -c%s "$outputFilename")
+
+if [[ $(find "$outputFilename" -type f -size +512c 2>/dev/null) ]]; then    
+	modeSucess $inputFilename $outputFilename 
     exit 0
+else
+	modeError $outputFilename 
+	exit 1
 fi
