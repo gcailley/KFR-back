@@ -1,4 +1,5 @@
-#
+pwd
+
 modeError(){
     local output=$1
     echo "ERR - Conversion has failed" 
