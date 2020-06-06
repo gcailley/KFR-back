@@ -1,0 +1,1 @@
+ ALTER TABLE rtlq_association ADD url_extranet VARCHAR(100) DEFAULT NULL, ADD url_intranet VARCHAR(100) DEFAULT NULL, ADD numero_compte_bancaire VARCHAR(100) DEFAULT NULL;

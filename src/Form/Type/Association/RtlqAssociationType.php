@@ -14,12 +14,15 @@ class RtlqAssociationType extends AbstractRtlqType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add ( 'nom', TextType::class )
-            ->add ( 'date_creation', DateType::class, $this->getDateFormatTZ())
-            ->add ( 'active', CheckBoxType::class )
-            ->add ( 'siege_social', TextType::class )
-            ->add ( 'email', TextType::class )
-            ->add ( 'numero_siren', TextType::class );
+            ->add('nom', TextType::class)
+            ->add('date_creation', DateType::class, $this->getDateFormatTZ())
+            ->add('active', CheckBoxType::class)
+            ->add('siege_social', TextType::class)
+            ->add('email', TextType::class)
+            ->add('numero_siren', TextType::class)
+            ->add('url_extranet', TextType::class)
+            ->add('url_intranet', TextType::class)
+            ->add('numero_compte_bancaire', TextType::class);
     }
     public function getName()
     {
