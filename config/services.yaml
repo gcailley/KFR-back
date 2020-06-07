@@ -77,5 +77,5 @@ services:
             - "@=service('doctrine.orm.entity_manager').getRepository('App:Association\\\\RtlqAdherent')"
 
     # add service from Liip library
-    Liip\ImagineBundle\Imagine\Data\DataManager:
-        alias: 'liip_imagine.data.manager'
+    Liip\ImagineBundle\Imagine\Filter\FilterManager:
+        alias: 'liip_imagine.filter.manager'

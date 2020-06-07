@@ -13,6 +13,7 @@ use App\Entity\Association\RtlqPhoto;
 use App\Entity\Association\RtlqPhotoDirectory;
 use App\Form\Type\Association\RtlqPhotoType;
 use Liip\ImagineBundle\Imagine\Data\DataManager;
+use Liip\ImagineBundle\Imagine\Filter\FilterManager;
 use Liip\ImagineBundle\Model\FileBinary;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -24,9 +25,9 @@ class PhotoController extends AbstractCrudApiController
 
     private $filterManager;
     private $params;
-    function __construct(DataManager $dataManager, ParameterBagInterface $params)
+    function __construct(FilterManager $filterManager, ParameterBagInterface $params)
     {
-        $this->filterManager = $dataManager;
+        $this->filterManager = $filterManager;
         $this->params = $params;
         $this->init();
     }
@@ -131,7 +132,9 @@ class PhotoController extends AbstractCrudApiController
 
     protected function innerUpdateAction($em, $entityMetier)
     {
+        dump($entityMetier);
         $this->saveIntoFile($entityMetier);
+
     }
 
 
@@ -142,6 +145,8 @@ class PhotoController extends AbstractCrudApiController
 
     private function saveIntoFile($entityMetier)
     {
+        if ($entityMetier->getSourceBase64() == null) return;
+
         $photosDir = $this->getDirectory("photos_drive_basedir");
         $thumbnailsDir = $this->getDirectory("thumbnails_drive_basedir");
         //extract information sur la photo

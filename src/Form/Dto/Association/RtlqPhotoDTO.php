@@ -62,4 +62,17 @@ class RtlqPhotoDTO extends AbstractRtlqDTO
         $this->repertoire_name = $value;
         return $this;
     }
+
+    public $source;
+    public function setSource($value)
+    {
+        $this->source = $value;
+        return $this;
+    }
+    
+    public function getSource()
+    {
+        return $this->source;
+    }
+
 }
