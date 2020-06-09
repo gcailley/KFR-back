@@ -12,7 +12,6 @@ use App\Form\Dto\Association\RtlqPhotoDTO;
 use App\Entity\Association\RtlqPhoto;
 use App\Entity\Association\RtlqPhotoDirectory;
 use App\Form\Type\Association\RtlqPhotoType;
-use Liip\ImagineBundle\Imagine\Data\DataManager;
 use Liip\ImagineBundle\Imagine\Filter\FilterManager;
 use Liip\ImagineBundle\Model\FileBinary;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -132,7 +131,6 @@ class PhotoController extends AbstractCrudApiController
 
     protected function innerUpdateAction($em, $entityMetier)
     {
-        dump($entityMetier);
         $this->saveIntoFile($entityMetier);
 
     }

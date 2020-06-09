@@ -26,7 +26,6 @@ abstract class AbstractRtlqController extends AbstractController
 
     protected function newResponse($data, $code, $array = array())
     {
-
         $response = new Response(json_encode($data), $code, $array);
         $response->headers->set('Access-Control-Allow-Origin', '*');
         return $response;

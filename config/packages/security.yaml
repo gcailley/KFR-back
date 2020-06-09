@@ -77,18 +77,16 @@ security:
 
         - { path: ^/association/adherents/password-change,  methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/adherents/password-reset,  methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/photo_directories, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/cotisations/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/saisons/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/news, methods: [GET] ,roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/technique/setup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/security/tokens, methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/security/tokens/logout, methods: [DELETE], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/photos, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/association/photo_directories, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/photos, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/drive/by-key, methods: [GET, OPTIONS], roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/association/adherents/avatar, methods: [GET, OPTIONS], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-
 
         - { path: ^/security/tokens/check-user, methods: [GET, OPTIONS], roles: ROLE_USER }
         - { path: ^/association/adherents/trombinoscope, methods: [GET, OPTIONS], roles: ROLE_USER }
