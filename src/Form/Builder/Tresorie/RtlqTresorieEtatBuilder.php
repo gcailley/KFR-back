@@ -18,9 +18,9 @@ class RtlqTresorieEtatBuilder extends AbstractRtlqEnumBuilder {
     }
     
     
-    public function modeleToDto($modele, $dtoClass)
+    public function modeleToDto($modele, $dtoClass, $doctrine)
     {
-        $dto = parent::modeleToDto($modele, $dtoClass);
+        $dto = parent::modeleToDto($modele, $dtoClass, $doctrine);
         $dto->setNextEtatId ( $modele->getNextEtatId () );
         $dto->setNextEtatName ( $modele->getNextEtatName () );
 

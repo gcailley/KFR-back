@@ -63,7 +63,7 @@ class KungfuTaoController extends AbstractCrudApiController
         }
 
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_PROF')) {
-            $dto_entity = $this->getLimitedTaoBuilder()->modeleToDto($entity, RtlqKungfuTaoDTO::class);
+            $dto_entity = $this->getLimitedTaoBuilder()->modeleToDto($entity, RtlqKungfuTaoDTO::class, $this->getDoctrine());
         } else {
             $dto_entity = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass());
         }
@@ -80,9 +80,9 @@ class KungfuTaoController extends AbstractCrudApiController
         $entities = $this->getDoctrine()->getRepository($this->newModeleClass())->findBy($filtre, $this->defaultSort());
 
         if (!$this->get('security.authorization_checker')->isGranted('ROLE_PROF')) {
-            $dto_entities = $this->getLimitedTaoBuilder()->modelesToDtos($entities,  RtlqKungfuTaoDTO::class);
+            $dto_entities = $this->getLimitedTaoBuilder()->modelesToDtos($entities,  RtlqKungfuTaoDTO::class, $this->getDoctrine());
         } else {
-            $dto_entities = $this->getBuilder()->modelesToDtos($entities,  $this->newDtoClass());
+            $dto_entities = $this->getBuilder()->modelesToDtos($entities,  $this->newDtoClass(), $this->getDoctrine());
         }
 
         return $this->convertDto2Response($dto_entities, $response, Response::HTTP_ACCEPTED);

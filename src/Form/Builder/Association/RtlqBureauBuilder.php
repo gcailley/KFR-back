@@ -36,7 +36,7 @@ class RtlqBureauBuilder extends AbstractRtlqBuilder
     }
 
 
-    public function modeleToDto($modele, $dtoClass)
+    public function modeleToDto($modele, $dtoClass, $doctrine)
     {
         $dto = $this->getNewDto($dtoClass);
 
@@ -61,7 +61,7 @@ class RtlqBureauBuilder extends AbstractRtlqBuilder
             if ($saison->getActive()) {
                 $dto->setActif(true);
             }
-            $saisonDto = $this->rtlqSaisonBuilder->modeleToDtoLight($saison, RtlqSaisonDTO::class);
+            $saisonDto = $this->rtlqSaisonBuilder->modeleToDtoLight($saison, RtlqSaisonDTO::class, $doctrine);
             $dto->addSaison($saisonDto);
         }
 

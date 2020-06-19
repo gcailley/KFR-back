@@ -95,4 +95,59 @@ class RtlqAssociationDTO extends AbstractRtlqDTO {
     public function getNumeroCompteBancaire() {
         return $this->numero_compte_bancaire;
     }
+
+    protected $president_id;
+    public function setPresidentId($value) {
+        $this->president_id = $value;
+        return $this;
+    }
+    public function getPresidentId() {
+        return $this->president_id;
+    }
+
+    protected $president_nom_prenom;
+    public function setPresidentNomPrenom($value) {
+        $this->president_nom_prenom = $value;
+        return $this;
+    }
+    public function getPresidentNomPrenom() {
+        return $this->president_nom_prenom;
+    }
+
+    protected $secretaire_id;
+    public function setSecretaireId($value) {
+        $this->secretaire_id = $value;
+        return $this;
+    }
+    public function getSecretaireId() {
+        return $this->secretaire_id;
+    }
+
+    protected $secretaire_nom_prenom;
+    public function setSecretaireNomPrenom($value) {
+        $this->secretaire_nom_prenom = $value;
+        return $this;
+    }
+    public function getSecretaireNomPrenom() {
+        return $this->secretaire_nom_prenom;
+    }
+
+    protected $tresorier_id;
+    public function setTresorierId($value) {
+        $this->tresorier_id = $value;
+        return $this;
+    }
+    public function getTresorierId() {
+        return $this->tresorier_id;
+    }
+
+    protected $tresorier_nom_prenom;
+    public function setTresorierNomPrenom($value) {
+        $this->tresorier_nom_prenom = $value;
+        return $this;
+    }
+    public function getTresorierNomPrenom() {
+        return $this->tresorier_nom_prenom;
+    }
+
 }

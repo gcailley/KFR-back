@@ -84,7 +84,7 @@ class AuthTokenController extends AbstractCrudApiController
 
         $em->flush();
 
-        $dto_entity = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass());
+        $dto_entity = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass(), $this->getDoctrine());
         return $this->newResponse(($dto_entity), Response::HTTP_ACCEPTED);
     }
 

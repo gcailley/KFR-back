@@ -247,7 +247,7 @@ class AdherentController extends AbstractCrudApiController
                 [],
                 $this->defaultSort()
             );
-        $dto_entities = $this->rtlqAdherentLightBuilder->modelesToDtos($entities, RtlqAdherentLightDTO::class);
+        $dto_entities = $this->rtlqAdherentLightBuilder->modelesToDtos($entities, RtlqAdherentLightDTO::class, $this->getDoctrine());
         return $this->newResponse($dto_entities, Response::HTTP_ACCEPTED);
     }
 
@@ -306,7 +306,7 @@ class AdherentController extends AbstractCrudApiController
 
         $this->mailer->send($message);
 
-        $dto = $this->getBuilder()->modeleToDto($adherent, $this->newDtoClass());
+        $dto = $this->getBuilder()->modeleToDto($adherent, $this->newDtoClass(), $this->getDoctrine());
         return $this->newResponse($dto, Response::HTTP_ACCEPTED);
     }
 
@@ -381,7 +381,7 @@ class AdherentController extends AbstractCrudApiController
         $em->merge($adherent);
         $em->flush();
 
-        $dto = $this->getBuilder()->modeleToDto($adherent, $this->newDtoClass());
+        $dto = $this->getBuilder()->modeleToDto($adherent, $this->newDtoClass(), $this->getDoctrine());
         return $this->newResponse(($dto), Response::HTTP_ACCEPTED);
     }
 
@@ -515,7 +515,7 @@ class AdherentController extends AbstractCrudApiController
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $dto = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass());
+        $dto = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass(), $this->getDoctrine());
         return new Response(json_encode($dto->getCotisationId()), Response::HTTP_ACCEPTED);
     }
 
@@ -588,7 +588,7 @@ class AdherentController extends AbstractCrudApiController
         }
 
         // conversion modele en DTO
-        $dtos = $this->rtlqAdherentTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuAdherentTaoDTO::class);
+        $dtos = $this->rtlqAdherentTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuAdherentTaoDTO::class, $this->getDoctrine());
 
         //get user information based on the id associate from the token
         return $this->returnNewResponse($dtos, Response::HTTP_ACCEPTED, false);
@@ -630,7 +630,7 @@ class AdherentController extends AbstractCrudApiController
         $em->flush();
 
         // conversion modele en DTO
-        $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($entityMetier, RtlqKungfuAdherentTaoDTO::class);
+        $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($entityMetier, RtlqKungfuAdherentTaoDTO::class, $this->getDoctrine());
         return $this->newResponse(($dtos), Response::HTTP_CREATED);
     }
 
@@ -664,7 +664,7 @@ class AdherentController extends AbstractCrudApiController
         }
 
         // conversion modele en DTO
-        $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($adherentTao, RtlqKungfuAdherentTaoDTO::class);
+        $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($adherentTao, RtlqKungfuAdherentTaoDTO::class, $this->getDoctrine());
         return $this->newResponse(($dtos), Response::HTTP_CREATED);
     }
 
@@ -712,7 +712,7 @@ class AdherentController extends AbstractCrudApiController
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $dto = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass());
+        $dto = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass(), $this->getDoctrine());
         return new Response(json_encode($dto->getGroupes()), Response::HTTP_ACCEPTED);
     }
 
@@ -777,7 +777,7 @@ class AdherentController extends AbstractCrudApiController
             throw new NotFoundHttpException("Adherent $id not found");
         }
 
-        $dto = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass());
+        $dto = $this->getBuilder()->modeleToDto($entity, $this->newDtoClass(), $this->getDoctrine());
         return new Response(json_encode($dto->getTresories()), Response::HTTP_ACCEPTED);
     }
 
@@ -881,7 +881,7 @@ class AdherentController extends AbstractCrudApiController
         }
 
         // conversion modele en DTO
-        $dtos = $this->rtlqTresorieBuilder->modelesToDtos($entitiesAssociate, RtlqTresorieDTO::class);
+        $dtos = $this->rtlqTresorieBuilder->modelesToDtos($entitiesAssociate, RtlqTresorieDTO::class, $this->getDoctrine());
 
         //get user information based on the id associate from the token
         return $this->returnNewResponse($dtos, Response::HTTP_ACCEPTED, false);
@@ -907,7 +907,7 @@ class AdherentController extends AbstractCrudApiController
         }
 
         // conversion modele en DTO
-        $dtos = $this->rtlqAdherentTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuAdherentTaoDTO::class);
+        $dtos = $this->rtlqAdherentTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuAdherentTaoDTO::class, $this->getDoctrine());
 
         //get user information based on the id associate from the token
         return $this->returnNewResponse($dtos, Response::HTTP_ACCEPTED, false);

@@ -71,7 +71,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         }
 
         foreach ($dto->getTresories() as $tresorieId) {
-            $modele->addTresorie($em    ->getReference(RtlqTresorie::class, $tresorieId));
+            $modele->addTresorie($em->getReference(RtlqTresorie::class, $tresorieId));
         }
 
         foreach ($dto->getCotisations() as $cotisationId) {
@@ -92,7 +92,7 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         return $modele;
     }
 
-    public function modeleToDtoLight($modele, $dtoClass)
+    public function modeleToDtoLight($modele, $dtoClass, $doctrine)
     {
         $dto = new $dtoClass;
 
@@ -165,9 +165,9 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
     }
 
 
-    public function modeleToDto($modele, $dtoClass)
+    public function modeleToDto($modele, $dtoClass, $doctrine)
     {
-        $dto = $this->modeleToDtoLight($modele, $dtoClass);
+        $dto = $this->modeleToDtoLight($modele, $dtoClass, $doctrine);
         if ($modele->getGroupes() != null) {
             foreach ($modele->getGroupes() as $groupe) {
                 $dto->addGroupe($groupe->getId());

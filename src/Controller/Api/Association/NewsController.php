@@ -92,7 +92,7 @@ class NewsController extends AbstractCrudApiController
         if ($entities === null || empty($entities)) {
             $dto_entities = [];
         } else {
-            $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass());
+            $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass(), $this->getDoctrine());
         }
         return $dto_entities;
     }
@@ -105,7 +105,7 @@ class NewsController extends AbstractCrudApiController
         if ($entities === null || empty($entities)) {
             $dto_entities = [];
         } else {
-            $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass());
+            $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass(), $this->getDoctrine());
         }
         return $dto_entities;
     }
@@ -118,7 +118,7 @@ class NewsController extends AbstractCrudApiController
         if ($entities === null || empty($entities)) {
             $dto_entities = [];
         } else {
-            $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass());
+            $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass(), $this->getDoctrine());
         }
         return $dto_entities;
     }

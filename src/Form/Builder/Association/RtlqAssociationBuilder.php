@@ -4,6 +4,7 @@ namespace App\Form\Builder\Association;
 
 use App\Form\Dto\Association\RtlqAssociationDTO;
 use App\Entity\Association\RtlqAssociation;
+use App\Entity\Association\RtlqBureau;
 use App\Form\Builder\AbstractRtlqBuilder;
 
 class RtlqAssociationBuilder extends AbstractRtlqBuilder
@@ -24,7 +25,7 @@ class RtlqAssociationBuilder extends AbstractRtlqBuilder
     }
 
 
-    public function modeleToDto($modele, $dtoClass)
+    public function modeleToDto($modele, $dtoClass, $doctrine)
     {
         $dto = $this->getNewDto($dtoClass);
 
@@ -38,6 +39,17 @@ class RtlqAssociationBuilder extends AbstractRtlqBuilder
         $dto->setNumeroCompteBancaire($modele->getNumeroCompteBancaire());
         $dto->setUrlIntranet($modele->getUrlIntranet());
         $dto->setUrlExtranet($modele->getUrlExtranet());
+
+        // recuperation current "bureau" and initialize president, tresorerier, secretaire
+        $bureau = $doctrine->getRepository(RtlqBureau::class)->getBureauActif();
+        if ($bureau) {
+            $dto->setPresidentId($bureau->getPresident()->getId());
+            $dto->setPresidentNomPrenom($bureau->getPresident()->getNomPrenom());
+            $dto->setTresorierId($bureau->getTresorier()->getId());
+            $dto->setTresorierNomPrenom($bureau->getTresorier()->getNomPrenom());
+            $dto->setSecretaireId($bureau->getSecretaire()->getId());
+            $dto->setSecretaireNomPrenom($bureau->getSecretaire()->getNomPrenom());
+        }
 
         return $dto;
     }

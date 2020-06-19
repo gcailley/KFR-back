@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * RtlqBureau.
  *
  * @ORM\Table(name="rtlq_bureau")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\Association\BureauRepository")
  */
 class RtlqBureau extends AbstractRtlqEntity
 {
@@ -87,7 +87,8 @@ class RtlqBureau extends AbstractRtlqEntity
      * Add saison
      * @param RtlqSaison $saison
      */
-    public function addSaison(RtlqSaison $saison){
+    public function addSaison(RtlqSaison $saison)
+    {
         foreach ($this->saisons as $value) {
             if ($value->getId() == $saison->getId()) {
                 return $this;
@@ -102,7 +103,8 @@ class RtlqBureau extends AbstractRtlqEntity
      *
      * @param RtlqSaison $saison
      */
-    public function removeSaison(RtlqSaison $saison){
+    public function removeSaison(RtlqSaison $saison)
+    {
         $this->saisons->removeElement($saison);
     }
 
@@ -111,11 +113,13 @@ class RtlqBureau extends AbstractRtlqEntity
      *
      * @return Collection
      */
-    public function getSaisons(){
+    public function getSaisons(): ArrayCollection
+    {
         return $this->saisons;
     }
 
-    public function removeAllSaisons(){
+    public function removeAllSaisons()
+    {
         $this->saisons = [];
     }
 
@@ -125,11 +129,10 @@ class RtlqBureau extends AbstractRtlqEntity
      * @ORM\JoinColumn(name="president_id", referencedColumnName="id" , nullable=false)
      */
     private $president;
-    public function getPresident()
+    public function getPresident(): ?RtlqAdherent
     {
         return $this->president;
     }
-
     public function setPresident(RtlqAdherent $value)
     {
         $this->president = $value;
@@ -142,11 +145,10 @@ class RtlqBureau extends AbstractRtlqEntity
      * @ORM\JoinColumn(name="secretaire_id", referencedColumnName="id" , nullable=false)
      */
     private $secretaire;
-    public function getSecretaire()
+    public function getSecretaire(): ?RtlqAdherent
     {
         return $this->secretaire;
     }
-
     public function setSecretaire(RtlqAdherent $value)
     {
         $this->secretaire = $value;
@@ -159,15 +161,13 @@ class RtlqBureau extends AbstractRtlqEntity
      * @ORM\JoinColumn(name="tresorier_id", referencedColumnName="id" , nullable=false)
      */
     private $tresorier;
-    public function getTresorier()
+    public function getTresorier(): ?RtlqAdherent
     {
         return $this->tresorier;
     }
-
     public function setTresorier(RtlqAdherent $value)
     {
         $this->tresorier = $value;
-
         return $this;
     }
 

@@ -16,7 +16,7 @@ class RtlqAdherentLightBuilder extends AbstractRtlqBuilder
         return $modele;
     }
 
-    public function modeleToDto($modele, $dtoClass)
+    public function modeleToDto($modele, $dtoClass, $doctrine)
     {
         $dto = new $dtoClass;
 

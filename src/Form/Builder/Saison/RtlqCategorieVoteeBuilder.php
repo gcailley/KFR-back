@@ -28,7 +28,7 @@ class RtlqCategorieVoteeBuilder extends AbstractRtlqBuilder
         return $modele;
     }
 
-    public function modeleToDto($modele, $dtoClass)
+    public function modeleToDto($modele, $dtoClass, $doctrine)
     {
         $dto = $this->getNewDto($dtoClass);
 

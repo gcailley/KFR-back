@@ -30,7 +30,7 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
     }
 
 
-    public function modeleToDto($modele, $dtoClass): RtlqKungfuTaoDTO
+    public function modeleToDto($modele, $dtoClass, $doctrine): RtlqKungfuTaoDTO
     {
         $dto = $this->getNewDto($dtoClass);
 

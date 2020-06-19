@@ -28,7 +28,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
             throw $this->createNotFoundException();
         }
 
-        $dto = $this->getBuilder()->modeleToDto($modele, $this->newDtoClass());
+        $dto = $this->getBuilder()->modeleToDto($modele, $this->newDtoClass(), $this->getDoctrine());
         return  $this->newResponse($dto, Response::HTTP_ACCEPTED);
     }
 
@@ -45,7 +45,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
     public function convertModele2DtoResponse($entityMetier, $response, $status)
     {
         if ($response) {
-            $dto = $this->getBuilder()->modeleToDto($entityMetier,  $this->newDtoClass());
+            $dto = $this->getBuilder()->modeleToDto($entityMetier,  $this->newDtoClass(), $this->getDoctrine());
             return $this->newResponse($dto, $status);
         } else {
             return $entityMetier;
@@ -67,7 +67,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
     public function getAllAction(Request $request, $response = true)
     {
         $entities = $this->getDoctrine()->getRepository($this->newModeleClass())->findBy([], $this->defaultSort());
-        $dto_entities = $this->getBuilder()->modelesToDtos($entities,  $this->newDtoClass());
+        $dto_entities = $this->getBuilder()->modelesToDtos($entities,  $this->newDtoClass(), $this->getDoctrine());
         return $this->convertDto2Response($dto_entities, $response, Response::HTTP_ACCEPTED);
     }
 
@@ -202,7 +202,7 @@ abstract class AbstractCrudApiController extends AbstractApiController
             $dto_entities = [];
         } else {
             if ($convert) {
-                $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass());
+                $dto_entities = $this->getBuilder()->modelesToDtos($entities, $this->newDtoClass(), $this->getDoctrine());
             } else {
                 $dto_entities = $entities;
             }

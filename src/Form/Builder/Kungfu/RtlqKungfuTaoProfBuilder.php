@@ -19,9 +19,9 @@ class RtlqKungfuTaoProfBuilder extends RtlqKungfuTaoBuilder
     }
 
 
-    public function modeleToDto($modele, $dtoClass): RtlqKungfuTaoDTO
+    public function modeleToDto($modele, $dtoClass, $doctrine ): RtlqKungfuTaoDTO
     {
-        $dto = parent::modeleToDto($modele, $dtoClass);
+        $dto = parent::modeleToDto($modele, $dtoClass, $doctrine);
         $dto->setVideoUrl($modele->getVideoUrl());
 
         return $dto;

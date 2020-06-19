@@ -29,7 +29,7 @@ class RtlqPhotoDirectoryBuilder extends AbstractRtlqBuilder
     }
 
 
-    public function modeleToDto($modele, $dtoClass)
+    public function modeleToDto($modele, $dtoClass, $doctrine)
     {
         $dto = $this->getNewDto($dtoClass);
 
@@ -39,7 +39,7 @@ class RtlqPhotoDirectoryBuilder extends AbstractRtlqBuilder
         $dto->setNbPhotos(sizeof($modele->getPhotos()));
         $photos = $modele->getPhotos();
         if ($photos && sizeof($photos) > 0) {
-            $photoDto = $this->rtlqPhotoBuilder->modeleToDto($photos[random_int(0, sizeof($photos)-1)], RtlqPhotoDTO::class);
+            $photoDto = $this->rtlqPhotoBuilder->modeleToDto($photos[random_int(0, sizeof($photos)-1)], RtlqPhotoDTO::class, $doctrine);
             $dto->setPreviewId($photoDto->getId());
         }
 

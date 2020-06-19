@@ -18,7 +18,7 @@ abstract class AbstractRtlqEnumBuilder extends AbstractRtlqBuilder
     }
     
     
-    public function modeleToDto($modele, $dtoClass)
+    public function modeleToDto($modele, $dtoClass, $doctrine)
     {
         $dto = $this->getNewDto($dtoClass);
         $dto->setId ( $modele->getId ());

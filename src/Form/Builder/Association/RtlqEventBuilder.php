@@ -17,20 +17,20 @@ class RtlqEventBuilder extends AbstractRtlqBuilder
     {
         $this->rtlqAdherentBuilder = new RtlqAdherentBuilder();
     }
-    
+
 
     public function dtoToModele($em, $dto, $modele)
     {
-        $modele->setDescription ( $dto->getDescription () );
-        $modele->setCommentaire ( $dto->getCommentaire() );
-        $modele->setAdresse($dto->getAdresse() );
-        $modele->setDateCreation($dto->getDateCreation()->setTime(12,0,0) );
-        
-        $modele->setSaison ( $em->getReference ( RtlqSaison::class, $dto->getSaisonId () ) );
+        $modele->setDescription($dto->getDescription());
+        $modele->setCommentaire($dto->getCommentaire());
+        $modele->setAdresse($dto->getAdresse());
+        $modele->setDateCreation($dto->getDateCreation()->setTime(12, 0, 0));
+
+        $modele->setSaison($em->getReference(RtlqSaison::class, $dto->getSaisonId()));
 
         $modele->removeAllAdherents();
         foreach ($dto->getAdherents() as $adherentDto) {
-            $modelAdh = $em->getReference ( RtlqAdherent::class, $adherentDto['id'] );
+            $modelAdh = $em->getReference(RtlqAdherent::class, $adherentDto['id']);
             $modele->addAdherent($modelAdh);
         }
         $modele->setNbAccompagnants($dto->getNbAccompagnants());
@@ -38,26 +38,26 @@ class RtlqEventBuilder extends AbstractRtlqBuilder
 
         return $modele;
     }
-    
-    
-    public function modeleToDto($modele, $dtoClass)
+
+
+    public function modeleToDto($modele, $dtoClass, $doctrine)
     {
         $dto = $this->getNewDto($dtoClass);
-        
-        $dto->setId ( $modele->getId () );
-        $dto->setDescription ( $modele->getDescription () );
-        $dto->setAdresse ( $modele->getAdresse () );
-        $dto->setCommentaire ( $modele->getCommentaire () );
-        $dto->setDateCreation( $this->dateToString($modele->getDateCreation() ));
 
-        $dto->setSaisonName ( $modele->getSaisonNom () );
-        $dto->setSaisonId ( $modele->getSaisonId () );
+        $dto->setId($modele->getId());
+        $dto->setDescription($modele->getDescription());
+        $dto->setAdresse($modele->getAdresse());
+        $dto->setCommentaire($modele->getCommentaire());
+        $dto->setDateCreation($this->dateToString($modele->getDateCreation()));
+
+        $dto->setSaisonName($modele->getSaisonNom());
+        $dto->setSaisonId($modele->getSaisonId());
 
         foreach ($modele->getAdherents() as $adherent) {
-            $adherentDto = $this->rtlqAdherentBuilder->modeleToDtoLight($adherent, RtlqAdherentDTO::class);
-            $dto->addAdherent( $adherentDto );
+            $adherentDto = $this->rtlqAdherentBuilder->modeleToDtoLight($adherent, RtlqAdherentDTO::class, $doctrine);
+            $dto->addAdherent($adherentDto);
         }
-        
+
         $dto->setNbAccompagnants($modele->getNbAccompagnants());
         $dto->setNbPeople($modele->getNbPeople());
 

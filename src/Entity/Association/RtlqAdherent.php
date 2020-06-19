@@ -218,10 +218,10 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface
             if ($cotisation->isSaisonCourante()) {
                 return $cotisation;
             }
-        } ;
+        };
     }
 
-    
+
     public function removeCotisationSaisonCourante()
     {
         $cotisationsToRemove = [];
@@ -229,9 +229,9 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface
             if ($cotisation->isSaisonCourante()) {
                 $cotisationsToRemove[] = $cotisation;
             }
-        } ;
+        };
 
-        foreach($cotisationsToRemove as $c) {
+        foreach ($cotisationsToRemove as $c) {
             $this->removeCotisation($c);
             $c->removeAdherent($this);
         }
@@ -885,5 +885,15 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface
             $this->password,
             $this->actif,
         ) = unserialize($serialized);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string prenom nom
+     */
+    public function getNomPrenom(): string
+    {
+        return $this->getPrenom() . " " . $this->getNom();
     }
 }

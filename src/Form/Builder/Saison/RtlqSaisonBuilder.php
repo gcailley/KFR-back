@@ -25,7 +25,7 @@ class RtlqSaisonBuilder extends AbstractRtlqBuilder
         return $modele;
     }
 
-    public function modeleToDtoLight($modele, $dtoClass)
+    public function modeleToDtoLight($modele, $dtoClass, $doctrine)
     {
         $dto = $this->getNewDto($dtoClass);
         $dto->setId($modele->getId());
@@ -34,10 +34,10 @@ class RtlqSaisonBuilder extends AbstractRtlqBuilder
 
         return $dto;
     }
-    public function modeleToDto($modele, $dtoClass)
+    public function modeleToDto($modele, $dtoClass, $doctrine)
     {
         
-        $dto = $this->modeleToDtoLight($modele, $dtoClass);
+        $dto = $this->modeleToDtoLight($modele, $dtoClass, $doctrine);
         $dto->setDateDebut($this->dateToString($modele->getDateDebut()));
         $dto->setDateFin($this->dateToString($modele->getDateFin()));
 
