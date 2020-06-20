@@ -16,9 +16,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  * indexes={@ORM\Index(name="id", columns={"id"})})
  * @ORM\Entity(repositoryClass="App\Repository\Kungfu\TaoRepository")
  */
-class RtlqKungfuTao extends AbstractRtlqEntity{
+class RtlqKungfuTao extends AbstractRtlqEntity
+{
 
-    public function __construct() {
+    public function __construct()
+    {
+        $this->taos_learnt = new ArrayCollection();
     }
 
     /**
@@ -34,7 +37,8 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getId() {
+    public  function getId()
+    {
         return $this->id;
     }
 
@@ -50,7 +54,8 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getNom() {
+    public  function getNom()
+    {
         return $this->nom;
     }
 
@@ -66,7 +71,8 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getNomChinois() {
+    public  function getNomChinois()
+    {
         return $this->nomChinois;
     }
 
@@ -81,7 +87,8 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getTraduction() {
+    public  function getTraduction()
+    {
         return $this->traduction;
     }
 
@@ -97,7 +104,8 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getOrigine() {
+    public  function getOrigine()
+    {
         return $this->origine;
     }
 
@@ -114,16 +122,19 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getStyle() {
+    public  function getStyle()
+    {
         return $this->style;
     }
-    public  function getStyleId() {
-        return ($this->style==null)?null:$this->style->getId();
+    public  function getStyleId()
+    {
+        return ($this->style == null) ? null : $this->style->getId();
     }
-    public  function getStyleName() {
-        return ($this->style==null)?null:$this->style->getValue();
+    public  function getStyleName()
+    {
+        return ($this->style == null) ? null : $this->style->getValue();
     }
-    
+
 
     /**
      * @var App\Entity\Kungfu\RtlqKungfuNiveau
@@ -137,14 +148,17 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getNiveau() {
+    public  function getNiveau()
+    {
         return $this->niveau;
     }
-    public  function getNiveauId() {
-        return ($this->niveau==null)?null:$this->niveau->getId();
+    public  function getNiveauId()
+    {
+        return ($this->niveau == null) ? null : $this->niveau->getId();
     }
-    public  function getNiveauName() {
-        return ($this->niveau==null)?null:$this->niveau->getValue();
+    public  function getNiveauName()
+    {
+        return ($this->niveau == null) ? null : $this->niveau->getValue();
     }
     /**
      *
@@ -157,7 +171,8 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getArme() {
+    public  function getArme()
+    {
         return $this->arme;
     }
 
@@ -172,7 +187,8 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getPinYin() {
+    public  function getPinYin()
+    {
         return $this->pinyin;
     }
 
@@ -188,7 +204,8 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
         return $this;
     }
 
-    public  function getVideoUrl() {
+    public  function getVideoUrl()
+    {
         return $this->videoUrl;
     }
 
@@ -197,28 +214,33 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
      * @var string @ORM\Column(name="actif", type="boolean", nullable=false)
      */
     protected $actif = false;
-    public function getActif() {
+    public function getActif()
+    {
         return $this->actif;
     }
-    public function setActif($value) {
+    public function setActif($value)
+    {
         $this->actif = $value;
         return $this;
     }
 
-     /**
+    /**
      *
      * @var string @ORM\Column(name="combine", type="boolean", nullable=false)
      */
     protected $combine = false;
-    public function getCombine() {
+    public function getCombine()
+    {
         return $this->combine;
     }
-    public function setCombine($value) {
+    public function setCombine($value)
+    {
         $this->combine = $value;
         return $this;
     }
 
-    public function isInto( $collections ) {
+    public function isInto($collections)
+    {
         foreach ($collections as $key => $value) {
             if ($this->isEquals($value->getTao())) {
                 return true;
@@ -227,18 +249,32 @@ class RtlqKungfuTao extends AbstractRtlqEntity{
         return false;
     }
 
-     /**
+    /**
      *
      * @var string @ORM\Column(name="nb_moves", type="integer", nullable=true)
      */
     protected $nb_moves = false;
-    public function getNbMoves() {
+    public function getNbMoves()
+    {
         return $this->nb_moves;
     }
-    public function setNbMoves($value) {
+    public function setNbMoves($value)
+    {
         $this->nb_moves = $value;
         return $this;
     }
 
-
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\KungFu\RtlqKungfuAdherentTao", mappedBy="tao", cascade={"persist"})
+     */
+    private $taos_learnt;
+    public function getTaosLearnt()
+    {
+        return $this->taos_learnt;
+    }
+    public function setTaosLearnt($taos_learnt)
+    {
+        $this->taos_learnt = $taos_learnt;
+        return $this;
+    }
 }

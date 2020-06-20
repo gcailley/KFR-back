@@ -46,7 +46,7 @@ class KungfuTaoController extends AbstractCrudApiController
      */
     public function defaultSort()
     {
-        return ['niveau' => 'ASC', 'style' => 'ASC', 'nom' => 'ASC'];
+        return ['style' => 'ASC', 'niveau' => 'ASC', 'nom' => 'ASC'];
     }
 
 
@@ -112,5 +112,5 @@ class KungfuTaoController extends AbstractCrudApiController
 
 
     //////////////////////////////////////////////////////////////////////
-    
+
 }

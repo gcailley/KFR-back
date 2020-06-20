@@ -154,34 +154,19 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity
      * @ORM\JoinColumn(name="tao_id", referencedColumnName="id", nullable=false)
      */
     private $tao;
-
-    /**
-     * Add adherent
-     *
-     * @param RtlqKungfuTao $tao
-     *
-     * @return RtlqKungfuTao
-     */
     public function setTao(RtlqKungfuTao $tao)
     {
         $this->tao = $tao;
         return $this;
     }
-    /**
-     * Get taos
-     *
-     * @return Collection
-     */
     public function getTao()
     {
         return $this->tao;
     }
-
     public function getTaoId()
     {
         return $this->tao->getId();
     }
-
     public function removeTao()
     {
         $this->tao = null;

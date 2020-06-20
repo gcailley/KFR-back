@@ -149,4 +149,14 @@ class RtlqKungfuTaoDTO extends AbstractRtlqDTO {
         $this->nb_moves = $value;
         return $this;
     }
+
+    protected $nb_taos_learnt;
+    public function getNbTaosLearnt() {
+        return $this->nb_taos_learnt;
+    }
+    public function setNbTaosLearnt($value) {
+        $this->nb_taos_learnt = $value;
+        return $this;
+    }
+
 }
