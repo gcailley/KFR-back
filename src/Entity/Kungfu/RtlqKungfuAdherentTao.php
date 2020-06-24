@@ -142,6 +142,11 @@ class RtlqKungfuAdherentTao extends AbstractRtlqEntity
         return $this->adherent->getId();
     }
 
+    public function getAdherentPrenomNom()
+    {
+        return $this->adherent->getPrenomNom();
+    }
+
     public function removeAdherent()
     {
         $this->adherent = null;

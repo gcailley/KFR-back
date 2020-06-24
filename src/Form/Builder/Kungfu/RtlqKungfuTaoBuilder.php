@@ -49,7 +49,10 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         $dto->setCombine($modele->getCombine());
         $dto->setNbMoves($modele->getNbMoves());
         $dto->setNbTaosLearnt(sizeof($modele->getTaosLearnt()));
-
+        foreach ( $modele->getTaosLearnt() as $taoLearnt) {
+            $dto->hasThisTao($taoLearnt->getAdherentPrenomNom());
+        }
+    
         return $dto;
     }
 }

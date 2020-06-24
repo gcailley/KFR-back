@@ -886,14 +886,4 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface
             $this->actif,
         ) = unserialize($serialized);
     }
-
-    /**
-     * Undocumented function
-     *
-     * @return string prenom nom
-     */
-    public function getNomPrenom(): string
-    {
-        return $this->getPrenom() . " " . $this->getNom();
-    }
 }

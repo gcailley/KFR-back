@@ -44,11 +44,11 @@ class RtlqAssociationBuilder extends AbstractRtlqBuilder
         $bureau = $doctrine->getRepository(RtlqBureau::class)->getBureauActif();
         if ($bureau) {
             $dto->setPresidentId($bureau->getPresident()->getId());
-            $dto->setPresidentNomPrenom($bureau->getPresident()->getNomPrenom());
+            $dto->setPresidentNomPrenom($bureau->getPresident()->getPrenomNom());
             $dto->setTresorierId($bureau->getTresorier()->getId());
-            $dto->setTresorierNomPrenom($bureau->getTresorier()->getNomPrenom());
+            $dto->setTresorierNomPrenom($bureau->getTresorier()->getPrenomNom());
             $dto->setSecretaireId($bureau->getSecretaire()->getId());
-            $dto->setSecretaireNomPrenom($bureau->getSecretaire()->getNomPrenom());
+            $dto->setSecretaireNomPrenom($bureau->getSecretaire()->getPrenomNom());
         }
 
         return $dto;

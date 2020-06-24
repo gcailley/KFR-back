@@ -6,6 +6,11 @@ use App\Form\Dto\AbstractRtlqDTO;
 
 class RtlqKungfuTaoDTO extends AbstractRtlqDTO {
 
+    public function __construct()
+    {
+        $this->adherents = array();
+    }
+
     protected $nom;
     public function setNom($value)
     {
@@ -157,6 +162,20 @@ class RtlqKungfuTaoDTO extends AbstractRtlqDTO {
     public function setNbTaosLearnt($value) {
         $this->nb_taos_learnt = $value;
         return $this;
+    }
+
+    protected $adherents;
+    public function setAdherents($value)
+    {
+        $this->adherents = $value;
+        return $this;
+    }
+    public  function getAdherents() {
+        return $this->adherents;
+    }
+    public  function hasThisTao($adherent) {
+        $this->adherents[] = $adherent;
+        return $this->adherents;
     }
 
 }

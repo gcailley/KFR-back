@@ -56,7 +56,7 @@ class RtlqAdherentDTO extends AbstractRtlqDTO
         return $this->cotisations;
     }
 
-    protected $tresories;
+    
     protected $montant_total_encaisse = 0;
     protected $montant_total_previsionnel = 0;
     protected $montant_total_en_retard = 0;
@@ -75,6 +75,7 @@ class RtlqAdherentDTO extends AbstractRtlqDTO
         return $this;
     }
 
+    protected $tresories;
     public function addTresorie($tresorie)
     {
         $this->tresories[] = $tresorie;
