@@ -14,9 +14,8 @@ class RtlqBureauDTO extends AbstractRtlqDTO
     
     public function __construct()
     {
-        $this->saisons = [];
+        $this->saisons = array();
     }
-
 
     protected $date_creation;
     public function getDateCreation()

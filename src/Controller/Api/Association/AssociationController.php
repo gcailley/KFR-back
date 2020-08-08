@@ -42,7 +42,7 @@ class AssociationController extends AbstractCrudApiController
             ->getRepository($this->newModeleClass())
             ->createQueryBuilder('a')
             ->where('a.active = :active')
-            ->setParameter('active', false)
+            ->setParameter('active', true)
             ->getQuery()
             ->getResult();
         return $this->returnNewResponse($entities, Response::HTTP_ACCEPTED);

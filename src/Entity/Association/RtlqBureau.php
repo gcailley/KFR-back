@@ -113,7 +113,7 @@ class RtlqBureau extends AbstractRtlqEntity
      *
      * @return Collection
      */
-    public function getSaisons(): ArrayCollection
+    public function getSaisons()
     {
         return $this->saisons;
     }
