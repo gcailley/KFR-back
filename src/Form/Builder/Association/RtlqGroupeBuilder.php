@@ -43,7 +43,7 @@ class RtlqGroupeBuilder extends AbstractRtlqBuilder
         $dto->setRole ( $modele->getRole() );
 
         foreach ($modele->getAdherents() as $adherent) {
-            $adherentDto = $this->rtlqAdherentBuilder->modeleToDtoLight($adherent, RtlqAdherentDTO::class, $doctrine);
+            $adherentDto = $this->rtlqAdherentBuilder->modeleToDtoSuperLight($adherent, RtlqAdherentDTO::class, $doctrine);
             $dto->addAdherent( $adherentDto );
         }
         

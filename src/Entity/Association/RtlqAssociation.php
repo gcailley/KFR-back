@@ -124,15 +124,12 @@ class RtlqAssociation  extends AbstractRtlqEntity
 
     /**
      * @var string
-     *
      * @ORM\Column(name="email", type="string", length=100, nullable=false)
      */
     private $email;
-
     public function setEmail($email)
     {
         $this->email = $email;
-
         return $this;
     }
     public function getEmail()
@@ -187,4 +184,38 @@ class RtlqAssociation  extends AbstractRtlqEntity
         return $this->numero_compte_bancaire;
     }
     // TODO ajouter liste des bureaux
+
+
+    
+    /**
+     * @var string
+     * @ORM\Column(name="message", type="string", length=1000, nullable=true)
+     */
+    private $message;
+    public function setMessage($message)
+    {
+        $this->message = $message;
+        return $this;
+    }
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="closed", type="boolean", nullable=false)
+     */
+    private $closed = false;
+    public function setClosed($closed)
+    {
+        $this->closed = $closed;
+        return $this;
+    }
+    public function getClosed()
+    {
+        return $this->closed;
+    }
+
 }

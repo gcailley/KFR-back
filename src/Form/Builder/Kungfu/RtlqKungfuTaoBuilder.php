@@ -2,29 +2,46 @@
 
 namespace App\Form\Builder\Kungfu;
 
+use App\Entity\Association\RtlqAdherent;
 use App\Entity\Kungfu\RtlqKungfuNiveau;
 use App\Entity\Kungfu\RtlqKungfuStyle;
 use App\Form\Dto\Kungfu\RtlqKungfuTaoDTO;
 use App\Entity\Kungfu\RtlqKungfuTao;
 use App\Form\Builder\AbstractRtlqBuilder;
+use App\Form\Builder\Association\RtlqAdherentBuilder;
+use App\Form\Dto\Association\RtlqAdherentDTO;
 
 class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
 {
-    public function dtoToModele($em, $postModele, $modele): RtlqKungfuTao
+
+    private $rtlqAdherentBuilder;
+
+    public function __construct()
+    {
+        $this->rtlqAdherentBuilder = new RtlqAdherentBuilder();
+    }
+    
+    public function dtoToModele($em, $dto, $modele): RtlqKungfuTao
     {
 
-        $modele->setNom($postModele->getNom());
-        $modele->setNomChinois($postModele->getNomChinois());
-        $modele->setTraduction($postModele->getTraduction());
-        $modele->setPinyin($postModele->getPinyin());
-        $modele->setOrigine($postModele->getOrigine());
-        $modele->setArme($postModele->getArme());
-        $modele->setActif($postModele->getActif());
-        $modele->setCombine($postModele->getCombine());
-        $modele->setNbMoves($postModele->getNbMoves());
+        $modele->setNom($dto->getNom());
+        $modele->setNomChinois($dto->getNomChinois());
+        $modele->setTraduction($dto->getTraduction());
+        $modele->setPinyin($dto->getPinyin());
+        $modele->setOrigine($dto->getOrigine());
+        $modele->setArme($dto->getArme());
+        $modele->setActif($dto->getActif());
+        $modele->setCombine($dto->getCombine());
+        $modele->setNbMoves($dto->getNbMoves());
+        $modele->setReferenceDriveId($dto->getReferenceDriveId());
 
-        $modele->setStyle($em->getReference(RtlqKungfuStyle::class, $postModele->getStyleId()));
-        $modele->setNiveau($em->getReference(RtlqKungfuNiveau::class, $postModele->getNiveauId()));
+        $modele->setStyle($em->getReference(RtlqKungfuStyle::class, $dto->getStyleId()));
+        $modele->setNiveau($em->getReference(RtlqKungfuNiveau::class, $dto->getNiveauId()));
+
+        foreach ($dto->getReferents() as $referentDto) {
+            $modelAdh = $em->getReference ( RtlqAdherent::class, $referentDto['id'] );
+            $modele->addReferent($modelAdh);
+        }
 
         return $modele;
     }
@@ -49,8 +66,16 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         $dto->setCombine($modele->getCombine());
         $dto->setNbMoves($modele->getNbMoves());
         $dto->setNbTaosLearnt(sizeof($modele->getTaosLearnt()));
+        $dto->setReferenceDriveId($modele->getReferenceDriveId());
+
         foreach ( $modele->getTaosLearnt() as $taoLearnt) {
-            $dto->hasThisTao($taoLearnt->getAdherentPrenomNom());
+            dump($taoLearnt->getAdherent());
+            $adherentDto = $this->rtlqAdherentBuilder->modeleToDtoSuperLight($taoLearnt->getAdherent(), RtlqAdherentDTO::class, $doctrine);
+            $dto->addAdherent($adherentDto);
+        }
+        foreach ( $modele->getReferents() as $referent) {
+            $referentDto = $this->rtlqAdherentBuilder->modeleToDtoSuperLight($referent, RtlqAdherentDTO::class, $doctrine);
+            $dto->addReferent($referentDto);
         }
     
         return $dto;

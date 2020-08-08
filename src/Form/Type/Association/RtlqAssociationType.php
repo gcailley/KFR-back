@@ -22,7 +22,9 @@ class RtlqAssociationType extends AbstractRtlqType
             ->add('numero_siren', TextType::class)
             ->add('url_extranet', TextType::class)
             ->add('url_intranet', TextType::class)
-            ->add('numero_compte_bancaire', TextType::class);
+            ->add('numero_compte_bancaire', TextType::class)
+            ->add('closed', CheckBoxType::class)
+            ->add('message', TextType::class);
     }
     public function getName()
     {

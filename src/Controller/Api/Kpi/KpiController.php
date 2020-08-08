@@ -32,22 +32,6 @@ class KpiController extends AbstractRtlqController
 
 
     /**
-     * @Route("/stats-tresoreries", methods={"GET"})
-     *
-     * public function extractStatsTersorerie()
-     * {
-     *    $repositorie = $this->getDoctrine()->getRepository(RtlqTresorie::class);
-     *   $results = [];
-     *  $kpis = $repositorie->getAllKpis();
-     *  foreach ($kpis as $kpi) {
-     *     $number = $repositorie->countByKpi($kpi);    
-     *    $results[$kpi] = $number;
-     *  }
-     *  return  $this->newResponse($results, Response::HTTP_ACCEPTED);
-     *  }
-     */
-
-    /**
      * @Route("/{action}", methods={"GET"})
      */
     public function extractKpi($action)

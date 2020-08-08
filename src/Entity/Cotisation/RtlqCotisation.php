@@ -19,7 +19,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 class RtlqCotisation extends AbstractRtlqEntity
 {
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->adherents = new ArrayCollection();
     }
 
@@ -99,12 +100,13 @@ class RtlqCotisation extends AbstractRtlqEntity
      *      )
      */
     private $adherents;
- /**
+    /**
      * Add adherent
      *
      * @param RtlqAdherent $adherent
      */
-    public function addAdherent(RtlqAdherent $adherent) {
+    public function addAdherent(RtlqAdherent $adherent)
+    {
         foreach ($this->adherents as $value) {
             if ($value->getId() == $adherent->getId()) {
                 return $this;
@@ -120,7 +122,8 @@ class RtlqCotisation extends AbstractRtlqEntity
      *
      * @param RtlqAdherent $adherent
      */
-    public function removeAdherent(RtlqAdherent $adherent) {
+    public function removeAdherent(RtlqAdherent $adherent)
+    {
         $this->adherents->removeElement($adherent);
     }
 
@@ -129,15 +132,17 @@ class RtlqCotisation extends AbstractRtlqEntity
      *
      * @return Collection
      */
-    public function getAdherents() {
+    public function getAdherents()
+    {
         return $this->adherents;
     }
-    
-    public function removeAllAdherents() {
-        $this->adherents=[];
+
+    public function removeAllAdherents()
+    {
+        $this->adherents = [];
     }
-    
-    
+
+
     /**
      * Get id
      *
@@ -338,10 +343,10 @@ class RtlqCotisation extends AbstractRtlqEntity
         return $this->saison != null ? $this->saison->getNom() : null;
     }
 
-    
+
     public function isSaisonCourante()
     {
-        return (null != $this->saison ) ? $this->saison->getActive() : false;
+        return (null != $this->saison) ? $this->saison->getActive() : false;
     }
     /**
      * Set categorie

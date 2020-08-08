@@ -20,6 +20,8 @@ class RtlqAssociationBuilder extends AbstractRtlqBuilder
         $modele->setNumeroCompteBancaire($dto->getNumeroCompteBancaire());
         $modele->setUrlIntranet($dto->getUrlIntranet());
         $modele->setUrlExtranet($dto->getUrlExtranet());
+        $modele->setClosed($dto->getClosed());
+        $modele->setMessage($dto->getMessage());
 
         return $modele;
     }
@@ -39,6 +41,8 @@ class RtlqAssociationBuilder extends AbstractRtlqBuilder
         $dto->setNumeroCompteBancaire($modele->getNumeroCompteBancaire());
         $dto->setUrlIntranet($modele->getUrlIntranet());
         $dto->setUrlExtranet($modele->getUrlExtranet());
+        $dto->setClosed($modele->getClosed());
+        $dto->setMessage($modele->getMessage());
 
         // recuperation current "bureau" and initialize president, tresorerier, secretaire
         $bureau = $doctrine->getRepository(RtlqBureau::class)->getBureauActif();

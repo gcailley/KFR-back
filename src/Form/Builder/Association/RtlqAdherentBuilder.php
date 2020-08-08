@@ -92,26 +92,15 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         return $modele;
     }
 
-    public function modeleToDtoLight($modele, $dtoClass, $doctrine)
+
+    public function modeleToDtoSuperLight($modele, $dtoClass, $doctrine)
     {
         $dto = new $dtoClass;
 
         $dto->setId($modele->getId());
-        $dto->setEmail($modele->getEmail());
-        $dto->setUsername($modele->getUsername());
-        // pour des raisons de sécurité ne doit pas être présent
         $dto->setPwd(null);
-        $dto->setTelephone($modele->getTelephone());
         $dto->setNom($modele->getNom());
         $dto->setPrenom($modele->getPrenom());
-        $dto->setDateNaissance($this->dateToString($modele->getDateNaissance()));
-        $dto->setActif($modele->getActif());
-        $dto->setPublique($modele->getPublic());
-        $dto->setSaisonCourante($modele->isInSaisonCourante());
-
-        $dto->setAdresse($modele->getAdresse());
-        $dto->setCodePostal($modele->getCodePostal());
-        $dto->setVille($modele->getVille());
         if ("resource" === gettype($modele->getAvatar())) {
             $dto->setAvatar(stream_get_contents($modele->getAvatar()));
         } else {
@@ -122,7 +111,23 @@ class RtlqAdherentBuilder extends AbstractRtlqBuilder
         } else {
             $dto->setAvatarUri(AdherentController::URI_AVATAR . '_default_.jpeg');
         }
+        return $dto;
+    }
 
+    public function modeleToDtoLight($modele, $dtoClass, $doctrine)
+    {
+        $dto = $this->modeleToDtoSuperLight($modele, $dtoClass, $doctrine);
+        $dto->setEmail($modele->getEmail());
+        $dto->setUsername($modele->getUsername());
+        // pour des raisons de sécurité ne doit pas être présent
+        $dto->setTelephone($modele->getTelephone());
+        $dto->setDateNaissance($this->dateToString($modele->getDateNaissance()));
+        $dto->setActif($modele->getActif());
+        $dto->setPublique($modele->getPublic());
+        $dto->setSaisonCourante($modele->isInSaisonCourante());
+        $dto->setAdresse($modele->getAdresse());
+        $dto->setCodePostal($modele->getCodePostal());
+        $dto->setVille($modele->getVille());
         $dto->setDateCreation($this->dateToString($modele->getDateCreation()));
         $dto->setDateLastAuth($this->dateToString($modele->getDateLastAuth()));
         $dto->setLicenceNumber($modele->getLicenceNumber());

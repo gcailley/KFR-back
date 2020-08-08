@@ -9,6 +9,7 @@ class RtlqKungfuTaoDTO extends AbstractRtlqDTO {
     public function __construct()
     {
         $this->adherents = array();
+        $this->referents = array();
     }
 
     protected $nom;
@@ -173,9 +174,31 @@ class RtlqKungfuTaoDTO extends AbstractRtlqDTO {
     public  function getAdherents() {
         return $this->adherents;
     }
-    public  function hasThisTao($adherent) {
+    public  function addAdherent($adherent) {
         $this->adherents[] = $adherent;
-        return $this->adherents;
+        return $this;
     }
 
+    protected $referents;
+    public function setReferents($value)
+    {
+        $this->referents = $value;
+        return $this;
+    }
+    public  function getReferents() {
+        return $this->referents;
+    }
+    public  function addReferent($referent) {
+        $this->referents[] = $referent;
+        return $this;
+    }
+
+    protected $reference_drive_id;
+    public function getReferenceDriveId() {
+        return $this->reference_drive_id;
+    }
+    public function setReferenceDriveId($value) {
+        $this->reference_drive_id = $value;
+        return $this;
+    }
 }

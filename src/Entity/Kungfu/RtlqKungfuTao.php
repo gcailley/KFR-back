@@ -5,6 +5,7 @@ namespace App\Entity\Kungfu;
 use Doctrine\ORM\Mapping as ORM;
 
 use App\Entity\AbstractRtlqEntity;
+use App\Entity\Association\RtlqAdherent;
 use App\Entity\Kungfu\RtlqKungfuStyle;
 use App\Entity\Kungfu\RtlqKungfuNiveau;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,6 +23,7 @@ class RtlqKungfuTao extends AbstractRtlqEntity
     public function __construct()
     {
         $this->taos_learnt = new ArrayCollection();
+        $this->referents = new ArrayCollection();
     }
 
     /**
@@ -277,4 +279,71 @@ class RtlqKungfuTao extends AbstractRtlqEntity
         $this->taos_learnt = $taos_learnt;
         return $this;
     }
+
+
+    /**
+     *
+     * @var string @ORM\Column(name="reference_drive_id", type="string", nullable=true)
+     */
+    protected $reference_drive_id = false;
+    public function getReferenceDriveId()
+    {
+        return $this->reference_drive_id;
+    }
+    public function setReferenceDriveId($value)
+    {
+        $this->reference_drive_id = $value;
+        return $this;
+    }
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Association\RtlqAdherent", inversedBy="taos_referent", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="rtlq_referents_taos",
+     *      joinColumns={@ORM\JoinColumn(name="tao_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="adherent_id", referencedColumnName="id")}
+     *      )
+     */
+    private $referents;
+    /**
+     * Add referent
+     *
+     * @param RtlqAdherent $referent
+     */
+    public function addReferent(RtlqAdherent $referent)
+    {
+        foreach ($this->referents as $value) {
+            if ($value->getId() == $referent->getId()) {
+                return $this;
+            }
+        }
+
+        $this->referents[] = $referent;
+        return $this;
+    }
+
+    /**
+     * Remove referent
+     *
+     * @param RtlqAdherent $referent
+     */
+    public function removeReferents(RtlqAdherent $referent)
+    {
+        $this->referents->removeElement($referent);
+    }
+
+    /**
+     * Get referents
+     *
+     * @return Collection
+     */
+    public function getReferents()
+    {
+        return $this->referents;
+    }
+
+    public function removeAllReferents()
+    {
+        $this->referents = [];
+    }
+
 }

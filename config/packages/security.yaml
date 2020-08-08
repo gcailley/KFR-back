@@ -1,6 +1,5 @@
 #
 security:
-
     providers:
         auth_token_provider:
             id: routanglangquanbundle.auth_token_provider
@@ -13,7 +12,6 @@ security:
     firewalls:
         debug:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
-            #pattern: ^/
             security: false
 
         public_photos_api:
@@ -40,7 +38,7 @@ security:
             pattern: ^/technique/setup
             methods: [GET]
             anonymous: ~
-        
+
         public_login_api:
             pattern: ^/security/tokens
             methods: [POST]
@@ -50,15 +48,16 @@ security:
             pattern: ^/association/adherents/password-reset
             methods: [POST]
             anonymous: ~
+
         public_change_password_api:
             pattern: ^/association/adherents/password-change
             methods: [POST]
             anonymous: ~
-            
+
         public_drive_by_key_api:
             pattern: ^/association/drive/by-key
             methods: [GET]
-            anonymous: ~            
+            anonymous: ~
 
         internal_api:
             pattern: ^/
@@ -71,55 +70,51 @@ security:
             anonymous: ~
 
     access_control:
+        - {path: ^/kpis/stats, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/association/adherents/password-change, methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/association/adherents/password-reset, methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/cotisations/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/associations/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/saisons/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/association/news, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/technique/setup, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/security/tokens, methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/security/tokens/logout, methods: [DELETE], roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/association/photo_directories, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/association/photos, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/association/drive/by-key, methods: [GET, OPTIONS], roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - {path: ^/association/adherents/avatar, methods: [GET, OPTIONS], roles: IS_AUTHENTICATED_ANONYMOUSLY}
 
+        - {path: ^/security/tokens/check-user, methods: [GET, OPTIONS], roles: ROLE_USER}
+        - {path: ^/association/adherents/trombinoscope, methods: [GET, OPTIONS], roles: ROLE_USER}
+        - {path: ^/association/adherents/by-token, methods: [GET, OPTIONS, PUT], roles: ROLE_USER}
+        - {path: ^/association/adherents/by-token/mytaos, methods: [GET, OPTIONS, DELETE, POST], roles: ROLE_USER}
 
-        - { path: ^/kpis/stats,  methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - {path: ^/association/drive/by-token, methods: [GET, POST, DELETE, PUT, OPTIONS], roles: ROLE_USER}
+        - {path: ^/kungfu/taos, methods: [GET, OPTIONS], roles: ROLE_USER}
 
-        - { path: ^/association/adherents/password-change,  methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/adherents/password-reset,  methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/cotisations/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/saisons/active, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/news, methods: [GET] ,roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/technique/setup, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/security/tokens, methods: [POST], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/security/tokens/logout, methods: [DELETE], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/photo_directories, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/photos, methods: [GET], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/drive/by-key, methods: [GET, OPTIONS], roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/association/adherents/avatar, methods: [GET, OPTIONS], roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - {path: ^/kpis, roles: ROLE_KPI}
 
-        - { path: ^/security/tokens/check-user, methods: [GET, OPTIONS], roles: ROLE_USER }
-        - { path: ^/association/adherents/trombinoscope, methods: [GET, OPTIONS], roles: ROLE_USER }
-        - { path: ^/association/adherents/by-token, methods: [GET, OPTIONS, PUT], roles: ROLE_USER }
-        - { path: ^/association/adherents/by-token/mytaos, methods: [GET, OPTIONS, DELETE, POST], roles: ROLE_USER }
+        - {path: ^/association/photo_directories, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_COM]}
+        - {path: ^/association/photos, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_COM]}
+        - {path: ^/association/news, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_COM]}
 
-        - { path: ^/association/drive/by-token, methods: [GET, POST, DELETE, PUT, OPTIONS], roles: ROLE_USER }
-        - { path: ^/kungfu/taos, methods: [GET, OPTIONS], roles: ROLE_USER }
-    
-        - { path: ^/kpis, roles: ROLE_KPI }
+        - {path: ^/association/events, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_BEN]}
+        - {path: ^/association/benevolats, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_BEN]}
 
-        - { path: ^/association/photo_directories, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_COM] }
-        - { path: ^/association/photos, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_COM] }
-        - { path: ^/association/news, methods: [DELETE, PUT, POST, OPTIONS], roles: [ROLE_COM] }
-
-        - { path: ^/association/events, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_BEN] }
-        - { path: ^/association/benevolats, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_BEN] }
-
-        - { path: ^/saisons, methods: [GET, OPTIONS], roles: [ROLE_BEN, ROLE_TRE] }
-        - { path: ^/tresorie/categories, methods: [GET, OPTIONS], roles: [ROLE_BEN, ROLE_TRE] }
-        - { path: ^/association/adherents/liste, methods: [GET, OPTIONS], roles: [ROLE_BEN, ROLE_TRE] }
-
-        - { path: ^/cotisations, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_TRE] }
-        - { path: ^/materiels, roles: ROLE_TRE }
-
-        - { path: ^/association/bureaux, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_ADMIN] }
-        - { path: ^/, roles: ROLE_ADMIN }
+        - {path: ^/saisons, methods: [GET, OPTIONS], roles: [ROLE_BEN, ROLE_TRE]}
+        - {path: ^/tresorie/categories, methods: [GET, OPTIONS], roles: [ROLE_BEN, ROLE_TRE]}
+        - {path: ^/association/adherents/liste, methods: [GET, OPTIONS], roles: [ROLE_BEN, ROLE_TRE]}
+        - {path: ^/cotisations, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_TRE]}
+        - {path: ^/materiels, roles: ROLE_TRE}
+        - {path: ^/association/bureaux, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_ADMIN]}
+        - {path: ^/, roles: ROLE_ADMIN}
 
     role_hierarchy:
-        ROLE_USER:        [ROLE_USER]
-        ROLE_COM:         [ROLE_COM]
-        ROLE_PROF:        [ROLE_PROF]
-        ROLE_TRE:         [ROLE_TRE]
-        ROLE_KPI:         [ROLE_KPI]
-        ROLE_ADMIN:       [ROLE_KPI, ROLE_ADMIN]
+        ROLE_USER: [ROLE_USER]
+        ROLE_COM: [ROLE_COM]
+        ROLE_PROF: [ROLE_PROF]
+        ROLE_TRE: [ROLE_TRE]
+        ROLE_KPI: [ROLE_KPI]
+        ROLE_ADMIN: [ROLE_KPI, ROLE_ADMIN]
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_PROF, ROLE_KPI, ROLE_TRE, ROLE_COM, ROLE_ADMIN, ROLE_SUPER_ADMIN]

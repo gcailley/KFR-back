@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\AbstractRtlqEntity;
 use App\Entity\Cotisation\RtlqCotisation;
 use App\Entity\Kungfu\RtlqKungfuAdherentTao;
+use App\Entity\Kungfu\RtlqKungfuTao;
 use App\Entity\Saison\RtlqSaison;
 use App\Entity\Tresorie\RtlqTresorie;
 
@@ -801,6 +802,56 @@ class RtlqAdherent extends AbstractRtlqEntity implements UserInterface
     {
         return $this->tresories;
     }
+
+
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Kungfu\RtlqKungfuTao", mappedBy="referents")
+     */
+    private $taos_referent;
+
+    /**
+     * Add groupe
+     *
+     * @param RtlqKungfuTao $tao_referent
+     *
+     * @return RtlqAdherent
+     */
+    public function addTaoReferent(RtlqKungfuTao $tao_referent)
+    {
+        $tao_referent->addReferent($this);
+        $this->taos_referent[] = $tao_referent;
+
+        return $this;
+    }
+
+    /**
+     * Remove taoReference
+     *
+     * @param RtlqKungfuTao $tao_referent
+     */
+    public function removeTaoReference(RtlqKungfuTao $tao_referent)
+    {
+        $this->taos_referent->removeElement($tao_referent);
+    }
+    /**
+     * Remove All taosReference
+     *
+     */
+    public function removeAllTaosReference()
+    {
+        $this->taos_referent = [];
+    }
+    /**
+     * Get taos_referent
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTaosReference()
+    {
+        return $this->taos_referent;
+    }
+
 
     public function getLicenceNumber()
     {
