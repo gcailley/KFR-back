@@ -92,7 +92,10 @@ class KungfuTaoController extends AbstractCrudApiController
      */
     public function getActifAction(Request $request)
     {
-        return $this->getAllAction($request, true);
+        $entities = $this->getDoctrine()
+            ->getRepository($this->newModeleClass())
+            ->findBy(array("actif" => true), null, 1, null);
+        return $this->returnNewResponse($entities, Response::HTTP_ACCEPTED);
     }
 
 
