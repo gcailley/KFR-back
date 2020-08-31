@@ -89,7 +89,6 @@ security:
         - {path: ^/association/adherents/trombinoscope, methods: [GET, OPTIONS], roles: ROLE_USER}
         - {path: ^/association/adherents/by-token, methods: [GET, OPTIONS, PUT], roles: ROLE_USER}
         - {path: ^/association/adherents/by-token/mytaos, methods: [GET, OPTIONS, DELETE, POST], roles: ROLE_USER}
-
         - {path: ^/association/drive/by-token, methods: [GET, POST, DELETE, PUT, OPTIONS], roles: ROLE_USER}
         - {path: ^/kungfu/taos, methods: [GET, OPTIONS], roles: ROLE_USER}
 
@@ -107,7 +106,7 @@ security:
         - {path: ^/association/adherents/liste, methods: [GET, OPTIONS], roles: [ROLE_BEN, ROLE_TRE]}
         - {path: ^/cotisations, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_TRE]}
         - {path: ^/materiels, roles: ROLE_TRE}
-        - {path: ^/association/bureaux, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_ADMIN]}
+
         - {path: ^/, roles: ROLE_ADMIN}
 
     role_hierarchy:
