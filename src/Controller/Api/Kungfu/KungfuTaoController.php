@@ -92,7 +92,7 @@ class KungfuTaoController extends AbstractCrudApiController
      */
     public function getActifAction(Request $request)
     {
-        return $this->getAllAction($request, true, array("actif" => true));
+        return $this->getAllAction($request, true);
     }
 
 
