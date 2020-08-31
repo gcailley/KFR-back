@@ -107,6 +107,8 @@ security:
         - {path: ^/cotisations, methods: [GET, DELETE, PUT, POST, OPTIONS], roles: [ROLE_TRE]}
         - {path: ^/materiels, roles: ROLE_TRE}
 
+        - {path: ^/kungfu/taos, methods: [GET, POST, DELETE, PUT, OPTIONS], roles: ROLE_PROF}
+
         - {path: ^/, roles: ROLE_ADMIN}
 
     role_hierarchy:
