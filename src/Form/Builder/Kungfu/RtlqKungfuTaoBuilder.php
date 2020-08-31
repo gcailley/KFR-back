@@ -69,7 +69,6 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         $dto->setReferenceDriveId($modele->getReferenceDriveId());
 
         foreach ( $modele->getTaosLearnt() as $taoLearnt) {
-            dump($taoLearnt->getAdherent());
             $adherentDto = $this->rtlqAdherentBuilder->modeleToDtoSuperLight($taoLearnt->getAdherent(), RtlqAdherentDTO::class, $doctrine);
             $dto->addAdherent($adherentDto);
         }
