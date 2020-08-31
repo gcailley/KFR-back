@@ -90,7 +90,7 @@ security:
         - {path: ^/association/adherents/by-token, methods: [GET, OPTIONS, PUT], roles: ROLE_USER}
         - {path: ^/association/adherents/by-token/mytaos, methods: [GET, OPTIONS, DELETE, POST], roles: ROLE_USER}
         - {path: ^/association/drive/by-token, methods: [GET, POST, DELETE, PUT, OPTIONS], roles: ROLE_USER}
-        - {path: ^/kungfu/taos, methods: [GET, OPTIONS], roles: ROLE_USER}
+        - {path: ^/kungfu/taos/actif, methods: [GET, OPTIONS], roles: ROLE_USER}
 
         - {path: ^/kpis, roles: ROLE_KPI}
 
