@@ -589,7 +589,7 @@ class AdherentController extends AbstractCrudApiController
 
         // conversion modele en DTO
         $dtos = $this->rtlqAdherentTaoBuilder->modelesToDtos($entitiesAssociate, RtlqKungfuAdherentTaoDTO::class, $this->getDoctrine());
-
+        
         //get user information based on the id associate from the token
         return $this->returnNewResponse($dtos, Response::HTTP_ACCEPTED, false);
     }

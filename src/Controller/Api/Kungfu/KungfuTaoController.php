@@ -82,7 +82,12 @@ class KungfuTaoController extends AbstractCrudApiController
             $dto_entities = $this->getLimitedTaoBuilder()->modelesToDtos($entities,  RtlqKungfuTaoDTO::class, $this->getDoctrine());
         } else {
             $dto_entities = $this->getBuilder()->modelesToDtos($entities,  $this->newDtoClass(), $this->getDoctrine());
+
+            // get user token
+            $tokenAuth  = $this->getTokenAuth($request);
+            $dto_entities = $this->getBuilder()->updateReferent($dto_entities,  $tokenAuth->getUser());
         }
+
 
         return $this->convertDto2Response($dto_entities, $response, Response::HTTP_ACCEPTED);
     }
