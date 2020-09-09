@@ -80,7 +80,6 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         return $dto;
     }
 
-       
     public function updateReferent($dtos, $authUser)
     {
         foreach ($dtos as $dto) {
