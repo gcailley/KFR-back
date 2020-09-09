@@ -23,7 +23,6 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
     
     public function dtoToModele($em, $dto, $modele): RtlqKungfuTao
     {
-
         $modele->setNom($dto->getNom());
         $modele->setNomChinois($dto->getNomChinois());
         $modele->setTraduction($dto->getTraduction());
@@ -80,7 +79,6 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         return $dto;
     }
 
-       
     public function updateReferent($dtos, $authUser)
     {
         foreach ($dtos as $dto) {
