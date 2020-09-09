@@ -23,7 +23,6 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
     
     public function dtoToModele($em, $dto, $modele): RtlqKungfuTao
     {
-
         $modele->setNom($dto->getNom());
         $modele->setNomChinois($dto->getNomChinois());
         $modele->setTraduction($dto->getTraduction());
