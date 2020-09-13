@@ -632,7 +632,7 @@ class AdherentController extends AbstractCrudApiController
         // conversion modele en DTO
         $dtos = $this->rtlqAdherentTaoBuilder->modeleToDto($entityMetier, RtlqKungfuAdherentTaoDTO::class, $this->getDoctrine());
         return $this->newResponse(($dtos), Response::HTTP_CREATED);
-    }
+        }
 
     /**
      * @Route("/{id}/taos/{idTao}", methods={"POST"})

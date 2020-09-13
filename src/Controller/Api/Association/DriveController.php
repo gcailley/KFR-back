@@ -9,13 +9,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\Dto\Association\RtlqDriveDTO;
 use App\Form\Type\Association\RtlqDriveType;
-use GuzzleHttp\json_encode;
 use App\Service\Video\VideoConverterService;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Mime\FileinfoMimeTypeGuesser as MimeFileinfoMimeTypeGuesser;
+use Symfony\Component\Mime\MimeTypes;
 
 /**
  * @Route("/association/drive")
@@ -59,7 +59,7 @@ class DriveController extends AbstractRtlqController
      * @throws Exception
      * @throws ImagickException
      */
-    function generateThumbnail($img, $width, $height, $quality = 90)
+    /**function generateThumbnail($img, $width, $height, $quality = 90)
     {
         if (is_file($img)) {
             $imagick = new Imagick(realpath($img));
@@ -76,6 +76,7 @@ class DriveController extends AbstractRtlqController
             throw new Exception("No valid image provided with {$img}.");
         }
     }
+     **/
 
     private function _getAllByUser($user)
     {
@@ -172,7 +173,7 @@ class DriveController extends AbstractRtlqController
 
         // checking input file
         $img = $request->files->get('source');
-        $this->logger->error($img === null) ;
+        $this->logger->error($img === null);
         if ($img === null) {
             return $this->newResponse("source empty.", Response::HTTP_REQUEST_ENTITY_TOO_LARGE);
         }
@@ -181,7 +182,7 @@ class DriveController extends AbstractRtlqController
         $userDrive = $this->getUserDrive($idUser);
         $uid = md5(uniqid(rand(), true));
         $name = $request->request->get('filename');
-        $filename = $uid . '#' . str_replace(" ","", $name);
+        $filename = $uid . '#' . str_replace(" ", "", $name);
         $file_path = $userDrive . DIRECTORY_SEPARATOR . $filename;
 
         // file move without converting
@@ -243,7 +244,6 @@ class DriveController extends AbstractRtlqController
         // get user token
         $tokenAuth  = $this->getTokenAuth($request);
         return $this->_deleteDriveByUserAndId($tokenAuth->getUser(), $id);
-
     }
     /**
      * @Route("/by-iduser-{idUser}/{id}", methods={"DELETE"}, requirements={"id"="^(\w)*(\.\w+)?$"})
@@ -253,9 +253,9 @@ class DriveController extends AbstractRtlqController
         // check user existance
         $entity = $this->getEntityById(RtlqAdherent::class, $idUser);
         return $this->_deleteDriveByUserAndId($entity, $id);
-
     }
-    private function _deleteDriveByUserAndId($user, $id) {
+    private function _deleteDriveByUserAndId($user, $id)
+    {
         $idUser = $user->getId();
         $baseDir = $this->getParameter("user_drive_basedir");
         $userDrive = "${baseDir}/${idUser}/drive/";
@@ -392,16 +392,9 @@ class DriveController extends AbstractRtlqController
         $response = new BinaryFileResponse($file_path);
 
         // To generate a file download, you need the mimetype of the file
-        $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
-
-        // Set the mimetype with the guesser or manually
-        if ($mimeTypeGuesser->isSupported()) {
-            // Guess the mimetype of the file according to the extension of the file
-            $response->headers->set('Content-Type', $mimeTypeGuesser->guess($file_path));
-        } else {
-            // Set the mimetype of the file manually, in this case for a text file is text/plain
-            $response->headers->set('Content-Type', 'text/plain');
-        }
+        $mimeTypes = new MimeTypes();
+        $mimeType = $mimeTypes->guessMimeType($file_path);
+        $response->headers->set('Content-Type', $mimeType);
 
         // Set content disposition inline of the file
         $response->setContentDisposition(

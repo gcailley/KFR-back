@@ -1,6 +1,10 @@
 php bin/console  doctrine:schema:update --force
 php bin/console  doctrine:schema:update --dump-sql
 
+installation symfony using composer
+    
+    composer install
+
 clean le cache de symfony
 
     php bin/console cache:clear
