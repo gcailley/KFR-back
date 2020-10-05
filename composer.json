@@ -3,6 +3,7 @@
     "license": "proprietary",
     "name":"kfr/back",
     "description":"API Backend de KFR",
+    "version": "2.4.0",
     "require": {
         "php": "^7.3.12",
         "ext-ctype": "*",
