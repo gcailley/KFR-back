@@ -6,8 +6,10 @@ use App\Controller\Api\AbstractCrudApiController;
 use App\Entity\Kungfu\RtlqKungfuTao;
 use App\Form\Builder\Kungfu\RtlqKungfuTaoBuilder;
 use App\Form\Builder\Kungfu\RtlqKungfuTaoProfBuilder;
+use App\Form\Builder\Kungfu\RtlqKungfuTaoReferentBuilder;
 use App\Form\Dto\Kungfu\RtlqKungfuTaoDTO;
 use App\Form\Dto\Kungfu\RtlqKungfuTaoProfDTO;
+use App\Form\Type\Kungfu\RtlqKungfuTaoReferentType;
 use App\Form\Type\Kungfu\RtlqKungfuTaoType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +23,7 @@ class KungfuTaoController extends AbstractCrudApiController
 {
 
     private $limitedTaoBuilder;
+    private $referentTaoBuilder;
 
     function newTypeClass(): string
     {
@@ -69,6 +72,40 @@ class KungfuTaoController extends AbstractCrudApiController
         return  $this->newResponse($dto_entity, Response::HTTP_ACCEPTED);
     }
 
+    /**
+     * @Route("/{id}", methods={"PATCH"}, requirements={"id"="\d+"})
+     */
+    public function patchByIdAction(Request $request, $id)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        //looking for object into the database.
+        $entityDB = $this->getDoctrine()->getRepository($this->newModeleClass())->find($id);
+        if (!is_object($entityDB)) {
+            throw $this->createNotFoundException();
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $entityDto = new RtlqKungfuTao();
+        $form = $this->createForm(RtlqKungfuTaoReferentType::class, $entityDto);
+        $form->submit($data);
+
+        //validation de l'object DTO
+        $errors = $this->getValidator()->doPutValidateDto($entityDto, $em);
+        if ($errors != null && sizeof($errors) != 0) {
+            throw $this->createInvalideBean($errors);
+        }
+
+        // convertion to Modele
+        $referentBuilder =
+            $entityMetier = $this->getReferentTaoBuilder()->dtoToModele($em, $entityDto, $entityDB);
+        $em->merge($entityMetier);
+        $em->flush();
+
+        $dto_entity = $this->getReferentTaoBuilder()->modeleToDto($entityMetier, RtlqKungfuTaoDTO::class, $this->getDoctrine());
+        return  $this->newResponse($dto_entity, Response::HTTP_ACCEPTED);
+    }
+
 
 
     /**
@@ -110,6 +147,13 @@ class KungfuTaoController extends AbstractCrudApiController
     }
 
 
+    private function getReferentTaoBuilder()
+    {
+        if (null == $this->referentTaoBuilder) {
+            $this->referentTaoBuilder = new RtlqKungfuTaoReferentBuilder();
+        }
+        return $this->referentTaoBuilder;
+    }
 
 
 

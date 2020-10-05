@@ -22,7 +22,7 @@ use Symfony\Component\Security\Http\HttpUtils;
 class AuthTokenAuthenticator extends AbstractGuardAuthenticator
 {
 
-    const X_AUTH_TOKEN = "X-Auth-Token";
+    const X_AUTH_TOKEN = "x-auth-token";
     /**
      * Durée de validité du token en secondes, 30 jours.
      */
