@@ -21,7 +21,7 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         $this->rtlqAdherentBuilder = new RtlqAdherentBuilder();
     }
     
-    public function dtoToModele($em, $dto, $modele): RtlqKungfuTao
+    public function dtoToModele($em, $dto, $modele)
     {
         $modele->setNom($dto->getNom());
         $modele->setNomChinois($dto->getNomChinois());
@@ -37,6 +37,7 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
         $modele->setStyle($em->getReference(RtlqKungfuStyle::class, $dto->getStyleId()));
         $modele->setNiveau($em->getReference(RtlqKungfuNiveau::class, $dto->getNiveauId()));
 
+        $modele->removeAllReferents();
         foreach ($dto->getReferents() as $referentDto) {
             $modelAdh = $em->getReference ( RtlqAdherent::class, $referentDto['id'] );
             $modele->addReferent($modelAdh);
@@ -46,7 +47,7 @@ class RtlqKungfuTaoBuilder extends AbstractRtlqBuilder
     }
 
 
-    public function modeleToDto($modele, $dtoClass, $doctrine): RtlqKungfuTaoDTO
+    public function modeleToDto($modele, $dtoClass, $doctrine)
     {
         $dto = $this->getNewDto($dtoClass);
 

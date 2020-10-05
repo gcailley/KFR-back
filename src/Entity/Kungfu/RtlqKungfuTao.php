@@ -255,7 +255,7 @@ class RtlqKungfuTao extends AbstractRtlqEntity
      *
      * @var string @ORM\Column(name="nb_moves", type="integer", nullable=true)
      */
-    protected $nb_moves = false;
+    protected $nb_moves;
     public function getNbMoves()
     {
         return $this->nb_moves;
@@ -267,7 +267,7 @@ class RtlqKungfuTao extends AbstractRtlqEntity
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\KungFu\RtlqKungfuAdherentTao", mappedBy="tao", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Kungfu\RtlqKungfuAdherentTao", mappedBy="tao", cascade={"persist"})
      */
     private $taos_learnt;
     public function getTaosLearnt()
